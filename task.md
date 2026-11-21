@@ -77,19 +77,21 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
 > **Mục tiêu:** Đạt đủ **`AC-P1-01` .. `AC-P1-16`** trong [`docs/plan/phase-1.md`](docs/plan/phase-1.md) theo đúng [`docs/prd0.md`](docs/prd0.md) & [`docs/contracts/`](docs/contracts/README.md), xuất bằng chứng thật và gắn tag `phase-1` trước 1:00.
 
 #### A. `Do-Hong-Vy` (`sim/gather` — [`chonoi/sim/gather.py`](chonoi/sim/gather.py))
-- [ ] **CP1-G1 (Lát 1 — Bơi, phân vùng, oxy, ngạt, ngất, giỏ LIFO | `AC-P1-01`, `AC-P1-02`):**
+- [x] **CP1-G1 (Lát 1 — Bơi, phân vùng, oxy, ngạt, ngất, giỏ LIFO | `AC-P1-01`, `AC-P1-02`):**
   - Bơi `[x,d]` (`ramp_max_ticks`, `Δt=1/60`, chặn biên + triệt vận tốc ra ngoài, `heading_deg` theo `move != 0` gần nhất — đã có phần khung, rà kỹ biên).
   - So đầu/cuối bước (`d <= surface_depth`) → phát `dive` / `surface` với `{"pos": [x, d]}` (pos sau di chuyển).
   - Cập nhật oxy theo `d` **cuối bước**: mặt nước `+oxygen_refill_per_tick` (kẹp max) và **reset `zero_oxy_ticks = 0`**; dưới nước `-1` tick (kẹp 0).
   - Phát `oxygen_empty` (`{"oxygen_ticks": 0}`) khi từ `> 0` xuống `0`.
   - Mỗi bước dưới nước kết thúc với `oxygen_ticks == 0` (**kể cả bước vừa chạm 0**) tăng `zero_oxy_ticks` (`chạm 0 ở t → ngạt lần đầu ở t+59`). Đủ `choke_interval_ticks` → reset về `0`, trừ `1` HP, phát `choke` (`{"hp": self.hp}`).
   - Khi `hp <= 0`: lấy `lost = list(reversed(self.hold))` (LIFO), `self.hold.clear()`, phát `faint` (`{"cause": "choke", "lost": lost, "hp": 0}`), gọi `_finish("fainted", events)` (kho rỗng `{}`), và `return events`.
-- [ ] **CP1-G2 (Lát 2 — Hái nút, bắt cá, cập bến, xuất kho | `AC-P1-03`, `AC-P1-04`, `AC-P1-05`):**
+- [x] **CP1-G2 (Lát 2 — Hái nút, bắt cá, cập bến, xuất kho | `AC-P1-03`, `AC-P1-04`, `AC-P1-05`):**
   - Trong `interact`: xét `_in_dock()` **TRƯỚC** hái nút (`docked` → `gather_end`, kể cả ở bước cuối nếu còn Máu).
   - Ngoài bến, chỉ hái khi `_at_surface()`: chọn nút `ready` (`regrow_ticks == 0`) gần nhất trong `interact_radius` (cả đúng mép, hòa theo `id_key`). Đủ chỗ cho `node_yield` (`len(hold) + amount <= hold_capacity`) → thêm vào `hold`, đặt `regrow_ticks = round(regrow_s * 60)`, phát `gather` (`{"node_id", "kind", "amount"}`). Thiếu chỗ → phát `hold_full` (`{"action": "gather", "node_id", "required", "free"}`), **giữ nguyên nút**.
   - Trong `catch`: chỉ khi `catch_cd_ticks == 0` và dưới nước (`not _at_surface()`): chọn đàn gần nhất trong `catch_radius` (hòa `id_key`). Đủ chỗ cho toàn bộ `fish_yield[kind]` → thêm vào `hold`, **xóa đàn khỏi `self.fish`**, đặt `catch_cd_ticks = round(catch_cooldown_s * 60)`, phát `fish_caught` (`{"fish_id", "kind", "yield"}`). Thiếu chỗ → phát `hold_full` (`{"action": "catch", "fish_id", "required", "free"}`), **giữ đàn & giữ cooldown**, không thử đàn khác. Không có đàn trong tầm → không event, không hồi chiêu.
   - Bước cuối `time_left_ticks == 0`: kết thúc `time` ở mọi độ sâu *sau* các hành động trên, giữ giỏ hiện có.
-- [ ] **CP1-G3 (Tích hợp, `README` & Tag P1 | `AC-P1-15`, `AC-P1-16`):** Review code cho `Cuubeo`, gộp sạch vào `main`, kiểm tra [README.md](README.md) & [game.contract.json](game.contract.json) khớp DoD, chạy `check-contract` + cùng QA chốt tag `phase-1` trước `1:00`.
+- [ ] **CP1-G3 (Tích hợp, `README` & Tag P1 | `AC-P1-15`, `AC-P1-16`):**
+  - [x] Rà soát [README.md](README.md) (`≤ 3` lệnh clone-to-run macOS/Linux, điều khiển, cách tính điểm, lệnh test `1` lệnh), đối chiếu [game.contract.json](game.contract.json), và ghi standup Phase 1 vào [docs/standup.md](docs/standup.md).
+  - [ ] *(Chờ `Cuubeo`, `Phog2811`, `Nguyenquoctoan0310`)* Review code cho `Cuubeo`, gộp sạch vào `main`, chạy `check-contract` + cùng QA chốt tag `phase-1` trước `1:00`.
 
 #### B. `Cuubeo` (`sim/quan` — [`chonoi/sim/quan.py`](chonoi/sim/quan.py) + PO)
 - [ ] **CP1-Q1 (Lát 3 — Khách, giữ chỗ, kiên nhẫn, bỏ đi | `AC-P1-06`, `AC-P1-08`):**

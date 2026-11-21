@@ -15,13 +15,20 @@ Cách làm việc kỹ thuật là **tự do** (push thẳng, nhánh + PR, pair,
 
 ## Bắt đầu nhanh
 
+Chạy từ clone sạch (macOS / Linux, ≤ 3 lệnh):
+
 ```bash
-git clone <fork-của-nhóm> && cd <fork-của-nhóm>
-PYTHONPATH=tests:. python3 -m unittest discover -s tests -v        # smoke test
-python3 -m chonoi.live --mode gather                                # chơi thử trên trình duyệt (tùy chọn)
+git clone https://github.com/Do-Hong-Vy/K5-L3B-LAB-Day12-AI-SDLC-ForkMe.git && cd K5-L3B-LAB-Day12-AI-SDLC-ForkMe
+PYTHONPATH=tests:. python3 -m unittest discover -s tests -v        # chạy toàn bộ test (1 lệnh)
+python3 -m chonoi.live --mode gather --inventory-out kho.json      # chơi buổi sáng trên trình duyệt
 ```
 
-Game cần chế độ **headless** theo Test Contract (`python3 -m chonoi.headless --mode gather|quan …`) để được chạy và chấm tự động. **Công nghệ không ràng buộc**: khung Python trong `chonoi/` chỉ là gợi ý, chi tiết ở [`docs/STARTER.md`](docs/STARTER.md).
+Chơi tiếp buổi tối với kho vừa kiếm được: `python3 -m chonoi.live --mode quan --inventory kho.json`.
+
+- **Điều khiển:** `WASD` hoặc phím mũi tên để bơi (`gather`) / đi (`quan`); `E` để tương tác (cập bến hoặc hái rau ở mặt nước; nấu / nhặt món / phục vụ tại bếp và bàn ở quán); `Space` để bắt cá khi đang lặn; `R` để chơi lại.
+- **Cách tính điểm:** `score = earned + reputation_multiplier × floor(reputation)` (theo [`game.contract.json`](game.contract.json), mặc định `reputation_multiplier = 100`; tiền và `earned` tính bằng số nguyên nghìn đồng, gồm giá món + tiền boa nếu phục vụ kịp ngưỡng kiên nhẫn).
+
+Game hỗ trợ chế độ **headless** theo Test Contract (`python3 -m chonoi.headless --mode gather|quan …`) để chạy tất định và chấm tự động. Chi tiết khung Python xem ở [`docs/STARTER.md`](docs/STARTER.md).
 
 ## Tự do sáng tạo
 
