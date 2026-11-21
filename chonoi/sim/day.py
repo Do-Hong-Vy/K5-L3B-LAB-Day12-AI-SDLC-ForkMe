@@ -132,7 +132,8 @@ class DaySim:
         self.day_tuning = self._day_tuning()
         self.phase = "gather"
         self.phase_tick = 0
-        self.cur = GatherSim(self.day_tuning, copy.deepcopy(self.scenario.get("gather", {})), self.rng, IdAllocator())
+        self.cur = GatherSim(self.day_tuning, copy.deepcopy(self.scenario.get("gather", {})), self.rng, IdAllocator(),
+                             day=self.day)  # M2 Cá Sấu từ Ngày 3
         self._sync_into(self.cur)
         plan = self.plan_of(self.day)
         self._ev(events, "day_start", {})

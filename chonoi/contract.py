@@ -27,8 +27,16 @@ def load_contract(path=DEFAULT_PATH) -> dict:
             c = json.load(f)
     except (OSError, ValueError) as e:
         raise BadInput(f"không đọc được {path}: {e}")
+    version = c.get("contract_version")
+    if version not in SUPPORTED_VERSIONS:
+        raise BadInput(f"contract_version phải là một trong {list(SUPPORTED_VERSIONS)}, đang là {version!r}")
     validate_tuning(c.get("tuning"))
     return c
+
+
+# Validator hiện tại kiểm schema v1.1 (Ticket-02). Nâng v1.2 (Ticket-03) thì thêm vào đây cùng lúc với validator.
+SUPPORTED_VERSIONS = ("1.1",)
+MAX_DAYS = 5
 
 
 def _int_between(name, v, lo, hi):
@@ -200,7 +208,11 @@ def _validate_gather_monsters(g, b):
             _pos_in(f"gather.monsters.spawns.{e['id']}.waypoints[{idx}]", wp, b, ("x", "d"))
             if not (d_lo <= wp[1] <= d_hi):
                 raise BadInput(f"tuning.gather.monsters.spawns.{e['id']}.waypoints[{idx}] ngoài dải độ sâu của {kind}")
-        _int_between(f"gather.monsters.spawns.{e['id']}.from_day", e.get("from_day"), 1, 5)
+        if list(wps[0]) != list(e["pos"]):
+            raise BadInput(f"tuning.gather.monsters.spawns.{e['id']}: waypoint đầu phải là vị trí xuất phát (Ticket-02 1.2)")
+        _int_between(f"gather.monsters.spawns.{e['id']}.from_day", e.get("from_day"), 1, MAX_DAYS)
+    if not any(e["from_day"] == 1 for e in spawns):
+        raise BadInput("tuning.gather.monsters.spawns cần ít nhất một con từ Ngày 1 (gather độc lập dùng bố trí Ngày 1)")
 
 
 def validate_tuning(t):
@@ -232,6 +244,9 @@ def validate_tuning(t):
         raise BadInput("burn_s phải là null ở Phase 1")
     _validate_quan_layout(q)
     _validate_menu(menu)
+    # day_plan đọc công thức menu -> kiểm SAU menu để menu hỏng báo BadInput (mã 2) chứ không KeyError
+    _validate_day_plan(t.get("day_plan"), menu)
+    _validate_shop(t.get("shop"))
 
 
 def _validate_quan_layout(q):
@@ -275,3 +290,53 @@ def _validate_menu(menu):
                 raise BadInput(f"menu.{dish_id}.recipe: nguyên liệu lạ {kind!r} (chỉ nhận {list(KINDS)})")
             if isinstance(n, bool) or not isinstance(n, int) or n <= 0:
                 raise BadInput(f"menu.{dish_id}.recipe.{kind} phải là số nguyên > 0")
+
+
+def _validate_day_plan(plan, menu):
+    """day_plan: 5 Ngày, dishes thuộc menu, ingredients = tổng công thức × suất (Ticket-02 2, 4.1)."""
+    if not isinstance(plan, list) or len(plan) != MAX_DAYS:
+        raise BadInput(f"tuning.day_plan phải là mảng {MAX_DAYS} Ngày")
+    for i, e in enumerate(plan, start=1):
+        p = f"day_plan[{i - 1}]"
+        if not isinstance(e, dict) or set(e) != {"day", "dishes", "ingredients"}:
+            raise BadInput(f"tuning.{p} phải có đúng khóa day, dishes, ingredients")
+        if e["day"] != i:
+            raise BadInput(f"tuning.{p}.day phải là {i} (theo thứ tự)")
+        dishes = e["dishes"]
+        if not isinstance(dishes, dict) or not dishes:
+            raise BadInput(f"tuning.{p}.dishes phải là map món -> số suất, không rỗng")
+        need = {}
+        for dish, n in dishes.items():
+            if dish not in menu:
+                raise BadInput(f"tuning.{p}.dishes: món lạ {dish!r}")
+            _int_between(f"{p}.dishes.{dish}", n, 1, 1000)
+            for kind, k in menu[dish]["recipe"].items():
+                need[kind] = need.get(kind, 0) + k * n
+        ing = e["ingredients"]
+        if not isinstance(ing, dict) or any(isinstance(v, bool) or not isinstance(v, int) or v <= 0
+                                           for v in ing.values()):
+            raise BadInput(f"tuning.{p}.ingredients phải là map kind -> số nguyên dương")
+        if ing != need:
+            raise BadInput(f"tuning.{p}.ingredients {ing} khác tổng công thức × suất {need}")
+
+
+def _validate_shop(shop):
+    """shop {max_ticks, upgrades{oxygen[], hp[]}}, mảng theo cấp 1..n (Ticket-02 4.1)."""
+    if not isinstance(shop, dict) or not {"max_ticks", "upgrades"} <= set(shop):
+        raise BadInput("tuning.shop phải có max_ticks và upgrades")
+    _int_between("shop.max_ticks", shop["max_ticks"], 1, 100_000)
+    ups = shop["upgrades"]
+    if not isinstance(ups, dict) or not {"oxygen", "hp"} <= set(ups):
+        raise BadInput("tuning.shop.upgrades phải có oxygen và hp")
+    fields = {"oxygen": ("oxygen_max_s", 10, 120, False), "hp": ("hp_max", 1, 99, True)}
+    for uid, levels in ups.items():
+        p = f"shop.upgrades.{uid}"
+        if not isinstance(levels, list) or not levels:
+            raise BadInput(f"tuning.{p} phải là mảng cấp không rỗng")
+        for i, lv in enumerate(levels, start=1):
+            if not isinstance(lv, dict) or lv.get("level") != i:
+                raise BadInput(f"tuning.{p}[{i - 1}].level phải là {i} (mảng theo cấp)")
+            _int_between(f"{p}[{i - 1}].price", lv.get("price"), 1, 10_000_000)
+            if uid in fields:
+                key, lo, hi, integer = fields[uid]
+                (_int_between if integer else _between)(f"{p}[{i - 1}].{key}", lv.get(key), lo, hi)

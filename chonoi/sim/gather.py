@@ -19,6 +19,7 @@ import math
 from ..ids import id_key, sort_by_id
 from ..inventory import hold_to_items
 from .ramp import ramp_velocity
+from .monsters import MonsterSystem
 
 TICK = 60.0
 AXES = ("x", "d")
@@ -28,7 +29,7 @@ class GatherSim:
     mode = "gather"
     phase = "gather"
 
-    def __init__(self, tuning, scenario, streams, ids):
+    def __init__(self, tuning, scenario, streams, ids, day=1):
         t = tuning["gather"]
         self.t = t
         self.rng = streams
@@ -65,6 +66,8 @@ class GatherSim:
         for coll in (self.nodes, self.fish):
             for e in coll:
                 ids.reserve(e["id"])
+        # Cá Sấu (L2, chonoi/sim/monsters.py): scenario.monsters thay bố trí; bỏ mảng thì dùng bố trí đúng Ngày
+        self.monsters = MonsterSystem(t, scenario.get("monsters"), day)
         self.money = 0
         self.earned = 0
         self.reputation = tuning["quan"]["reputation_initial"]
@@ -89,6 +92,7 @@ class GatherSim:
                       for n in sort_by_id(self.nodes)],
             "fish": [{"id": f["id"], "pos": f["pos"], "kind": f["kind"], "heading_deg": f["heading_deg"]}
                      for f in sort_by_id(self.fish)],
+            "monsters": self.monsters.snapshot(),
         }
 
     # --- một bước ---------------------------------------------------------------
@@ -115,6 +119,9 @@ class GatherSim:
         elif not was_at_surface and now_at_surface:
             events.append(("surface", {"pos": list(self.pos)}))
         if self._update_oxygen_and_choke(events):
+            return events
+        # 2b. Cá Sấu theo id rồi tối đa một hit (Ticket-02 4.5: sau ngạt, trước tương tác); Máu 0 -> faint + gather_end
+        if self.monsters.step(self, events):
             return events
         # 3. interact: bến trước, rồi hái
         if inp.pressed("interact"):
