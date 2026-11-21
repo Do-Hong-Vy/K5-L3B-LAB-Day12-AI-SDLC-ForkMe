@@ -10,9 +10,11 @@ import math
 
 from .errors import BadInput
 from .ids import id_key
-from .inventory import KINDS, validate_items
+from .inventory import KINDS, validate_individuals, validate_items
 
-GATHER_KEYS = {"player", "hold", "nodes", "fish", "random_fish", "time_left_ticks"}
+GATHER_KEYS = {"player", "hold", "nodes", "fish", "random_fish", "time_left_ticks", "monsters"}
+MONSTER_KEYS = {"id", "kind", "pos", "waypoints", "target_idx", "state", "state_ticks_left", "recoil_dir"}
+MONSTER_STATES = ("patrol", "chase", "recoil")
 GATHER_PLAYER_KEYS = {"pos", "vel", "heading_deg", "hp", "oxygen_ticks", "zero_oxy_ticks",
                       "invuln_ticks", "catch_cd_ticks"}
 FISH_KEYS = {"id", "kind", "pos", "heading_deg", "age_ticks"}
@@ -162,9 +164,13 @@ def _validate_gather(b, tuning):
             _check_ids(arr, b[arr])
     if "random_fish" in b and not isinstance(b["random_fish"], bool):
         raise BadInput("random_fish phải là boolean")
+    if "monsters" in b:
+        _validate_monsters(b["monsters"], g, bounds)
     if "hold" in b:
         h = b["hold"]
-        if not isinstance(h, list) or any(k not in KINDS for k in h):
+        if "freshness" in tuning:  # v1.2: mảng cá thể {id, kind, fresh}
+            validate_individuals(h, name="gather.hold")
+        elif not isinstance(h, list) or any(k not in KINDS for k in h):
             raise BadInput("hold phải là mảng id nguyên liệu hợp lệ")
         if len(h) > g["hold_capacity"]:
             raise BadInput("hold vượt sức chứa")
@@ -276,7 +282,10 @@ def _validate_quan(b, tuning):
         if arr in b:
             _check_ids(arr, b[arr])
     if "stock" in b:
-        validate_items(b["stock"])
+        if "freshness" in tuning:  # v1.2: mảng cá thể
+            validate_individuals(b["stock"], name="quan.stock")
+        else:
+            validate_items(b["stock"])
     p = b.get("player", {})
     if not isinstance(p, dict) or set(p) - QUAN_PLAYER_KEYS:
         raise BadInput("quan.player chỉ có pos và vel")
@@ -414,7 +423,13 @@ def _validate_quan_rules(b, tuning):
             raise BadInput(f"customers.{cid}.patience_ticks_left vượt kiên nhẫn tối đa {patience_full}")
         if eat > eat_full:
             raise BadInput(f"customers.{cid}.eat_ticks_left vượt thời gian ăn {eat_full}")
-        reserved = validate_items(c["reserved"]) if "reserved" in c else None
+        if "freshness" in tuning and "reserved" in c:  # v1.2: mảng id cá thể (kiểm liên kết ở check_quan_stock)
+            r = c["reserved"]
+            if not isinstance(r, list) or any(not isinstance(i, str) or not i for i in r) or len(set(r)) != len(r):
+                raise BadInput(f"customers.{cid}.reserved phải là mảng id cá thể khác nhau")
+            reserved = r
+        else:
+            reserved = validate_items(c["reserved"]) if "reserved" in c else None
         for key in ("base_price", "tip"):
             v = c.get(key)
             if v is not None and (isinstance(v, bool) or not isinstance(v, int) or v < 0):
@@ -434,7 +449,7 @@ def _validate_quan_rules(b, tuning):
             if eat:
                 raise BadInput(f"customers.{cid}: khách waiting không có eat_ticks_left")
         if status == "reserved":
-            if reserved is not None and reserved != validate_items(menu[c["dish_id"]]["recipe"]):
+            if reserved is not None and not isinstance(reserved, list) and reserved != validate_items(menu[c["dish_id"]]["recipe"]):
                 raise BadInput(f"customers.{cid}: reserved khác công thức món {c['dish_id']}")
         elif reserved:
             raise BadInput(f"customers.{cid}: đơn {status} phải có reserved rỗng")
@@ -460,8 +475,11 @@ def check_quan_stock(block, stock, tuning):
     Đơn reserved thiếu `reserved` thì cấp theo công thức, duyệt theo order_tick rồi id bàn (PRD-0 D).
     """
     menu = tuning["menu"]
-    used = {}
     order = sorted(block.get("customers", []), key=lambda c: (c.get("order_tick", 0), id_key(c["table_id"])))
+    if "freshness" in tuning:
+        _check_reserved_ids(order, stock, tuning)
+        return
+    used = {}
     for c in order:
         if c.get("order_status", "reserved") != "reserved":
             continue
@@ -471,3 +489,75 @@ def check_quan_stock(block, stock, tuning):
             if used[kind] > stock.get(kind, 0):
                 raise BadInput(f"customers.{c['id']}: giữ chỗ {kind} vượt tồn kho "
                                f"({used[kind]} > {stock.get(kind, 0)})")
+
+
+def _check_reserved_ids(order, stock, tuning):
+    """v1.2 (Ticket-03 mục 4.3): phần giữ trỏ tới cá thể chưa ươn có trong kho, đủ công thức, không dùng chung;
+    đơn reserved bỏ trống reserved thì cấp tươi nhất rồi id nhỏ — không đủ -> mã 2."""
+    menu = tuning["menu"]
+    below = tuning["freshness"]["spoiled_below"]
+    by_id = {it["id"]: it for it in stock}
+    owner = {}
+    for c in order:
+        r = c.get("reserved")
+        for iid in (r if isinstance(r, list) else []):
+            if iid in owner:
+                raise BadInput(f"cá thể {iid} bị giữ bởi hai đơn ({owner[iid]}, {c['id']})")
+            owner[iid] = c["id"]
+    for c in order:
+        if c.get("order_status", "reserved") != "reserved":
+            continue
+        recipe, r = menu[c["dish_id"]]["recipe"], c.get("reserved")
+        if r is None:  # cấp theo order_tick rồi id bàn: tươi nhất rồi id nhỏ
+            for kind in sorted(recipe):
+                cand = sorted((it for it in stock if it["kind"] == kind and it["id"] not in owner and it["fresh"] >= below),
+                              key=lambda it: (-it["fresh"], id_key(it["id"])))
+                if len(cand) < recipe[kind]:
+                    raise BadInput(f"customers.{c['id']}: kho không đủ cá thể chưa ươn để giữ {kind}")
+                for it in cand[:recipe[kind]]:
+                    owner[it["id"]] = c["id"]
+            continue
+        counts = {}
+        for iid in r:
+            it = by_id.get(iid)
+            if it is None:
+                raise BadInput(f"customers.{c['id']}.reserved: id {iid} không có trong kho")
+            if it["fresh"] < below:
+                raise BadInput(f"customers.{c['id']}.reserved: {iid} đã ươn")
+            counts[it["kind"]] = counts.get(it["kind"], 0) + 1
+        if counts != recipe:
+            raise BadInput(f"customers.{c['id']}.reserved khác công thức món {c['dish_id']}")
+
+
+def _validate_monsters(arr, g, bounds):
+    """Ticket-02 mục 4.3: monsters[] {id,kind,pos,waypoints,target_idx,state,state_ticks_left,recoil_dir}."""
+    _check_ids("monsters", arr)
+    species = (g.get("monsters") or {}).get("species", {})
+    for m in arr:
+        mid = m["id"]
+        if set(m) - MONSTER_KEYS:
+            raise BadInput(f"monsters.{mid}: trường lạ/chưa hỗ trợ {sorted(set(m) - MONSTER_KEYS)}")
+        if m.get("kind") not in species:
+            raise BadInput(f"monsters.{mid}.kind phải là loài có trong tuning ({sorted(species)})")
+        _pos(f"monsters.{mid}.pos", m.get("pos"), bounds)
+        wps = m.get("waypoints")
+        if not isinstance(wps, list) or len(wps) != 2:
+            raise BadInput(f"monsters.{mid}.waypoints phải có đúng hai điểm")
+        for i, w in enumerate(wps):
+            _pos(f"monsters.{mid}.waypoints[{i}]", w, bounds)
+        if m.get("target_idx", 1) not in (0, 1) or isinstance(m.get("target_idx", 1), bool):
+            raise BadInput(f"monsters.{mid}.target_idx phải là 0 hoặc 1")
+        state = m.get("state", "patrol")
+        if state not in MONSTER_STATES:
+            raise BadInput(f"monsters.{mid}.state phải là một trong {MONSTER_STATES}")
+        t = m.get("state_ticks_left", 0)
+        _nonneg_int(f"monsters.{mid}.state_ticks_left", t)
+        rd = m.get("recoil_dir")
+        if state == "recoil":
+            if t <= 0:
+                raise BadInput(f"monsters.{mid}: recoil cần state_ticks_left > 0")
+            if not (isinstance(rd, list) and len(rd) == 2 and all(_num(c) for c in rd)
+                    and abs(math.hypot(*rd) - 1) < 1e-6):
+                raise BadInput(f"monsters.{mid}.recoil_dir phải là vector đơn vị khi recoil")
+        elif rd is not None:
+            raise BadInput(f"monsters.{mid}.recoil_dir chỉ có khi recoil (mặc định null)")
