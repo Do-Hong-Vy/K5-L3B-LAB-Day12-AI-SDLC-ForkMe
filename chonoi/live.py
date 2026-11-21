@@ -15,6 +15,7 @@ Ngẫu nhiên vẫn đi qua `Streams` (seed); chỉ nhịp chạy theo đồng h
 import argparse
 import json
 import os
+import re
 import sys
 import threading
 import time
@@ -30,6 +31,7 @@ from .runner import Session
 from .scenario import check_quan_stock, load_scenario
 
 WEB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web")
+ASSET_RE = re.compile(r"^/assets/[a-z0-9_]+/[a-z0-9_]+\.png$")
 TICK_S = 1.0 / 60.0
 MAX_BODY = 4096
 RECENT_EVENTS = 40
@@ -159,6 +161,12 @@ class _Handler(BaseHTTPRequestHandler):
                     self._send(200, f.read(), "text/html; charset=utf-8")
             except OSError:
                 self._send(404, b'{"error":"thieu index.html"}')
+        elif ASSET_RE.match(path):  # sprite CC0 (chonoi/web/assets/...), tên an toàn, không cho '..'
+            try:
+                with open(os.path.join(WEB_DIR, *path.lstrip("/").split("/")), "rb") as f:
+                    self._send(200, f.read(), "image/png")
+            except OSError:
+                self._send(404, b'{"error":"khong co asset"}')
         else:
             self._send(404, b'{"error":"khong co"}')
 

@@ -317,6 +317,20 @@ let sessionStats = {
   dayEarned: 0
 };
 
+// ---------- Sprite CC0 — Kenney Fish Pack 2.0 (www.kenney.nl, CREDITS.md) ----------
+// Chỉ là hình ảnh phía client; mô phỏng/headless không đổi. Chưa tải xong thì vẽ hình khối dự phòng.
+const SPRITE_FILES = {
+  ca_linh: "fish_blue", ca_loc: "fish_grey", ca_keo: "fish_green",
+  weed_a: "seaweed_green_b", weed_b: "seaweed_green_d", weed_c: "seaweed_grass_a", weed_d: "seaweed_orange_a",
+  rock_a: "rock_a", rock_b: "rock_b", bubble_a: "bubble_a", bubble_b: "bubble_b",
+};
+const SPRITES = {};
+Object.entries(SPRITE_FILES).forEach(([key, file]) => {
+  const img = new Image();
+  img.onload = () => { SPRITES[key] = img; };
+  img.src = `/assets/kenney/${file}.png`;
+});
+
 // ---------- Từ điển chuẩn Contract v1.0 & v1.1 (6 nguyên liệu, 6 món) ----------
 const KIND_COLOR = {
   ca_loc: "#84a955",
@@ -1981,9 +1995,36 @@ function drawGather(w, h, dt) {
     text(depthLabels[d] || d + "m", sx(0) + 6, sy(d) - 4, { size: 11, bold: isZone, color: isZone ? "rgba(216, 180, 254, 0.72)" : "rgba(255, 255, 255, 0.45)" });
   }
 
+  // 2b. Rong và đá đáy sông (sprite Kenney CC0, vị trí cố định — chỉ trang trí)
+  const DECOR = [["rock_a", 8, 1.6], ["weed_a", 14, 2.2], ["weed_c", 21, 1.6], ["weed_b", 33, 2.6], ["rock_b", 40, 1.4],
+                 ["weed_d", 48, 2.0], ["weed_a", 57, 2.4], ["rock_a", 66, 1.8], ["weed_c", 73, 1.6], ["weed_b", 82, 2.8],
+                 ["rock_b", 91, 1.5], ["weed_d", 97, 2.0]];
+  DECOR.forEach(([key, x, size], i) => {
+    const img = SPRITES[key];
+    if (!img) return;
+    const sway = key.startsWith("weed") ? Math.sin(tNow * 1.3 + i) * 0.06 : 0;
+    const hgt = size * s, wid = hgt * (img.width / img.height);
+    ctx.save();
+    ctx.translate(sx(x), sy(D));
+    ctx.rotate(sway);
+    ctx.drawImage(img, -wid / 2, -hgt, wid, hgt);
+    ctx.restore();
+  });
+
   const p = snap.player;
   const px = p ? sx(p.pos[0]) : 0, py = p ? sy(p.pos[1]) : 0;
   const underwater = p ? (p.at_surface === undefined ? p.pos[1] > surfD : !p.at_surface) : false;
+  // bong bóng thở khi lặn (sprite Kenney)
+  if (underwater && SPRITES.bubble_a) {
+    for (let k = 0; k < 3; k++) {
+      const t = (tNow * 0.8 + k / 3) % 1;
+      const img = k % 2 ? SPRITES.bubble_b || SPRITES.bubble_a : SPRITES.bubble_a;
+      const bs = (0.25 + 0.12 * k) * s;
+      ctx.globalAlpha = 1 - t;
+      ctx.drawImage(img, px + 0.3 * s + Math.sin((tNow + k) * 4) * 0.15 * s - bs / 2, py - 0.6 * s - t * 2.2 * s - bs / 2, bs, bs);
+      ctx.globalAlpha = 1;
+    }
+  }
 
   // 3. Nhà sàn Bến thuyền (Dock)
   const dp = meta.dock_pos || [2, 0], dr = meta.dock_radius || 3;
@@ -2053,11 +2094,19 @@ function drawGather(w, h, dt) {
       ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 2.4;
       ctx.beginPath(); ctx.arc(0, 0, 1.45 * s, 0, Math.PI * 2); ctx.stroke();
     }
-    ctx.fillStyle = kc(f.kind);
-    ctx.beginPath(); ctx.ellipse(0, 0, 1.0 * s, 0.5 * s, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(-0.85 * s, 0); ctx.lineTo(-1.55 * s, -0.48 * s); ctx.lineTo(-1.55 * s, 0.48 * s); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = "#0f172a";
-    ctx.beginPath(); ctx.arc(0.55 * s, -0.14 * s, 0.13 * s, 0, Math.PI * 2); ctx.fill();
+    const sprite = SPRITES[f.kind];
+    if (sprite) {  // Kenney CC0, đầu cá hướng +x như heading_deg = 0; quay sang trái thì lật dọc để cá không lộn ngược
+      const deg = ((f.heading_deg || 0) % 360 + 360) % 360;
+      if (deg > 90 && deg < 270) ctx.scale(1, -1);
+      const wid = (f.kind === "ca_loc" ? 3.0 : 2.4) * s, hgt = wid * (sprite.height / sprite.width);
+      ctx.drawImage(sprite, -wid / 2, -hgt / 2, wid, hgt);
+    } else {
+      ctx.fillStyle = kc(f.kind);
+      ctx.beginPath(); ctx.ellipse(0, 0, 1.0 * s, 0.5 * s, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(-0.85 * s, 0); ctx.lineTo(-1.55 * s, -0.48 * s); ctx.lineTo(-1.55 * s, 0.48 * s); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#0f172a";
+      ctx.beginPath(); ctx.arc(0.55 * s, -0.14 * s, 0.13 * s, 0, Math.PI * 2); ctx.fill();
+    }
     ctx.restore();
 
     text(`${f.id} ${kName(f.kind)} (+${yld})`, fx, fy - 0.9 * s, {
