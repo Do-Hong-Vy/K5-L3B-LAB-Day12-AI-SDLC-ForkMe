@@ -31,9 +31,12 @@ def run_day(w, *args, scenario=None, inputs=None, ticks=None, days=None, every=1
     return code, err, (read_jsonl(w.path("d.jsonl")) if code == 0 else None)
 
 
+PHASE_FLOW = {"day_start", "day_plan", "phase_start", "gather_end", "quan_end", "shop_end"}
+
+
 def names(rows):
-    return [(e["tick"], e["phase"], e.get("day"), e["name"]) for e in events(rows) if e["name"] != "no_dish"
-            and e["name"] not in ("customer_arrived", "customer_left")]
+    """Chỉ các event đổi pha/Ngày (bỏ event gameplay trong pha như fish_spawned, customer_*)."""
+    return [(e["tick"], e["phase"], e.get("day"), e["name"]) for e in events(rows) if e["name"] in PHASE_FLOW]
 
 
 DOCK = {"day": {"money": 1000, "earned": 1000}, "gather": {"hold": ["ca_loc", "bong_sung", "bong_sung"], "random_fish": False}}

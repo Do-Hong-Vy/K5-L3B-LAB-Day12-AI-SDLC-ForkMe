@@ -10,7 +10,9 @@ import tempfile
 
 from .errors import BadInput
 
-KINDS_P1 = ("ca_loc", "ca_linh", "bong_dien_dien", "bong_sung")
+# v1.1 (Ticket-02, ADR-0001): 6 nguyên liệu. Merge 9612d91 làm mất dòng KINDS -> khôi phục.
+KINDS = ("ca_loc", "ca_linh", "ca_keo", "bong_dien_dien", "bong_sung", "keo_neo")
+KINDS_P1 = KINDS  # alias tương thích ngược cho module/test P1
 
 
 def validate_items(items, kinds=KINDS):

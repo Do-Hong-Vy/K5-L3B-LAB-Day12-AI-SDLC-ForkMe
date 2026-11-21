@@ -46,6 +46,16 @@ test_last_tick_dock_and_last_tick_catch (test_gather_p1.GatherPhase1Rules.test_l
 test_no_hardcoded_tuning_constants (test_gather_p1.GatherPhase1Rules.test_no_hardcoded_tuning_constants) ... ok
 test_oxygen_empty_choke_at_t_plus_59 (test_gather_p1.GatherPhase1Rules.test_oxygen_empty_choke_at_t_plus_59) ... ok
 test_surface_on_choke_tick_prevents_choke (test_gather_p1.GatherPhase1Rules.test_surface_on_choke_tick_prevents_choke) ... ok
+test_gather_p2_deterministic_bytes (test_gather_p2.FishSpawnAndOrderTests.test_gather_p2_deterministic_bytes) ... ok
+test_spawn_at_360_cap_12_and_new_fish_swims_next_step (test_gather_p2.FishSpawnAndOrderTests.test_spawn_at_360_cap_12_and_new_fish_swims_next_step) ... ok
+test_spawn_clearance_and_weight_normalization_and_skip_when_full (test_gather_p2.FishSpawnAndOrderTests.test_spawn_clearance_and_weight_normalization_and_skip_when_full) ... ok
+test_step_order_catch_before_swim_and_no_swim_on_time_end (test_gather_p2.FishSpawnAndOrderTests.test_step_order_catch_before_swim_and_no_swim_on_time_end) ... ok
+test_fish_edge_and_corner_reflection (test_gather_p2.FishSwimmingTests.test_fish_edge_and_corner_reflection) ... ok
+test_fish_speed_1_5_and_random_fish_false_stationary (test_gather_p2.FishSwimmingTests.test_fish_speed_1_5_and_random_fish_false_stationary) ... ok
+test_fish_turns_at_age_120_before_moving (test_gather_p2.FishSwimmingTests.test_fish_turns_at_age_120_before_moving) ... ok
+test_contract_and_scenario_reject_invalid_v11_gather (test_gather_p2.GatherContractV11Tests.test_contract_and_scenario_reject_invalid_v11_gather) ... ok
+test_contract_v11_gather_fields_and_standards (test_gather_p2.GatherContractV11Tests.test_contract_v11_gather_fields_and_standards) ... ok
+test_harvest_keo_neo_and_catch_ca_keo_handover (test_gather_p2.GatherContractV11Tests.test_harvest_keo_neo_and_catch_ca_keo_handover) ... ok
 test_state_input_and_clean_stop (test_live.LiveServerTest.test_state_input_and_clean_stop) ... ok
 test_bad_frames_raise (test_python_starter_units.Units.test_bad_frames_raise) ... ok
 test_catch_is_a_v10_button_and_attack_is_not (test_python_starter_units.Units.test_catch_is_a_v10_button_and_attack_is_not) ... ok
@@ -121,6 +131,6 @@ test_too_few_members (test_team_check.TeamCheck.test_too_few_members) ... ok
 test_wrong_size_duplicate_and_outsider (test_team_check.TeamCheck.test_wrong_size_duplicate_and_outsider) ... ok
 
 ----------------------------------------------------------------------
-Ran 117 tests in 26.132s
+Ran 127 tests in 30.436s
 
 OK
