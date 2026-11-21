@@ -65,10 +65,10 @@ Kết quả rà soát sau các commit CP0 (`902de7f`):
 - [x] **CP0-6 (`Nguyenquoctoan0310` + `Do-Hong-Vy` — Môi trường & Smoke Test):**
   - `Nguyenquoctoan0310` đã sửa `test_template_is_rejected` và thêm `test_repo_team_md_is_valid` trong [`tests/test_team_check.py`](tests/test_team_check.py) (5/5 pass), giữ `python3` trong `game.contract.json` cho CI Linux, bổ sung hướng dẫn fix Windows vào [`AGENTS.md`](AGENTS.md).
   - Đã kiểm chứng trên máy `Do-Hong-Vy` qua shim `python3.exe` tạm + `test_live`: **33/33 tests PASS**. *(Nhắc các bạn dùng Windows tạo `python3.exe` cục bộ không commit nếu máy chưa có sẵn).*
-- [ ] **CP0-7 (`Do-Hong-Vy` + `Nguyenquoctoan0310` + `All` — Harness AI):**
+- [x] **CP0-7 (`Do-Hong-Vy` + `Nguyenquoctoan0310` + `All` — Harness AI):**
   - [x] **Skill 1 (`Do-Hong-Vy`):** [`.agents/skills/check-contract/SKILL.md`](.agents/skills/check-contract/SKILL.md) + cập nhật [`AGENTS.md`](AGENTS.md).
   - [x] **Skill 2 (`Nguyenquoctoan0310`):** [`.agents/skills/verify-phase/SKILL.md`](.agents/skills/verify-phase/SKILL.md) + cập nhật [`AGENTS.md`](AGENTS.md).
-  - [ ] **Nhật ký AI CP0 (`Phog2811`):** Bổ sung dòng CP0 của `Phog2811` vào [`docs/ai-usage-log.md`](docs/ai-usage-log.md) (`Do-Hong-Vy`, `Nguyenquoctoan0310`, `Cuubeo` đã ghi).
+  - [x] **Nhật ký AI CP0 (`Phog2811`):** Đã bổ sung dòng CP0 của `Phog2811` vào [`docs/ai-usage-log.md`](docs/ai-usage-log.md) (cả 4 thành viên `Do-Hong-Vy`, `Nguyenquoctoan0310`, `Cuubeo`, `Phog2811` đã ghi đủ).
 
 ---
 
