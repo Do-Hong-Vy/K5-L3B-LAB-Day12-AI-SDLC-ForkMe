@@ -12,7 +12,7 @@ import json
 import os
 import unittest
 
-from helpers import ROOT, Workdir, frames, read_jsonl, run_headless, snapshots, write_json
+from helpers import INDIVIDUAL, ROOT, Workdir, counts, frames, hold, read_jsonl, run_headless, snapshots, stock, write_json
 
 with open(os.path.join(ROOT, "game.contract.json"), encoding="utf-8") as f:
     TUNING = json.load(f)["tuning"]
@@ -45,8 +45,19 @@ def cooking(dish=None, ticks=1):
     return [{"id": STOVE, "state": "cooking", "dish": dish or payload(), "cook_ticks_left": ticks}]
 
 
+def v12(block):
+    """v1.2 (Ticket-03): fixture kho đếm -> kho cá thể; reserved rỗng {} -> []. Mâu thuẫn khác giữ nguyên để
+    vẫn kiểm mã 2 (reserved dạng map ở v1.2 cũng là sai schema -> mã 2)."""
+    b = dict(block)
+    if "stock" in b:
+        b["stock"] = stock(b["stock"])
+    if INDIVIDUAL:
+        b["customers"] = [dict(c, reserved=[]) if c.get("reserved") == {} else c for c in b.get("customers", [])]
+    return b
+
+
 def run_quan(w, block, extra=()):
-    sc = write_json(w.path("sc.json"), {"quan": block})
+    sc = write_json(w.path("sc.json"), {"quan": v12(block)})
     out = w.path("q.jsonl")
     code, err = run_headless("--mode", "quan", "--seed", "1", "--ticks", "5", "--scenario", sc, "--out", out, *extra)
     return code, err, os.path.exists(out)
@@ -124,7 +135,7 @@ class QuanScenarioRejected(unittest.TestCase):
 
     def test_giu_qua_ton_voi_file_inventory_exit_2(self):
         with Workdir() as w:
-            inv = write_json(w.path("inv.json"), {"items": {}})
+            inv = write_json(w.path("inv.json"), {"items": stock({})})
             code, err, made = run_quan(w, {"customers": [cust()]}, extra=("--inventory", inv))
             self.assertEqual(code, 2, err)
             self.assertFalse(made)
@@ -141,11 +152,15 @@ class QuanScenarioAccepted(unittest.TestCase):
 
     def test_reserved_suy_tu_cong_thuc_du_ton(self):
         s0 = self._ok({"stock": RECIPE, "customers": [cust()]})
-        self.assertEqual(s0["customers"][0]["reserved"], dict(sorted(RECIPE.items())))
+        r = s0["customers"][0]["reserved"]
+        if INDIVIDUAL:  # v1.2: mảng id cá thể -> đổi về {kind: n} qua snapshot stock
+            kind = {it["id"]: it["kind"] for it in s0["stock"]}
+            r = counts([{"kind": kind[i]} for i in r])
+        self.assertEqual(r, dict(sorted(RECIPE.items())))
 
     def test_reserved_du_ton_qua_file_inventory(self):
         with Workdir() as w:
-            inv = write_json(w.path("inv.json"), {"items": RECIPE})
+            inv = write_json(w.path("inv.json"), {"items": stock(RECIPE)})
             code, err, _ = run_quan(w, {"customers": [cust()]}, extra=("--inventory", inv))
             self.assertEqual(code, 0, err)
 
@@ -179,7 +194,7 @@ class Determinism(unittest.TestCase):
 
     def _chain(self, w, tag):
         g = TUNING["gather"]
-        sc = write_json(w.path("g_sc.json"), {"gather": {"hold": ["ca_loc", "bong_sung", "bong_sung"]}})
+        sc = write_json(w.path("g_sc.json"), {"gather": {"hold": hold(["ca_loc", "bong_sung", "bong_sung"])}})
         inp = write_json(w.path("g_in.json"), frames({"tick": 0, "move": [1, 0]}, {"tick": 30, "move": [0, 0]},
                                                      {"tick": 31, "interact": True}, {"tick": 32, "interact": False}))
         gout, inv = w.path(f"g_{tag}.jsonl"), w.path(f"inv_{tag}.json")

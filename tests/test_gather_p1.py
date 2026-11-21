@@ -7,7 +7,7 @@ from chonoi.ids import IdAllocator
 from chonoi.inputs import InputState
 from chonoi.rng import Streams
 from chonoi.sim.gather import GatherSim
-from helpers import Workdir, events, frames, read_jsonl, run_headless, snapshots, write_json
+from helpers import Workdir, counts, events, frames, hold, kinds, read_jsonl, run_headless, snapshots, write_json
 
 
 def tuning_gather():
@@ -78,7 +78,7 @@ class GatherPhase1Rules(unittest.TestCase):
             sc = write_json(w.path("sc.json"), {
                 "gather": {
                     "player": {"pos": [2, 1.0], "oxygen_ticks": 0, "zero_oxy_ticks": 59, "hp": 1},
-                    "hold": ["ca_loc", "bong_sung", "ca_linh"],
+                    "hold": hold(["ca_loc", "bong_sung", "ca_linh"]),
                     "random_fish": False,
                 }
             })
@@ -91,17 +91,16 @@ class GatherPhase1Rules(unittest.TestCase):
             rows = read_jsonl(w.path("o.jsonl"))
             faint_ev = events(rows, "faint")
             self.assertEqual(len(faint_ev), 1)
-            self.assertEqual(faint_ev[0]["data"], {
-                "cause": "choke",
-                "lost": ["ca_linh", "bong_sung", "ca_loc"],
-                "hp": 0,
-            })
+            # v1.2 (Ticket-03): lost là mảng cá thể theo thứ tự bỏ LIFO -> so theo kind
+            self.assertEqual(kinds(faint_ev[0]["data"].pop("lost")), ["ca_linh", "bong_sung", "ca_loc"])
+            self.assertEqual(faint_ev[0]["data"], {"cause": "choke", "hp": 0})
             end_ev = events(rows, "gather_end")
             self.assertEqual(len(end_ev), 1)
-            self.assertEqual(end_ev[0]["data"], {"reason": "fainted", "inventory": {"items": {}}})
+            self.assertEqual(end_ev[0]["data"]["reason"], "fainted")
+            self.assertEqual(counts(end_ev[0]["data"]["inventory"]["items"]), {})
             self.assertEqual(rows[-1]["reason"], "fainted")
             with open(inv, encoding="utf-8") as f:
-                self.assertEqual(json.load(f), {"items": {}})
+                self.assertEqual(counts(json.load(f)["items"]), {})
 
     def test_harvest_nearest_tiebreak_regrow_and_hold_full(self):
         g = tuning_gather()
@@ -114,7 +113,7 @@ class GatherPhase1Rules(unittest.TestCase):
                         {"id": "N10", "kind": "bong_sung", "pos": [22, 0], "regrow_ticks": 0},
                         {"id": "N2", "kind": "bong_dien_dien", "pos": [18, 0], "regrow_ticks": 1},
                     ],
-                    "hold": ["ca_loc"] * (g["hold_capacity"] - 1),
+                    "hold": hold(["ca_loc"] * (g["hold_capacity"] - 1)),
                     "random_fish": False,
                 }
             })
@@ -184,7 +183,7 @@ class GatherPhase1Rules(unittest.TestCase):
             sc = write_json(w.path("sc.json"), {
                 "gather": {
                     "player": {"pos": [20, 10]},
-                    "hold": ["bong_sung"] * (g["hold_capacity"] - 2),
+                    "hold": hold(["bong_sung"] * (g["hold_capacity"] - 2)),
                     "fish": [
                         {"id": "F1", "kind": "ca_linh", "pos": [20.5, 10]},  # gần hơn, yield=3 > free=2
                         {"id": "F2", "kind": "ca_loc", "pos": [21.5, 10]},   # xa hơn nhưng vừa chỗ -> không được thử
@@ -236,7 +235,7 @@ class GatherPhase1Rules(unittest.TestCase):
             # Cập bến đúng mép dock_radius ở bước cuối cùng -> docked
             sc = write_json(w.path("sc.json"), {
                 "gather": {"player": {"pos": [g["dock_pos"][0] + g["dock_radius"], g["dock_pos"][1]]},
-                           "hold": ["ca_loc"], "time_left_ticks": 1, "random_fish": False}
+                           "hold": hold(["ca_loc"]), "time_left_ticks": 1, "random_fish": False}
             })
             inp = write_json(w.path("in.json"), frames({"tick": 0, "interact": True}))
             inv = w.path("inv.json")
@@ -261,7 +260,7 @@ class GatherPhase1Rules(unittest.TestCase):
             self.assertEqual(rows2[-1]["reason"], "time")
             self.assertEqual(len(events(rows2, "fish_caught")), 1)
             with open(inv2, encoding="utf-8") as f:
-                self.assertEqual(json.load(f), {"items": {"ca_loc": g["fish_yield"]["ca_loc"]}})
+                self.assertEqual(counts(json.load(f)["items"]), {"ca_loc": g["fish_yield"]["ca_loc"]})
 
     def test_gather_full_flow_deterministic_bytes(self):
         with Workdir() as w:
@@ -308,7 +307,7 @@ class GatherPhase1Rules(unittest.TestCase):
         # Ở d = 1.1 <= 1.2 (surface_depth tùy biến), hái nút cho node_yield = 2 và regrow = 30
         ev1 = sim.step(InputState((0.0, 0.0), {"interact": True}, {"interact"}))
         self.assertEqual(ev1, [("gather", {"node_id": "N1", "kind": "bong_sung", "amount": 2})])
-        self.assertEqual(sim.hold, ["bong_sung", "bong_sung"])
+        self.assertEqual(kinds(sim.hold), ["bong_sung", "bong_sung"])
         self.assertEqual(sim.nodes[0]["regrow_ticks"], 30)
         self.assertEqual(sim.oxygen_ticks, 3)  # 1 + 2 = 3 <= 30
 

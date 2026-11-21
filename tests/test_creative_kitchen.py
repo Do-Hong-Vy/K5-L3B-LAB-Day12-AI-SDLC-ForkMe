@@ -4,7 +4,7 @@ import json
 import os
 import unittest
 
-from helpers import ROOT, Workdir, read_jsonl, run_headless, write_json
+from helpers import ROOT, Workdir, kinds, read_jsonl, run_headless, stock, write_json
 
 from chonoi.creative import load_kitchen
 from chonoi.ids import IdAllocator
@@ -21,8 +21,8 @@ IDLE = InputState((0.0, 0.0), set(), set())
 PRESS = InputState((0.0, 0.0), {"interact"}, {"interact"})
 
 
-def make(dish, stock, kitchen=KITCHEN):
-    sc = {"stock": stock, "random_customers": False,
+def make(dish, counts_, kitchen=KITCHEN):
+    sc = {"stock": stock(counts_), "random_customers": False,
           "customers": [{"id": "C1", "table_id": "T1", "dish_id": dish}]}
     return QuanSim(TUNING, sc, Streams(1), IdAllocator(), kitchen=kitchen)
 
@@ -57,7 +57,7 @@ class Kitchen(unittest.TestCase):
         at(sim, TUNING["quan"]["stoves"][0]["pos"])
         cs = sim.step(PRESS)
         self.assertEqual(cs[0][0], "cook_started")
-        self.assertEqual(cs[0][1]["items"], ["bong_dien_dien", "ca_loc"])
+        self.assertEqual(kinds(cs[0][1]["items"]), ["bong_dien_dien", "ca_loc"])
         self.assertEqual(sim.snapshot()["prepped"], {})
 
     def test_mon_nhieu_phan_can_so_che_tung_phan(self):
@@ -84,10 +84,10 @@ class Kitchen(unittest.TestCase):
 
 class HeadlessUnchanged(unittest.TestCase):
     def test_tat_o_headless(self):
-        sim = QuanSim(TUNING, {"stock": {}}, Streams(1), IdAllocator())
+        sim = QuanSim(TUNING, {"stock": stock({})}, Streams(1), IdAllocator())
         self.assertNotIn("sections", sim.snapshot())
         with Workdir() as w:
-            sc = write_json(w.path("sc.json"), {"quan": {"stock": {"ca_loc": 1}}})
+            sc = write_json(w.path("sc.json"), {"quan": {"stock": stock({"ca_loc": 1})}})
             code, err = run_headless("--mode", "quan", "--seed", "1", "--scenario", sc, "--ticks", "200",
                                      "--out", w.path("q.jsonl"))
             self.assertEqual(code, 0, err)

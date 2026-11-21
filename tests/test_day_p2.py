@@ -8,7 +8,7 @@ import os
 import time
 import unittest
 
-from helpers import ROOT, Workdir, events, frames, read_jsonl, run_headless, snapshots, write_json
+from helpers import ROOT, Workdir, counts, events, frames, hold, read_jsonl, run_headless, snapshots, stock, write_json
 
 with open(os.path.join(ROOT, "game.contract.json"), encoding="utf-8") as f:
     TUNING = json.load(f)["tuning"]
@@ -39,7 +39,7 @@ def names(rows):
     return [(e["tick"], e["phase"], e.get("day"), e["name"]) for e in events(rows) if e["name"] in PHASE_FLOW]
 
 
-DOCK = {"day": {"money": 1000, "earned": 1000}, "gather": {"hold": ["ca_loc", "bong_sung", "bong_sung"], "random_fish": False}}
+DOCK = {"day": {"money": 1000, "earned": 1000}, "gather": {"hold": hold(["ca_loc", "bong_sung", "bong_sung"]), "random_fish": False}}
 DOCK_IN = [{"tick": 0, "interact": True}, {"tick": 1, "interact": False}]
 
 
@@ -71,9 +71,9 @@ class DayFlow(unittest.TestCase):
     def test_ban_giao_kho_trong_bo_nho_va_ke_hoach_loc_mon(self):
         with Workdir() as w:
             _, err, rows = run_day(w, scenario=DOCK, inputs=DOCK_IN, ticks=2, every=1)
-            self.assertEqual(events(rows, "gather_end")[0]["data"]["inventory"], {"items": {"bong_sung": 2, "ca_loc": 1}})
+            self.assertEqual(counts(events(rows, "gather_end")[0]["data"]["inventory"]["items"]), {"bong_sung": 2, "ca_loc": 1})
             q = snapshots(rows)[-1]
-            self.assertEqual((q["phase"], q["phase_tick"], q["stock"]), ("quan", 1, {"bong_sung": 2, "ca_loc": 1}))
+            self.assertEqual((q["phase"], q["phase_tick"], counts(q["stock"])), ("quan", 1, {"bong_sung": 2, "ca_loc": 1}))
             self.assertEqual((q["money"], q["earned"]), (1000, 1000))
 
     def test_ke_hoach_D1_D5_va_lap_lai(self):
@@ -159,7 +159,7 @@ class Cli(unittest.TestCase):
 
     def test_scenario_day_mau_thuan_ma_2(self):
         with Workdir() as w:
-            for sc in ({"quan": {"stock": {}}}, {"quan": {"reputation": 4}}, {"day": {"money": 300, "earned": 200}},
+            for sc in ({"quan": {"stock": stock({})}}, {"quan": {"reputation": 4}}, {"day": {"money": 300, "earned": 200}},
                        {"day": {"upgrades": {"oxygen": 9}}}, {"day": {"day_plan": [{"day": 1, "dishes": {"x": 1}}]}},
                        {"day": {"day_plan": [{"day": 1, "dishes": {"goi_bong_sung": 1}, "ingredients": {"bong_sung": 9}}]}}):
                 code, _, _ = run_day(w, scenario=sc, ticks=0)

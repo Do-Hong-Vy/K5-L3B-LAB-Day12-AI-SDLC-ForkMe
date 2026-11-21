@@ -8,7 +8,8 @@ import math
 import os
 import unittest
 
-from helpers import ROOT, Workdir, events, frames, read_jsonl, run_headless, snapshots, write_json
+from helpers import (INDIVIDUAL, ROOT, Workdir, counts, events, frames, kinds, read_jsonl, run_headless, snapshots,
+                     stock, write_json)
 
 with open(os.path.join(ROOT, "game.contract.json"), encoding="utf-8") as f:
     TUNING = json.load(f)["tuning"]
@@ -22,8 +23,32 @@ STOVE = Q["stoves"][0]
 TABLE = Q["tables"][0]
 
 
+def v12(block):
+    """v1.2 (Ticket-03): fixture viết theo kho đếm -> kho cá thể; reserved rỗng -> mảng rỗng."""
+    b = dict(block)
+    if "stock" in b:
+        b["stock"] = stock(b["stock"])
+    if INDIVIDUAL:
+        b["customers"] = [dict(c, reserved=[]) if c.get("reserved") == {} else c for c in b.get("customers", [])]
+    return b
+
+
+def cooked_price(price, aged_ticks=1):
+    """v1.2: giá chốt theo tươi lúc nấu; cá thể fresh 100 đã hao `aged_ticks` tick ở quán (1 đơn vị/tick)."""
+    return (price * (24000 - aged_ticks)) // 24000 if INDIVIDUAL else price
+
+
+def rcounts(snap, c):
+    """Phần giữ của khách -> {kind: n} (v1.1 map / v1.2 mảng id tra trong snapshot stock)."""
+    r = c["reserved"]
+    if isinstance(r, dict):
+        return r
+    kind = {it["id"]: it["kind"] for it in snap["stock"]}
+    return counts([{"kind": kind[i]} for i in r])
+
+
 def run_quan(w, block, inputs=None, ticks=200, seed=1):
-    sc = write_json(w.path("sc.json"), {"quan": block})
+    sc = write_json(w.path("sc.json"), {"quan": v12(block)})
     args = ["--mode", "quan", "--seed", str(seed), "--scenario", sc, "--ticks", str(ticks),
             "--out", w.path("q.jsonl"), "--snapshot-every", "1"]
     if inputs is not None:
@@ -56,9 +81,9 @@ class QuanCustomers(unittest.TestCase):
             snap = [s for s in snapshots(rows) if s["tick"] == FIRST][0]
             c = snap["customers"][0]
             self.assertEqual((c["order_tick"], c["state"], c["order_status"]), (FIRST, "waiting", "reserved"))
-            self.assertEqual(c["reserved"], {"ca_loc": 1})
+            self.assertEqual(rcounts(snap, c), {"ca_loc": 1})
             self.assertEqual(c["patience_ticks_left"], PATIENCE)
-            self.assertEqual(snap["stock"], {"ca_loc": 1})  # kho vật lý vẫn gồm phần giữ
+            self.assertEqual(counts(snap["stock"]), {"ca_loc": 1})  # kho vật lý vẫn gồm phần giữ
             self.assertEqual(snap["tables"][0]["customer_id"], "C1")
 
     def test_kien_nhan_giam_tu_buoc_sau(self):
@@ -93,7 +118,7 @@ class QuanCustomers(unittest.TestCase):
             rows = run_quan(w, {"stock": {"ca_linh": 3, "bong_dien_dien": 1}, "random_customers": False,
                                 "customers": [waiting("lau_ca_linh_dien_dien")]}, ticks=0)
             c = snapshots(rows)[0]["customers"][0]
-            self.assertEqual(c["reserved"], {"bong_dien_dien": 1, "ca_linh": 3})
+            self.assertEqual(rcounts(snapshots(rows)[0], c), {"bong_dien_dien": 1, "ca_linh": 3})
             self.assertEqual((c["state"], c["order_status"], c["order_tick"], c["patience_ticks_left"]),
                              ("waiting", "reserved", 0, PATIENCE))
 
@@ -128,12 +153,15 @@ class QuanService(unittest.TestCase):
             self.assertEqual(names, ["cook_started", "dish_ready", "dish_picked"])
             cs = events(rows, "cook_started")[0]
             self.assertEqual(cs["tick"], 1)
+            # v1.2: items là mảng cá thể, giá chốt theo tươi (đã hao 1 tick) — Ticket-03 [THAY THẾ]
+            self.assertEqual(kinds(cs["data"].pop("items")), ["ca_loc"])
             self.assertEqual(cs["data"], {"stove_id": STOVE["id"], "order_id": "C1", "dish_id": "ca_loc_nuong_trui",
-                                          "items": ["ca_loc"], "base_price": price})
+                                          "base_price": cooked_price(price)})
             self.assertEqual(events(rows, "dish_ready")[0]["tick"], 1 + cook)
             last = snapshots(rows)[-1]
-            self.assertEqual(last["hand"], {"order_id": "C1", "dish_id": "ca_loc_nuong_trui", "base_price": price})
-            self.assertEqual(last["stock"], {})
+            self.assertEqual(last["hand"], {"order_id": "C1", "dish_id": "ca_loc_nuong_trui",
+                                            "base_price": cooked_price(price)})
+            self.assertEqual(counts(last["stock"]), {})
             self.assertEqual(last["customers"][0]["order_status"], "assigned")
         # phục vụ: dựng fixture tay đang cầm món, đứng ở bàn
         hand = {"order_id": "C1", "dish_id": "ca_loc_nuong_trui", "base_price": price}
@@ -177,7 +205,7 @@ class QuanService(unittest.TestCase):
             self.assertEqual(ev[0]["data"], {"order_id": "C1", "table_id": TABLE["id"], "reason": "patience",
                                              "reputation": rep})
             self.assertEqual(snapshots(rows)[-1]["customers"], [])
-            self.assertEqual(snapshots(rows)[-1]["stock"], {"ca_loc": 1})  # nhả phần giữ, kho không đổi
+            self.assertEqual(counts(snapshots(rows)[-1]["stock"]), {"ca_loc": 1})  # nhả phần giữ, kho không đổi
 
     def test_khach_roi_bo_mon_dang_nau(self):
         with Workdir() as w:
@@ -185,7 +213,7 @@ class QuanService(unittest.TestCase):
             self.assertEqual([e["name"] for e in events(rows)], ["cook_started", "customer_left"])
             last = snapshots(rows)[-1]
             self.assertEqual((last["stoves"][0]["state"], last["stoves"][0]["dish"]), ("idle", None))
-            self.assertEqual(last["stock"], {})  # nguyên liệu đã dùng không hoàn lại
+            self.assertEqual(counts(last["stock"]), {})  # nguyên liệu đã dùng không hoàn lại
 
     def test_dong_ca_tra_tien_closing_va_khach_cho_khong_tru_uy_tin(self):
         price = MENU["ca_loc_nuong_trui"]["price"]

@@ -13,7 +13,7 @@ from chonoi.inputs import InputState
 from chonoi.inventory import KINDS, validate_items
 from chonoi.rng import Streams
 from chonoi.sim.gather import GatherSim
-from helpers import Workdir, close, events, frames, read_jsonl, run_headless, snapshots, write_json
+from helpers import Workdir, close, counts, events, frames, hold, read_jsonl, run_headless, snapshots, write_json
 
 
 def _contract():
@@ -23,7 +23,8 @@ def _contract():
 class GatherContractV11Tests(unittest.TestCase):
     def test_contract_v11_gather_fields_and_standards(self):
         c = _contract()
-        self.assertEqual(c["contract_version"], "1.1")
+        # v1.2 (Ticket-03) kế thừa toàn bộ khóa v1.1 của gather; chỉ số phiên bản đổi.
+        self.assertIn(c["contract_version"], ("1.1", "1.2"))
         g = c["tuning"]["gather"]
         self.assertEqual(g["fish_yield"], {"ca_linh": 3, "ca_loc": 1, "ca_keo": 2})
         self.assertEqual(len(g["nodes"]), 6)
@@ -102,7 +103,7 @@ class GatherContractV11Tests(unittest.TestCase):
             sc2 = write_json(w.path("sc2.json"), {
                 "gather": {
                     "player": {"pos": [30, 24]},
-                    "hold": ["keo_neo"],
+                    "hold": hold(["keo_neo"]),
                     "fish": [{"id": "F7", "kind": "ca_keo", "pos": [30, 24]}],
                     "time_left_ticks": 1,
                     "random_fish": False,
@@ -116,7 +117,7 @@ class GatherContractV11Tests(unittest.TestCase):
             rows = read_jsonl(w.path("g2.jsonl"))
             self.assertEqual(events(rows, "fish_caught")[0]["data"], {"fish_id": "F7", "kind": "ca_keo", "yield": 2})
             with open(inv, encoding="utf-8") as f:
-                self.assertEqual(json.load(f), {"items": {"ca_keo": 2, "keo_neo": 1}})
+                self.assertEqual(counts(json.load(f)["items"]), {"ca_keo": 2, "keo_neo": 1})
 
 
 class FishSwimmingTests(unittest.TestCase):

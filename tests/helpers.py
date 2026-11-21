@@ -65,3 +65,46 @@ class Workdir:
 
     def path(self, name):
         return os.path.join(self._d.name, name)
+
+
+# --- v1.2 (Ticket-03, ADR-0002): kho cá thể. Fixture viết theo kho đếm được chuyển qua các hàm dưới. ----------
+def _contract():
+    with open(os.path.join(ROOT, "game.contract.json"), encoding="utf-8") as f:
+        return json.load(f)
+
+
+INDIVIDUAL = tuple(int(x) for x in _contract()["contract_version"].split(".")[:2]) >= (1, 2)
+
+
+def stock(counts, fresh=100, prefix="S"):
+    """{kind: n} -> mảng cá thể {id, kind, fresh} (v1.2) hoặc giữ nguyên (v1.1). Id S1, S2… theo kind đã sắp."""
+    if not INDIVIDUAL:
+        return dict(counts)
+    out, n = [], 0
+    for kind in sorted(counts):
+        for _ in range(counts[kind]):
+            n += 1
+            out.append({"id": f"{prefix}{n}", "kind": kind, "fresh": fresh})
+    return out
+
+
+def hold(kinds, fresh=100):
+    """Mảng kind theo thứ tự nhặt -> mảng cá thể I1, I2… (v1.2) hoặc giữ nguyên (v1.1)."""
+    if not INDIVIDUAL:
+        return list(kinds)
+    return [{"id": f"I{i}", "kind": k, "fresh": fresh} for i, k in enumerate(kinds, 1)]
+
+
+def kinds(items):
+    """Snapshot giỏ / lost / items -> mảng kind (dùng chung hai schema)."""
+    return [x["kind"] if isinstance(x, dict) else x for x in items]
+
+
+def counts(items):
+    """Snapshot kho / gather_end.inventory.items -> {kind: n} (dùng chung hai schema)."""
+    if isinstance(items, dict):
+        return dict(items)
+    out = {}
+    for x in items:
+        out[x["kind"]] = out.get(x["kind"], 0) + 1
+    return {k: out[k] for k in sorted(out)}

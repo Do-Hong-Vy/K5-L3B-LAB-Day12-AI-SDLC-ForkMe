@@ -8,7 +8,7 @@ import json
 import os
 import unittest
 
-from helpers import ROOT, Workdir, events, frames, read_jsonl, run_headless, snapshots, write_json
+from helpers import INDIVIDUAL, ROOT, Workdir, counts, events, frames, read_jsonl, run_headless, snapshots, stock, write_json
 
 with open(os.path.join(ROOT, "game.contract.json"), encoding="utf-8") as f:
     TUNING = json.load(f)["tuning"]
@@ -17,8 +17,18 @@ FIRST = Q["first_customer_tick"]
 INTERVAL = int(round(Q["customer_interval_s"] * 60))
 
 
+def v12(block):
+    """v1.2 (Ticket-03): fixture kho đếm -> kho cá thể; reserved rỗng -> mảng rỗng."""
+    b = dict(block)
+    if "stock" in b:
+        b["stock"] = stock(b["stock"])
+    if INDIVIDUAL:
+        b["customers"] = [dict(c, reserved=[]) if c.get("reserved") == {} else c for c in b.get("customers", [])]
+    return b
+
+
 def run_quan(w, block, inputs=None, ticks=200, seed=1):
-    sc = write_json(w.path("sc.json"), {"quan": block})
+    sc = write_json(w.path("sc.json"), {"quan": v12(block)})
     args = ["--mode", "quan", "--seed", str(seed), "--scenario", sc, "--ticks", str(ticks),
             "--out", w.path("q.jsonl"), "--snapshot-every", "1"]
     if inputs is not None:
@@ -71,7 +81,7 @@ class FourTablesTwoStoves(unittest.TestCase):
     def test_nguyen_lieu_moi_va_mon_moi(self):
         with Workdir() as w:
             rows = run_quan(w, {"stock": {"ca_keo": 2, "keo_neo": 1}}, ticks=FIRST + 1)
-            self.assertEqual(snapshots(rows)[0]["stock"], {"ca_keo": 2, "keo_neo": 1})
+            self.assertEqual(counts(snapshots(rows)[0]["stock"]), {"ca_keo": 2, "keo_neo": 1})
             self.assertEqual(events(rows, "customer_arrived")[0]["data"]["dish_id"], "ca_keo_nuong")
 
     def test_hai_bep_nau_song_song_hoa_theo_id(self):
@@ -109,12 +119,12 @@ class FourTablesTwoStoves(unittest.TestCase):
 class PlanFilter(unittest.TestCase):
     """AC-P2-07: trong day chỉ chọn món của kế hoạch (QuanSim nhận dish_ids); quán độc lập dùng cả 6 món."""
 
-    def _spawn(self, dish_ids, stock):
+    def _spawn(self, dish_ids, stock_counts):
         from chonoi.ids import IdAllocator
         from chonoi.inputs import InputState
         from chonoi.rng import Streams
         from chonoi.sim.quan import QuanSim
-        sim = QuanSim(TUNING, {"stock": stock}, Streams(1), IdAllocator(), dish_ids=dish_ids)
+        sim = QuanSim(TUNING, v12({"stock": stock_counts}), Streams(1), IdAllocator(), dish_ids=dish_ids)
         idle = InputState((0.0, 0.0), set(), set())
         out = []
         for _ in range(FIRST):
