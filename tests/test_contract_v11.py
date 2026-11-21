@@ -34,12 +34,14 @@ class ContractV11(unittest.TestCase):
 
     # --- cá ---
     def test_fish_initial_khong_du_8_dan(self):
-        self.rejected(lambda t: t["gather"]["fish_initial"].pop())
+        # clarify #22: fish_initial là số 8 (Ticket-02 4.1)
+        self.rejected(lambda t: t["gather"].update(fish_initial=7))
 
     def test_fish_initial_trung_vi_tri(self):
+        # dạng danh sách cũ vẫn được kiểm: 8 đàn nhưng trùng vị trí -> từ chối
         def m(t):
-            f = t["gather"]["fish_initial"]
-            f[1]["pos"] = list(f[0]["pos"])
+            f = [{"id": f"F{i}", "kind": "ca_linh", "pos": [15, 5]} for i in range(1, 9)]
+            t["gather"]["fish_initial"] = f
         self.rejected(m)
 
     def test_thieu_ca_keo_trong_yield(self):

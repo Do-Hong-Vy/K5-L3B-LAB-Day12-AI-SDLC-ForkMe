@@ -72,8 +72,8 @@ class GatherSim:
                        "regrow_ticks": n.get("regrow_ticks", 0)} for n in src_nodes]
         if "fish" in scenario:
             src_fish = scenario["fish"]
-        elif self.random_fish:
-            src_fish = t["fish_initial"]
+        elif self.random_fish and not isinstance(t["fish_initial"], int):
+            src_fish = t["fish_initial"]  # dạng cũ: danh sách đàn cố định
         else:
             src_fish = []
         self.fish = [{"id": f["id"], "kind": f["kind"], "pos": [float(c) for c in f["pos"]],
@@ -82,6 +82,12 @@ class GatherSim:
         for coll in (self.nodes, self.fish):
             for e in coll:
                 ids.reserve(e["id"])
+        # Ticket-02 4.1: "fish_initial là số 8" (clarify #22, PO chốt) -> đầu ca 8 đàn ở 8 điểm khác nhau,
+        # chọn như luật sinh cá: loài theo trọng số (chuẩn hóa theo loài còn điểm), điểm đều của loài, hướng theo seed.
+        if "fish" not in scenario and self.random_fish and isinstance(t["fish_initial"], int):
+            for _ in range(int(t["fish_initial"])):
+                if self._spawn_one() is None:
+                    break
         # Cá Sấu (L2, chonoi/sim/monsters.py): scenario.monsters thay bố trí; bỏ mảng thì dùng bố trí đúng Ngày
         self.monsters = MonsterSystem(t, scenario.get("monsters"), day)
         self.money = 0
@@ -341,6 +347,12 @@ class GatherSim:
             return
         if len(self.fish) >= int(self.t["fish_max"]):
             return
+        f = self._spawn_one()
+        if f is not None:
+            events.append(("fish_spawned", {"id": f["id"], "kind": f["kind"], "pos": list(f["pos"])}))
+
+    def _spawn_one(self):
+        """Sinh tối đa một đàn: điểm cách mọi đàn đang sống > clearance; hết điểm -> None (bỏ lượt)."""
         weights = self.t["fish_weights"]
         clearance = float(self.t["fish_spawn_clearance"])
         spawn_xs = [float(x) for x in self.t["fish_spawn_x"]]
@@ -358,7 +370,7 @@ class GatherSim:
             if pts:
                 candidates[kind] = pts
         if not candidates:
-            return
+            return None
         spawn_rng = self.rng.get("fish_spawn")
         valid_kinds = sorted(candidates)
         raw_w = [float(weights[k]) for k in valid_kinds]
@@ -368,5 +380,6 @@ class GatherSim:
         pos = list(spawn_rng.choice(candidates[kind]))
         heading = spawn_rng.uniform(0.0, 360.0)
         fid = self.ids.new("F")
-        self.fish.append({"id": fid, "kind": kind, "pos": pos, "heading_deg": heading, "age_ticks": 0})
-        events.append(("fish_spawned", {"id": fid, "kind": kind, "pos": list(pos)}))
+        f = {"id": fid, "kind": kind, "pos": pos, "heading_deg": heading, "age_ticks": 0}
+        self.fish.append(f)
+        return f

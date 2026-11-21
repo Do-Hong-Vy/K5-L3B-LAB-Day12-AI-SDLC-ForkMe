@@ -39,9 +39,8 @@ class GatherContractV11Tests(unittest.TestCase):
                 ("N6", "keo_neo", [90, 0]),
             ],
         )
-        self.assertEqual(len(g["fish_initial"]), 8)
-        pts = {tuple(f["pos"]) for f in g["fish_initial"]}
-        self.assertEqual(len(pts), 8)
+        # clarify #22 (PO): Ticket-02 4.1 "fish_initial là số 8" -> đầu ca sinh 8 đàn ở 8 điểm khác nhau theo seed
+        self.assertEqual(g["fish_initial"], 8)
         self.assertEqual(g["fish_speed"], 1.5)
         self.assertEqual(g["fish_turn_ticks"], 120)
         self.assertEqual(g["fish_max"], 12)
@@ -59,7 +58,7 @@ class GatherContractV11Tests(unittest.TestCase):
     def test_contract_and_scenario_reject_invalid_v11_gather(self):
         c = _contract()
         t_bad_fish = copy.deepcopy(c["tuning"])
-        t_bad_fish["gather"]["fish_initial"].pop()
+        t_bad_fish["gather"]["fish_initial"] = 7
         with self.assertRaises(BadInput):
             validate_tuning(t_bad_fish)
 

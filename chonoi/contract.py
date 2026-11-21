@@ -165,8 +165,13 @@ def _validate_gather_fish_tuning(g, b, fy):
     if not isinstance(fw, dict) or set(fw) != set(FISH_KINDS) or any(not _num(fw[k]) or fw[k] <= 0 for k in FISH_KINDS):
         raise BadInput(f"tuning.gather.fish_weights phải có trọng số > 0 cho {FISH_KINDS}")
     fish = g.get("fish_initial")
+    if isinstance(fish, int) and not isinstance(fish, bool):  # Ticket-02 4.1: "fish_initial là số 8" (clarify #22)
+        if fish != 8:
+            raise BadInput("tuning.gather.fish_initial phải là 8 (số đàn đầu ca, Contract v1.1)")
+        _int_between("gather.fish_max", g.get("fish_max"), fish, 100)
+        return
     if not isinstance(fish, list) or len(fish) != 8:
-        raise BadInput("tuning.gather.fish_initial phải là danh sách đúng 8 đàn (Contract v1.1)")
+        raise BadInput("tuning.gather.fish_initial phải là số 8 hoặc danh sách đúng 8 đàn (Contract v1.1)")
     _int_between("gather.fish_max", g.get("fish_max"), len(fish), 100)
     seen, seen_pos = set(), set()
     for f in fish:

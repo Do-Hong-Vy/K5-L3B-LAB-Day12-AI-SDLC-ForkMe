@@ -44,7 +44,9 @@ class Contract(unittest.TestCase):
                 self.assertIn(key, s["player"])
             self.assertEqual(s["hold_capacity"], tuning_gather()["hold_capacity"])
             # v1.1 (Ticket-02 / ADR-0001): 8 đàn cá ban đầu theo tuning (P1 cũ là 6)
-            self.assertEqual(len(s["fish"]), len(tuning_gather()["fish_initial"]))
+            fi = tuning_gather()["fish_initial"]
+            self.assertEqual(len(s["fish"]), fi if isinstance(fi, int) else len(fi))
+            self.assertEqual(len({tuple(f["pos"]) for f in s["fish"]}), len(s["fish"]))  # 8 điểm khác nhau
             self.assertTrue(all(n["pos"][1] == 0 for n in s["nodes"]))
 
     def test_con_02_deterministic_bytes(self):
