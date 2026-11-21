@@ -25,6 +25,7 @@ from .contract import load_contract
 from .errors import BadInput
 from .inputs import LiveInputs
 from .inventory import read_inventory
+from .creative import load_kitchen
 from .runner import Session
 from .scenario import check_quan_stock, load_scenario
 
@@ -37,8 +38,8 @@ RECENT_EVENTS = 40
 class LiveGame:
     """Một lượt chơi + luồng nền bước 60 tick/s. Mọi truy cập trạng thái đi qua khóa."""
 
-    def __init__(self, mode, tuning, scenario, seed, inventory=None, inventory_out=None):
-        self._args = (mode, tuning, scenario, seed, inventory)
+    def __init__(self, mode, tuning, scenario, seed, inventory=None, inventory_out=None, kitchen=None):
+        self._args = (mode, tuning, scenario, seed, inventory, kitchen)
         self.mode = mode
         self.tuning = tuning
         self.inventory_out = inventory_out
@@ -222,6 +223,7 @@ def main(argv=None) -> int:
     p.add_argument("--scenario")
     p.add_argument("--inventory", help="chỉ với quan: nạp kho từ file")
     p.add_argument("--inventory-out", dest="inventory_out", help="chỉ với gather: ghi kho khi kết thúc buổi")
+    p.add_argument("--no-creative", action="store_true", help="tắt sáng tạo của nhóm (bếp nhiều section), chơi đúng luật lõi")
     a = p.parse_args(argv)
     try:
         if a.inventory and a.mode != "quan":
@@ -235,7 +237,8 @@ def main(argv=None) -> int:
             raise BadInput("vừa có quan.stock vừa có --inventory")
         if a.mode == "quan":
             check_quan_stock(scenario, inventory if inventory is not None else scenario.get("stock", {}), tuning)
-        game = LiveGame(a.mode, tuning, scenario, a.seed, inventory, a.inventory_out)
+        kitchen = None if a.no_creative or a.mode != "quan" else load_kitchen()
+        game = LiveGame(a.mode, tuning, scenario, a.seed, inventory, a.inventory_out, kitchen)
         server = LiveServer(game, a.host, a.port)
     except BadInput as e:
         sys.stderr.write(f"đầu vào sai: {e}\n")

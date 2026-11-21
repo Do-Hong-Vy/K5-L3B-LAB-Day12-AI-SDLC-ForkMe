@@ -75,9 +75,12 @@ class QuanCustomers(unittest.TestCase):
             self.assertEqual(events(rows, "customer_arrived"), [])
 
     def test_het_ban_thi_bo_luot_khong_su_kien(self):
+        # v1.1 (Ticket-02): 4 bàn T1–T4 -> dựng khách fixture kín mọi bàn (trước đây 1 bàn T1 là đủ).
+        busy = [{"id": f"C{i}", "table_id": tb["id"], "dish_id": "ca_loc_nuong_trui"}
+                for i, tb in enumerate(Q["tables"], 1)]
         with Workdir() as w:
-            rows = run_quan(w, {"stock": {"ca_loc": 2}}, ticks=FIRST + INTERVAL + 1)
-            self.assertEqual(len(events(rows, "customer_arrived")), 1)
+            rows = run_quan(w, {"stock": {"ca_loc": len(busy) + 1}, "customers": busy}, ticks=FIRST + 1)
+            self.assertEqual(events(rows, "customer_arrived"), [])
             self.assertEqual(events(rows, "no_dish"), [])
 
     def test_random_customers_false_tat_khach_tu_sinh(self):

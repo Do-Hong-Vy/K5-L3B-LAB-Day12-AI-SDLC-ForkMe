@@ -34,6 +34,13 @@ Game hỗ trợ chế độ **headless** theo Test Contract (`python3 -m chonoi.
 
 Ngoài phần đề yêu cầu, nhóm được **thêm** nhân vật, loài cá/cây, sinh vật, món, bản đồ, cơ chế, câu chuyện, đồ họa, âm nhạc… với ba điều kiện: **không phá phần cố định** (tắt ở headless), ghi mục **"Sáng tạo của nhóm"** trong README của nhóm, và **làm lõi đúng trước**.
 
+## Sáng tạo của nhóm
+
+### Bếp nhiều section (Cuubeo)
+- **Cách chơi:** quán có 6 section sơ chế (S1 cá lóc, S2 cá linh, S3 cá kèo, S4 bông điên điển, S5 bông súng, S6 kèo nèo — xem `chonoi/creative/kitchen.json`). Đứng tại section nhấn **E**: section sơ chế 1 phần nguyên liệu cho đơn cũ nhất còn cần loại đó (1–2 s, người chơi đi làm việc khác được). Khi mọi nguyên liệu của đơn đã sơ chế đủ, tới bếp nhấn **E** để **gộp lại thành món** và nấu như luật thường. Khách bỏ đi thì phần sơ chế dở bị hủy.
+- **Bật/tắt:** chỉ bật trong `python3 -m chonoi.live --mode quan`; thêm `--no-creative` để chơi đúng luật lõi. **Headless không bao giờ bật** (`runner.build_sim` mặc định `kitchen=None`).
+- **Bằng chứng lõi vẫn đúng:** `tests/test_creative_kitchen.py::HeadlessUnchanged` (headless không có `sections`/`prepped`/`prep_*`) + toàn bộ test lõi xanh — [`docs/proof/phase-2/creative-kitchen-tests.log`](docs/proof/phase-2/creative-kitchen-tests.log).
+
 ## Lịch 3 giờ
 
 | Mốc | Phase | Hạn tag |

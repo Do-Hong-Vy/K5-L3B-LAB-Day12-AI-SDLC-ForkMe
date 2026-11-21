@@ -11,7 +11,8 @@ Một bước (đúng thứ tự PRD-0 F):
        bàn       -> giao đúng order_id, khách ăn với timer đầy, chốt boa                    `served`
   4. theo id bàn: ăn xong trả tiền (`paid`) rồi rời; còn giờ + kiên nhẫn 0 -> `customer_left` (patience);
      hết ca: đang ăn trả ngay (closing), đang chờ rời (closing, không trừ uy tín) -> `quan_end`
-  5. còn giờ: lượt khách theo lịch -> bàn trống id nhỏ nhất, chọn đều theo seed trong món khả dụng,
+  5. còn giờ: lượt khách theo lịch -> bàn trống id nhỏ nhất, chọn đều theo seed trong món khả dụng
+     (trong `day`: chỉ món thuộc kế hoạch Ngày — Ticket-02 mục 2, 4.5),
      giữ chỗ ngay -> `customer_arrived`; có bàn mà không món nào đủ -> `no_dish`
 
 Số liệu chỉ đọc từ tuning (game.contract.json). Ngẫu nhiên chỉ qua Streams (luồng "customers").
@@ -34,10 +35,12 @@ class QuanSim:
     mode = "quan"
     phase = "quan"
 
-    def __init__(self, tuning, scenario, streams, ids, inventory=None):
+    def __init__(self, tuning, scenario, streams, ids, inventory=None, dish_ids=None, kitchen=None):
         t = tuning["quan"]
         self.t = t
         self.menu = tuning["menu"]
+        # Ticket-02 mục 2: trong `day` khách chỉ gọi món thuộc kế hoạch Ngày; quán độc lập dùng cả menu.
+        self.dish_ids = sorted(dish_ids) if dish_ids is not None else sorted(self.menu)
         self.rng = streams
         self.ids = ids
         p = scenario.get("player", {})
@@ -68,6 +71,13 @@ class QuanSim:
         self.shift_earned = 0
         self.done = False
         self.reason = None
+        # Sáng tạo của nhóm — Bếp nhiều section (chonoi/creative/kitchen.json). None = luật lõi Test Contract.
+        self.kitchen = kitchen
+        if kitchen is not None:
+            self.sections = [dict(s, state="idle", order_id=None, ticks_left=0)
+                             for s in sort_by_id(kitchen["sections"])]
+            self.prep_ticks = {k: _ticks(v) for k, v in kitchen["prep_s"].items()}
+            self.prepped = {}  # order_id -> {kind: số phần đã sơ chế}
 
     @staticmethod
     def _merge(defaults, updates):
@@ -110,6 +120,16 @@ class QuanSim:
                        for s in self.stoves],
             "tables": [{"id": tb["id"], "pos": tb["pos"], "customer_id": occupied.get(tb["id"])} for tb in self.tables],
             "customers": [self._customer_view(c) for c in sort_by_id(self.customers)],
+            **self._kitchen_view(),
+        }
+
+    def _kitchen_view(self) -> dict:
+        if self.kitchen is None:
+            return {}  # headless / Test Contract: snapshot không đổi
+        return {
+            "sections": [{k: s[k] for k in ("id", "kind", "pos", "state", "order_id", "ticks_left")}
+                         | {"ticks_total": self.prep_ticks[s["kind"]]} for s in self.sections],
+            "prepped": {oid: dict(sorted(v.items())) for oid, v in sorted(self.prepped.items(), key=lambda x: id_key(x[0]))},
         }
 
     @staticmethod
@@ -136,6 +156,8 @@ class QuanSim:
                 c["eat_ticks_left"] = max(0, c["eat_ticks_left"] - 1)
             elif c["state"] == "waiting":
                 c["patience_ticks_left"] = max(0, c["patience_ticks_left"] - 1)
+        if self.kitchen is not None:
+            self._tick_sections(events)
         # 2. bếp theo id: nấu xong -> ready (burn_s: null, không cháy)
         for s in self.stoves:
             if s["state"] == "cooking" and s["cook_ticks_left"] == 0:
@@ -177,7 +199,12 @@ class QuanSim:
         for tb in self.tables:
             d = math.dist(self.pos, tb["pos"])
             if d <= r:
-                cands.append((d, 1, id_key(tb["id"]), "table", tb))
+                cands.append((d, 2, id_key(tb["id"]), "table", tb))
+        if self.kitchen is not None:  # sáng tạo: section xếp sau bếp, trước bàn
+            for sec in self.sections:
+                d = math.dist(self.pos, sec["pos"])
+                if d <= r:
+                    cands.append((d, 1, id_key(sec["id"]), "section", sec))
         if not cands:
             return
         _, _, _, kind, obj = min(cands, key=lambda x: x[:3])
@@ -186,11 +213,48 @@ class QuanSim:
                 self._start_cooking(obj, events)
             elif obj["state"] == "ready" and self.hand is None:
                 self._pick_dish(obj, events)
+        elif kind == "section":
+            self._start_prep(obj, events)
         else:
             self._serve(obj, events)  # đối tượng không tương tác được -> bỏ lượt
 
+    # --- sáng tạo: bếp nhiều section -------------------------------------------
+    def _prep_need(self, c, kind) -> int:
+        """Số phần `kind` đơn `c` còn cần đưa vào section (trừ phần đã xong và đang làm)."""
+        done = self.prepped.get(c["id"], {}).get(kind, 0)
+        working = sum(1 for s in self.sections if s["state"] == "working" and s["order_id"] == c["id"]
+                      and s["kind"] == kind)
+        return c["reserved"].get(kind, 0) - done - working
+
+    def _prep_complete(self, c) -> bool:
+        got = self.prepped.get(c["id"], {})
+        return all(got.get(k, 0) >= n for k, n in c["reserved"].items())
+
+    def _start_prep(self, sec, events):
+        if sec["state"] != "idle":
+            return
+        orders = [c for c in self.customers if c["order_status"] == "reserved" and self._prep_need(c, sec["kind"]) > 0]
+        if not orders:
+            return
+        c = min(orders, key=lambda c: (c["order_tick"], id_key(c["table_id"])))
+        sec.update(state="working", order_id=c["id"], ticks_left=self.prep_ticks[sec["kind"]])
+        events.append(("prep_started", {"section_id": sec["id"], "order_id": c["id"], "kind": sec["kind"]}))
+
+    def _tick_sections(self, events):
+        for sec in self.sections:
+            if sec["state"] != "working":
+                continue
+            sec["ticks_left"] -= 1
+            if sec["ticks_left"] <= 0:
+                got = self.prepped.setdefault(sec["order_id"], {})
+                got[sec["kind"]] = got.get(sec["kind"], 0) + 1
+                events.append(("prep_done", {"section_id": sec["id"], "order_id": sec["order_id"], "kind": sec["kind"]}))
+                sec.update(state="idle", order_id=None, ticks_left=0)
+
     def _start_cooking(self, stove, events):
         orders = [c for c in self.customers if c["order_status"] == "reserved"]
+        if self.kitchen is not None:  # sáng tạo: chỉ gộp đơn đã sơ chế đủ mọi nguyên liệu
+            orders = [c for c in orders if self._prep_complete(c)]
         if not orders:
             return
         c = min(orders, key=lambda c: (c["order_tick"], id_key(c["table_id"])))
@@ -203,6 +267,8 @@ class QuanSim:
         c["reserved"] = {}
         c["order_status"] = "assigned"
         c["base_price"] = dish["price"]
+        if self.kitchen is not None:
+            self.prepped.pop(c["id"], None)
         stove["state"] = "cooking"
         stove["dish"] = {"order_id": c["id"], "dish_id": c["dish_id"], "base_price": dish["price"]}
         stove["cook_ticks_left"] = _ticks(dish["cook_s"])
@@ -247,6 +313,11 @@ class QuanSim:
                 s.update(state="idle", dish=None, cook_ticks_left=0, ready_ticks=0)
         if self.hand and self.hand.get("order_id") == c["id"]:
             self.hand = None
+        if self.kitchen is not None:  # sáng tạo: bỏ phần sơ chế dở của đơn
+            self.prepped.pop(c["id"], None)
+            for sec in self.sections:
+                if sec["order_id"] == c["id"]:
+                    sec.update(state="idle", order_id=None, ticks_left=0)
         if reason == "patience":
             self._add_reputation(self.t["left_reputation_delta"])
         self.customers.remove(c)
@@ -276,7 +347,7 @@ class QuanSim:
         if not free:
             return
         avail = self._available()
-        dishes = [d for d in sorted(self.menu)
+        dishes = [d for d in self.dish_ids  # lọc theo kế hoạch trước, rồi mới lọc nguyên liệu khả dụng
                   if all(avail.get(k, 0) >= n for k, n in self.menu[d]["recipe"].items())]
         if not dishes:
             events.append(("no_dish", {}))
