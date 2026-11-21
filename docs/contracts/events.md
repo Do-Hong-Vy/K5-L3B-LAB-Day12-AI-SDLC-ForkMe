@@ -42,3 +42,11 @@
 | `quan_end` | `{"reason": "time", "money": int, "earned": int, "shift_earned": int, "reputation": float}` | Bước 4 khi `time_left_ticks == 0`, sau khi xử lý khách `eating` & `waiting`. | **Đã khóa (starter)** |
 
 *Bên nghe:* Headless JSONL, Live UI.
+
+## 4. Thay đổi v1.2 (Ticket-03, ADR-0002)
+| Tên | `data` | Ghi chú |
+|---|---|---|
+| `spoiled` | `{item_id, kind, location: "hold"\|"stock"}` | đúng một lần khi fresh đi từ ≥ 30 xuống < 30, nhiều cá thể thì theo id |
+| `cook_started.items` | mảng cá thể `{id, kind, fresh}` sắp kind rồi id | `base_price = floor(giá × tb fresh / 100)` |
+| `faint.lost`, `monster_hit.lost` | mảng cá thể theo thứ tự bỏ (LIFO) | |
+| `gather_end.inventory` | `{"items": [{id, kind, fresh}]}` | cùng schema file kho |

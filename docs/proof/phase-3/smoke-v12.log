@@ -1,0 +1,17 @@
+# Ticket-03 — ví dụ ngưỡng (gather 1 bước, fresh 30 -> spoiled tick 1)
+exit=0
+{"type":"event","tick":1,"phase":"gather","name":"spoiled","data":{"item_id":"I1","kind":"ca_linh","location":"hold"}}
+
+# Ticket-03 — smoke bàn giao file (fresh 100, interact frame 0 -> cập bến; quan --inventory --ticks 0)
+gather exit=0
+kho.json: {"items":[{"id":"I1","kind":"ca_linh","fresh":99.99166666666666}]}
+quan exit=0
+"stock":[{"id":"I1","kind":"ca_linh","fresh":99.992}]
+
+# kho đếm ở v1.2+ -> mã 2
+đầu vào sai: items phải là mảng cá thể {id, kind, fresh} (contract v1.2)
+exit=2
+
+# day 5 Ngày tất định
+giống từng byte
+{"type":"end","ticks":111000,"sim_tick":111000,"mode":"day","state":"finished","reason":"days_complete","money":0,"earned":0,"reputation":3.0,"score":300,"days_completed":5}

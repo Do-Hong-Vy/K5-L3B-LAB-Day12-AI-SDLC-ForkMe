@@ -1,0 +1,9 @@
+# Clone sạch (bản local tại commit cd9e371) — ≤ 3 lệnh theo README
+$ git clone <repo> && cd <repo>
+$ PYTHONPATH=tests:. python3 -m unittest discover -s tests
+Ran 269 tests in 55.100s
+
+OK (skipped=1)
+$ python3 -m chonoi.headless --mode day --days 1 --seed 1 --ticks 30000 --out day.jsonl
+exit=0
+{"type":"end","ticks":22200,"sim_tick":22200,"mode":"day","state":"finished","reason":"days_complete","money":0,"earned":0,"reputation":3.0,"score":300,"days_completed":1}

@@ -1,0 +1,13 @@
+Quán Ăn Chợ Nổi — Nhóm ForkMe (K5-L3B Lab Day 12, AI SDLC)
+
+Mã nguồn
+- Khung starter `chonoi/` (headless, inputs, scenario, contract, rng, ids, jsonl, inventory, runner, live, web)
+  do giảng viên môn AI SDLC (VinUni) cung cấp cho bài lab.
+- Luật chơi, test và tài liệu do nhóm ForkMe viết (xem TEAM.md, git log) phục vụ mục đích học tập.
+
+Tài sản bên thứ ba (đều CC0 1.0 — public domain, xem CREDITS.md và License.txt trong từng thư mục)
+- chonoi/web/assets/kenney/  — Kenney "Fish Pack 2.0" (www.kenney.nl), CC0 1.0
+- chonoi/web/assets/toon/    — Kenney "Toon Characters 1" (www.kenney.nl), CC0 1.0
+  https://creativecommons.org/publicdomain/zero/1.0/
+
+Không dùng nhân vật, hình ảnh hay âm thanh thuộc thương hiệu khác.

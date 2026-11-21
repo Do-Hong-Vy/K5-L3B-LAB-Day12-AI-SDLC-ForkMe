@@ -35,3 +35,14 @@
 ## Skills / hooks của nhóm
 - **Skill 1 — `check-contract`** ([`.agents/skills/check-contract/SKILL.md`](.agents/skills/check-contract/SKILL.md)): do `Do-Hong-Vy` (Integrator) duy trì. Dùng trước khi merge lát tính năng, khi có Change Request đụng contract, và trước khi gắn tag `phase-1..4` để kiểm tra `check_team`, không hard-code tuning, determinism từng byte và đồng bộ `docs/contracts/`.
 - **Skill 2 — `verify-phase`** ([`.agents/skills/verify-phase/SKILL.md`](.agents/skills/verify-phase/SKILL.md)): do `Nguyenquoctoan0310` (QA Lead) duy trì. Dùng sau khi gộp một lát, sau mỗi Change Request, và trước tag `phase-N` (chạy sau `check-contract`): chạy full test + regression, kiểm tra determinism từng byte và mã thoát `2`, lưu log vào `docs/proof/phase-N/` và điền `docs/verification/phase-N.md`.
+
+## Lệnh Phase 2–4
+- Vòng ngày: `python3 -m chonoi.headless --mode day --days 1..5 --seed 1 --ticks 120000 --out day.jsonl`; chơi: `python3 -m chonoi.live --mode day --days 5`
+- Bench: `python3 -m chonoi.bench --seed 42 --duration 30 --out bench.json` · Soak: `python3 -m chonoi.soak --seed 7 --days 10 --out soak.json`
+
+## Bẫy đã gặp (cập nhật Phase 3–4)
+- **Chỉ push khi suite xanh:** `if PYTHONPATH="tests;." python -m unittest discover -s tests >/dev/null 2>&1; then git push; fi` — đừng dùng `... | tail && git push` (exit code là của `tail`).
+- **Giải xung đột merge xong phải chạy test** trước khi commit merge (merge `9612d91` từng làm mất `KINDS`).
+- **v1.2 kho cá thể:** fixture test dùng `tests/helpers.py` (`stock`, `hold`, `kinds`, `counts`); độ tươi trong JSONL làm tròn 3 số -> so với file kho theo ±0.01.
+- **Báo trước khi nhận lát** trong `docs/standup.md` để không làm trùng (Cá Sấu từng bị làm hai lần).
+- **Asset:** chỉ CC0/CC-BY/MIT, ghi `CREDITS.md`; không dùng nhân vật/thương hiệu khác. Ảnh để trong `chonoi/web/assets/<bo>/<ten>.png` (tên chữ thường), live phục vụ qua `/assets/...`.

@@ -15,20 +15,28 @@ Cách làm việc kỹ thuật là **tự do** (push thẳng, nhánh + PR, pair,
 
 ## Bắt đầu nhanh
 
+**Yêu cầu:** Python 3.10+ (chỉ thư viện chuẩn), trình duyệt bất kỳ. Trên Windows đặt `PYTHONUTF8=1` khi chạy test.
+
 Chạy từ clone sạch (macOS / Linux, ≤ 3 lệnh):
 
 ```bash
 git clone https://github.com/Do-Hong-Vy/K5-L3B-LAB-Day12-AI-SDLC-ForkMe.git && cd K5-L3B-LAB-Day12-AI-SDLC-ForkMe
 PYTHONPATH=tests:. python3 -m unittest discover -s tests -v        # chạy toàn bộ test (1 lệnh)
-python3 -m chonoi.live --mode gather --inventory-out kho.json      # chơi buổi sáng trên trình duyệt
+python3 -m chonoi.live --mode day --days 5                          # chơi trọn 5 Ngày trên trình duyệt (mở địa chỉ in ra)
 ```
 
-Chơi tiếp buổi tối với kho vừa kiếm được: `python3 -m chonoi.live --mode quan --inventory kho.json`.
+Chơi riêng từng buổi: `python3 -m chonoi.live --mode gather --inventory-out kho.json` rồi `python3 -m chonoi.live --mode quan --inventory kho.json`.
 
-- **Điều khiển:** `WASD` hoặc phím mũi tên để bơi (`gather`) / đi (`quan`); `E` để tương tác (cập bến hoặc hái rau ở mặt nước; nấu / nhặt món / phục vụ tại bếp và bàn ở quán); `Space` để bắt cá khi đang lặn; `R` để chơi lại.
-- **Cách tính điểm:** `score = earned + reputation_multiplier × floor(reputation)` (theo [`game.contract.json`](game.contract.json), mặc định `reputation_multiplier = 100`; tiền và `earned` tính bằng số nguyên nghìn đồng, gồm giá món + tiền boa nếu phục vụ kịp ngưỡng kiên nhẫn).
+- **Điều khiển:** `WASD`/mũi tên bơi (`gather`) / đi (`quan`) · `E` tương tác (cập bến, hái rau ở mặt nước; nấu / bưng / phục vụ ở quán) · `Space` bắt cá khi lặn · `Esc`/`P` tạm dừng · `T` tương phản cao · `C` chế độ Sáng tạo · `H` sổ thực đơn · `M` âm thanh · `R` chơi lại. Shop: mua `oxygen` / `hp` rồi đóng Shop.
+- **Cách tính điểm:** `score = earned + reputation_multiplier × floor(reputation)` (mặc định `reputation_multiplier = 100`); tiền là số nguyên nghìn đồng; giá món theo độ tươi `floor(giá × trung bình fresh / 100)`, boa `floor(giá × 0.2)` nếu còn ≥ 50% kiên nhẫn.
 
-Game hỗ trợ chế độ **headless** theo Test Contract (`python3 -m chonoi.headless --mode gather|quan …`) để chạy tất định và chấm tự động. Chi tiết khung Python xem ở [`docs/STARTER.md`](docs/STARTER.md).
+| Lệnh | Mục đích |
+|---|---|
+| `python3 -m chonoi.headless --mode gather\|quan\|day [--days N] --seed S --ticks T --out out.jsonl` | Headless theo Test Contract v1.3 (gameplay v1.2), tất định từng byte |
+| `python3 -m chonoi.bench --seed 42 --duration 30 --out bench.json` | Benchmark có render (`bench_cmd`) |
+| `python3 -m chonoi.soak --seed 7 --days 10 --out soak.json` | Soak 10 Ngày (`soak_cmd`) |
+
+**Giới hạn đã biết:** benchmark đo render phần mềm của bản Python (không đo canvas trình duyệt); chưa làm các mở rộng tùy chọn (dòng lũ, khách đặt trước, Lao, vợt, Rắn, cháy món, Chợ, Sổ tay, leaderboard, phụ đề SFX). Chi tiết khung Python: [`docs/STARTER.md`](docs/STARTER.md). Lịch sử thay đổi: [`CHANGELOG.md`](CHANGELOG.md) · phát hành: [`docs/release-notes-v1.0.0.md`](docs/release-notes-v1.0.0.md).
 
 ## Tự do sáng tạo
 

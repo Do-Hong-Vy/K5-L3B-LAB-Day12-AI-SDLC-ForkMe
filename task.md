@@ -89,10 +89,10 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
   - Ngoài bến, chỉ hái khi `_at_surface()`: chọn nút `ready` (`regrow_ticks == 0`) gần nhất trong `interact_radius` (cả đúng mép, hòa theo `id_key`). Đủ chỗ cho `node_yield` (`len(hold) + amount <= hold_capacity`) → thêm vào `hold`, đặt `regrow_ticks = round(regrow_s * 60)`, phát `gather` (`{"node_id", "kind", "amount"}`). Thiếu chỗ → phát `hold_full` (`{"action": "gather", "node_id", "required", "free"}`), **giữ nguyên nút**.
   - Trong `catch`: chỉ khi `catch_cd_ticks == 0` và dưới nước (`not _at_surface()`): chọn đàn gần nhất trong `catch_radius` (hòa `id_key`). Đủ chỗ cho toàn bộ `fish_yield[kind]` → thêm vào `hold`, **xóa đàn khỏi `self.fish`**, đặt `catch_cd_ticks = round(catch_cooldown_s * 60)`, phát `fish_caught` (`{"fish_id", "kind", "yield"}`). Thiếu chỗ → phát `hold_full` (`{"action": "catch", "fish_id", "required", "free"}`), **giữ đàn & giữ cooldown**, không thử đàn khác. Không có đàn trong tầm → không event, không hồi chiêu.
   - Bước cuối `time_left_ticks == 0`: kết thúc `time` ở mọi độ sâu *sau* các hành động trên, giữ giỏ hiện có.
-- [ ] **CP1-G3 (Tích hợp, `README` & Tag P1 | `AC-P1-15`, `AC-P1-16`):**
+- [x] **CP1-G3 (Tích hợp, `README` & Tag P1 | `AC-P1-15`, `AC-P1-16`):**
   - [x] Rà soát [README.md](README.md) (`≤ 3` lệnh clone-to-run macOS/Linux, điều khiển, cách tính điểm, lệnh test `1` lệnh), đối chiếu [game.contract.json](game.contract.json), và ghi standup Phase 1 vào [docs/standup.md](docs/standup.md).
   - [x] Review code cho `Cuubeo` (`docs/proof/phase-1/review-quan-by-Do-Hong-Vy.md`), tạo `gather_sample.jsonl`/`quan_sample.jsonl`, kiểm chứng `AC-P1-14`/`AC-P1-15`, chạy `check-contract` (`90/90` tests OK).
-  - [ ] Commit bản chốt cuối & gắn tag `phase-1` + `git push origin main --tags` trước `1:00`.
+  - [x] Commit bản chốt cuối & gắn tag `phase-1` (`199f067`, Do-Hong-Vy).
 
 #### B. `Cuubeo` (`sim/quan` — [`chonoi/sim/quan.py`](chonoi/sim/quan.py) + PO)
 - [x] **CP1-Q1 (Lát 3 — Khách, giữ chỗ, kiên nhẫn, bỏ đi | `AC-P1-06`, `AC-P1-08`):**
@@ -139,15 +139,15 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
   - Đọc đề Phase 2 trên Lab Board, tách toàn bộ AC (`AC-P2-??`) vào `docs/plan/phase-2.md` (`≤ 1 trang`).
   - Ghi mọi câu hỏi/đổi yêu cầu vào [`docs/clarify.md`](docs/clarify.md).
   - Nếu có thay đổi `game.contract.json`, schema snapshot/event/inventory hoặc quy tắc sẵn có: tạo **ADR** trong `docs/adr/0001-<tieu-de>.md` (theo `0000-template.md`, có bảng tác động module/file/test) và thông báo cả nhóm trước khi code.
-- [ ] **CP2-1 (`All` — Standup nhanh):** Điền dòng Phase 2 trong [`docs/standup.md`](docs/standup.md).
-- [ ] **CP2-2 (`Do-Hong-Vy` — `sim/gather`):** Triển khai các lát tính năng/đổi yêu cầu Phase 2 thuộc buổi sáng (`gather`) — giữ nguyên quy tắc `Streams` tách luồng (`rng.get("<ten_luong>")`) để không làm lệch RNG cũ; đọc mọi tham số mới từ `game.contract.json`.
-- [ ] **CP2-3 (`Cuubeo` — `sim/quan`):** Triển khai các lát tính năng/đổi yêu cầu Phase 2 thuộc buổi tối (`quan`) hoặc ghép ca/chế độ mới theo đề Phase 2.
-- [ ] **CP2-4 (`Phog2811` — `client/ui`):** Cập nhật UI/HUD hiển thị đầy đủ các thực thể/trạng thái/nút bấm/cơ chế mới của Phase 2; trau chuốt hình ảnh thay thế hình khối tạm (đảm bảo mọi hiệu ứng thêm chỉ chạy phía client/live, không chạm vào output headless).
-- [ ] **CP2-5 (`Nguyenquoctoan0310` — `qa`):**
+- [x] **CP2-1 (`All` — Standup nhanh):** Điền dòng Phase 2 trong [`docs/standup.md`](docs/standup.md).
+- [x] **CP2-2 (`Do-Hong-Vy` — `sim/gather`):** Triển khai các lát tính năng/đổi yêu cầu Phase 2 thuộc buổi sáng (`gather`) — giữ nguyên quy tắc `Streams` tách luồng (`rng.get("<ten_luong>")`) để không làm lệch RNG cũ; đọc mọi tham số mới từ `game.contract.json`.
+- [x] **CP2-3 (`Cuubeo` — `sim/quan`):** Triển khai các lát tính năng/đổi yêu cầu Phase 2 thuộc buổi tối (`quan`) hoặc ghép ca/chế độ mới theo đề Phase 2.
+- [x] **CP2-4 (`Phog2811` — `client/ui`):** Cập nhật UI/HUD hiển thị đầy đủ các thực thể/trạng thái/nút bấm/cơ chế mới của Phase 2; trau chuốt hình ảnh thay thế hình khối tạm (đảm bảo mọi hiệu ứng thêm chỉ chạy phía client/live, không chạm vào output headless).
+- [x] **CP2-5 (`Nguyenquoctoan0310` — `qa`):**
   - Cập nhật validation mới trong `contract.py` / `scenario.py` / `inputs.py` (nếu contract nâng cấp).
   - Viết bộ test Phase 2 (`tests/test_phase2_*.py`) + **chạy lại toàn bộ test Phase 1 (regression)**.
   - Xuất bằng chứng vào `docs/proof/phase-2/` và hoàn thiện `docs/verification/phase-2.md`.
-- [ ] **CP2-6 (`Phog2811` + `All` — Retro nhanh Phase 2, ~1:45):**
+- [x] **CP2-6 (`Phog2811` + `All` — Retro nhanh Phase 2, ~1:45):**
   - Điền mục **Phase 2 (nhanh)** trong [`docs/retro.md`](docs/retro.md): *Điều tốt*, *Điều tệ*, *1 hành động cụ thể cho Phase 3*.
 - [ ] **CP2-7 (`Do-Hong-Vy` + `All` — Harness & Tag P2):**
   - Cập nhật [`AGENTS.md`](AGENTS.md) với quy tắc/bẫy mới phát hiện ở Phase 1–2 (tạo diff rõ trong git history).
@@ -161,14 +161,14 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
 > **Mục tiêu:** Đáp ứng toàn bộ yêu cầu Phase 3 mở lúc 1:55 (ví dụ chế độ nối ngày `--mode day` / nâng cấp gameplay / cân bằng hệ thống theo đề), thực thi hành động cải tiến từ Retro P2, giữ regression P1+P2 xanh.
 
 - [x] **CP3-0 (PO `Cuubeo`, 1:55 – 2:00):** Đọc đề Phase 3, cập nhật [`docs/clarify.md`](docs/clarify.md) & tạo `docs/plan/phase-3.md`; lập ADR (`docs/adr/0002-...md`) nếu đổi contract/schema.
-- [ ] **CP3-1 (`All` — Thực thi hành động Retro P2 & Standup):** Áp dụng ngay 1 hành động đã cam kết ở Retro Phase 2; điền dòng Phase 3 trong [`docs/standup.md`](docs/standup.md).
-- [ ] **CP3-2 (`Do-Hong-Vy` & `Cuubeo` — Core Sim & Tích hợp):**
+- [x] **CP3-1 (`All` — Thực thi hành động Retro P2 & Standup):** Áp dụng ngay 1 hành động đã cam kết ở Retro Phase 2; điền dòng Phase 3 trong [`docs/standup.md`](docs/standup.md).
+- [x] **CP3-2 (`Do-Hong-Vy` & `Cuubeo` — Core Sim & Tích hợp):**
   - Triển khai các thay đổi/tính năng Phase 3 trên `sim/gather`, `sim/quan`, và `sim/day` / `runner` (nếu Phase 3 mở khóa `--mode day` hoặc luồng chuyển sáng→tối).
   - Rà soát độ ổn định deterministic: chạy kiểm tra cùng seed với mọi chế độ.
-- [ ] **CP3-3 (`Phog2811` — `client/ui` + Chuẩn bị Sáng tạo):**
+- [x] **CP3-3 (`Phog2811` — `client/ui` + Chuẩn bị Sáng tạo):**
   - Hoàn thiện UI cho các tính năng Phase 3 (menu, chuyển cảnh sáng-tối, hiệu ứng phản hồi, âm thanh Web Audio API tự tạo hoặc asset CC0/MIT).
   - Bắt đầu phần **Sáng tạo của nhóm** (chỉ khi lõi Phase 3 chạy đúng): giữ tuyệt đối nguyên tắc **tắt ở headless**.
-- [ ] **CP3-4 (`Nguyenquoctoan0310` — `qa`):**
+- [x] **CP3-4 (`Nguyenquoctoan0310` — `qa`):**
   - Viết test Phase 3 (`tests/test_phase3_*.py`) + **regression toàn bộ Phase 1 & Phase 2**.
   - Lưu log/output vào `docs/proof/phase-3/` và hoàn thiện `docs/verification/phase-3.md`.
 - [ ] **CP3-5 (`All` — Harness & Tag P3):**
@@ -181,15 +181,15 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
 
 > **Mục tiêu:** Đóng toàn bộ yêu cầu Phase 4, hoàn thiện sản phẩm sáng tạo, khóa bằng chứng 100 điểm, hoàn thành retro cá nhân & nhóm, gắn tag `phase-4` + Release `v1.0.0`, sẵn sàng Demo.
 
-- [ ] **CP4-1 (Xử lý yêu cầu Phase 4 — 2:30 – 2:42):**
+- [x] **CP4-1 (Xử lý yêu cầu Phase 4 — 2:30 – 2:42):**
   - PO `Cuubeo` đọc đề Phase 4 trên Lab Board → cập nhật `docs/plan/phase-4.md`, [`docs/clarify.md`](docs/clarify.md).
   - `Do-Hong-Vy` & `Cuubeo` xử lý nốt phần sim / edge cases / cân bằng tham số (nếu Phase 4 yêu cầu).
   - `Phog2811` chốt hoàn thiện UI/đồ họa/âm thanh và phần **Sáng tạo của nhóm** (đảm bảo **tắt khi chạy headless**!).
-- [ ] **CP4-2 (Kiểm chứng cuối cùng — `Nguyenquoctoan0310`):**
+- [x] **CP4-2 (Kiểm chứng cuối cùng — `Nguyenquoctoan0310`):**
   - Chạy lại toàn bộ test suite (`tests/` cho P1 + P2 + P3 + P4) + test kiểm tra sáng tạo tắt ở headless + `python tools/check_team.py`.
   - Kiểm tra không lộ API key, token, `.env` trong toàn bộ commit/repo.
   - Lưu bằng chứng cuối vào `docs/proof/phase-4/` và hoàn thiện `docs/verification/phase-4.md`.
-- [ ] **CP4-3 (Hoàn thiện tài liệu sản phẩm & nguồn — `Phog2811` + `Do-Hong-Vy`):**
+- [x] **CP4-3 (Hoàn thiện tài liệu sản phẩm & nguồn — `Phog2811` + `Do-Hong-Vy`):**
   - Cập nhật [`README.md`](README.md): bổ sung mục **"Sáng tạo của nhóm"** (liệt kê rõ phần thêm, cách chơi/trải nghiệm, và xác nhận đã tắt ở headless).
   - Cập nhật [`CREDITS.md`](CREDITS.md): liệt kê tất cả asset ngoài (CC0/CC-BY/MIT hoặc tự tạo) và công cụ AI đã dùng.
   - Cập nhật [`CHANGELOG.md`](CHANGELOG.md): ghi tóm tắt các thay đổi từ `phase-1` đến `v1.0.0`.
@@ -202,14 +202,14 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
     - Nếu làm lại, đổi gì.
   - Mỗi thành viên viết file phản tư cá nhân (`≤ 200 từ`, đủ 4 gạch đầu dòng kèm link commit & link review thật):
     - [ ] `docs/members/Do-Hong-Vy.md`
-    - [ ] `docs/members/Cuubeo.md`
+    - [x] `docs/members/Cuubeo.md`
     - [ ] `docs/members/Phog2811.md`
     - [ ] `docs/members/Nguyenquoctoan0310.md`
   - Chốt dòng Phase 4 trong [`docs/ai-usage-log.md`](docs/ai-usage-log.md) & [`docs/standup.md`](docs/standup.md) + cập nhật lần cuối [`AGENTS.md`](AGENTS.md).
 - [ ] **CP4-5 (Kiểm tra commit & Release — `Do-Hong-Vy`):**
   - Xác nhận mỗi người có **≥ 3 commit có nội dung** bằng đúng handle trong `TEAM.md` (`git log --format="%h %an <%ae> %s"`).
   - Gắn tag `phase-4` và tag `v1.0.0` trên commit sạch cuối cùng đã pass mọi test, push lên `origin`, tạo GitHub Release `v1.0.0` trước **3:00**.
-- [ ] **CP4-6 (Chuẩn bị Demo 5 điểm — `Phog2811` + `All`):**
+- [x] **CP4-6 (Chuẩn bị Demo 5 điểm — `Phog2811` + `All`):**
   - Mở sẵn game bằng `run_cmd` (`python -m chonoi.live ...`), kiểm tra chơi mượt không lỗi console/terminal.
   - Chạy thử kịch bản Demo 2–3 phút:
     1. Bắt đầu ngày: `gather` (lặn, oxy, bắt cá, hái rau, cập bến giữ giỏ).
@@ -227,3 +227,9 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
 | **Bùi Phước Anh** (`Cuubeo`) | ≥ 3 commit nội dung | `sim/quan`, quản lý AC & Change Request | `docs/clarify.md`, `docs/plan/phase-1..4.md`, `docs/members/Cuubeo.md`, dòng trong `ai-usage-log.md` & `standup.md`, review cho `Do-Hong-Vy` |
 | **Đinh Hoàng Phong** (`Phog2811`) | ≥ 3 commit nội dung | `client/ui`, đồ họa/HUD/âm thanh, phần Sáng tạo của nhóm, Demo | `docs/standup.md`, `docs/retro.md`, `README.md` ("Sáng tạo của nhóm"), `CREDITS.md`, `CHANGELOG.md`, `docs/members/Phog2811.md`, dòng trong `ai-usage-log.md` |
 | **Nguyễn Quốc Toàn** (`Nguyenquoctoan0310`) | ≥ 3 commit nội dung | `scenario.py`, `contract.py`, `tests/` (unit + integration + regression), skills verify | `docs/verification/phase-1..4.md`, `docs/proof/phase-1..4/*`, `docs/members/Nguyenquoctoan0310.md`, dòng trong `ai-usage-log.md` & `standup.md` |
+
+---
+
+### Trạng thái chốt (Cuubeo, cập nhật cuối buổi)
+- Còn mở: **CP2-7 / CP3-5 / CP4-5** — đẩy `main`, gắn tag `phase-2`, `phase-3`, `phase-4` và công bố GitHub Release `v1.0.0` (Integrator `Do-Hong-Vy`); **CP4-4** — `docs/members/Do-Hong-Vy.md`, `Nguyenquoctoan0310.md`, `Phog2811.md` đã có bản nháp bằng chứng, chờ chính chủ viết phần phản tư.
+- Bằng chứng: `docs/verification/phase-1..4.md`, `docs/proof/phase-1..4/`, `CHANGELOG.md`, `docs/release-notes-v1.0.0.md`, `docs/demo.md`.
