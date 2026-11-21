@@ -149,10 +149,10 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
   - Xuất bằng chứng vào `docs/proof/phase-2/` và hoàn thiện `docs/verification/phase-2.md`.
 - [x] **CP2-6 (`Phog2811` + `All` — Retro nhanh Phase 2, ~1:45):**
   - Điền mục **Phase 2 (nhanh)** trong [`docs/retro.md`](docs/retro.md): *Điều tốt*, *Điều tệ*, *1 hành động cụ thể cho Phase 3*.
-- [ ] **CP2-7 (`Do-Hong-Vy` + `All` — Harness & Tag P2):**
+- [x] **CP2-7 (`Do-Hong-Vy` + `All` — Harness & Tag P2):**
   - Cập nhật [`AGENTS.md`](AGENTS.md) với quy tắc/bẫy mới phát hiện ở Phase 1–2 (tạo diff rõ trong git history).
   - Cập nhật [`docs/ai-usage-log.md`](docs/ai-usage-log.md) cho cả 4 người (Phase 2).
-  - Kiểm tra mọi người đã có `≥ 2` commit tích lũy; chạy full test xanh; gắn tag `phase-2` và push trước **1:55**.
+  - Kiểm tra mọi người đã có `≥ 2` commit tích lũy; chạy full test xanh; gắn tag `phase-2` và push trước **1:55**. *(Xong: tag `phase-2` -> `b28f27e`, gắn sau mốc 1:55 — ghi trong retro.)*
 
 ---
 
