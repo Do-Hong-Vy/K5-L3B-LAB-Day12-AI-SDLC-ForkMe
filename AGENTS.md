@@ -46,3 +46,4 @@
 - **v1.2 kho cá thể:** fixture test dùng `tests/helpers.py` (`stock`, `hold`, `kinds`, `counts`); độ tươi trong JSONL làm tròn 3 số -> so với file kho theo ±0.01.
 - **Báo trước khi nhận lát** trong `docs/standup.md` để không làm trùng (Cá Sấu từng bị làm hai lần).
 - **Asset:** chỉ CC0/CC-BY/MIT, ghi `CREDITS.md`; không dùng nhân vật/thương hiệu khác. Ảnh để trong `chonoi/web/assets/<bo>/<ten>.png` (tên chữ thường), live phục vụ qua `/assets/...`.
+- **File tạm & tag cuối phase:** Không `git add` file tạm thử tay (`kho.json`, `*.jsonl`); trước khi gắn tag `phase-N` / `v1.0.0`, kiểm đồng bộ `docs/contracts/` và chạy `tests.test_live` ở môi trường cho phép bind `127.0.0.1`.

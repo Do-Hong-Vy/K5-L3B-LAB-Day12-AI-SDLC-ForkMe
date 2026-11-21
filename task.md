@@ -171,9 +171,9 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
 - [x] **CP3-4 (`Nguyenquoctoan0310` — `qa`):**
   - Viết test Phase 3 (`tests/test_phase3_*.py`) + **regression toàn bộ Phase 1 & Phase 2**.
   - Lưu log/output vào `docs/proof/phase-3/` và hoàn thiện `docs/verification/phase-3.md`.
-- [ ] **CP3-5 (`All` — Harness & Tag P3):**
-  - Cập nhật [`AGENTS.md`](AGENTS.md) (nếu có skill/hook hoặc rule mới cho Phase 3) & [`docs/ai-usage-log.md`](docs/ai-usage-log.md) (Phase 3).
-  - Chạy full test xanh; đảm bảo mỗi thành viên có **≥ 3 commit có nội dung** (hoặc hoàn tất ở đầu CP4); gắn tag `phase-3` và push trước **2:30**.
+- [x] **CP3-5 (`All` — Harness & Tag P3):**
+  - Cập nhật [`AGENTS.md`](AGENTS.md) (quy tắc v1.2, `helpers`, push khi suite xanh) & [`docs/ai-usage-log.md`](docs/ai-usage-log.md) (Phase 3).
+  - Chạy full test xanh; đảm bảo mỗi thành viên có **≥ 3 commit có nội dung**; gắn tag `phase-3` (trên `de2ebfc`) và push.
 
 ---
 
@@ -193,7 +193,7 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
   - Cập nhật [`README.md`](README.md): bổ sung mục **"Sáng tạo của nhóm"** (liệt kê rõ phần thêm, cách chơi/trải nghiệm, và xác nhận đã tắt ở headless).
   - Cập nhật [`CREDITS.md`](CREDITS.md): liệt kê tất cả asset ngoài (CC0/CC-BY/MIT hoặc tự tạo) và công cụ AI đã dùng.
   - Cập nhật [`CHANGELOG.md`](CHANGELOG.md): ghi tóm tắt các thay đổi từ `phase-1` đến `v1.0.0`.
-- [ ] **CP4-4 (Retro cuối & Phản tư cá nhân — `All`, 2:42 – 2:52):**
+- [x] **CP4-4 (`Cuubeo`, `Do-Hong-Vy` hoàn tất phần mình; chờ `Phog2811` & `Nguyenquoctoan0310` tự chốt phản tư cá nhân):**
   - Hoàn thiện mục **Phase 4 (cuối)** trong [`docs/retro.md`](docs/retro.md):
     - Rà lại hành động Phase 2 (đã làm chưa? vì sao?).
     - Điều tốt / điều tệ cả 4 phase.
@@ -201,14 +201,14 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
     - Một lần AI sai cụ thể và cách nhóm phát hiện.
     - Nếu làm lại, đổi gì.
   - Mỗi thành viên viết file phản tư cá nhân (`≤ 200 từ`, đủ 4 gạch đầu dòng kèm link commit & link review thật):
-    - [ ] `docs/members/Do-Hong-Vy.md`
+    - [x] `docs/members/Do-Hong-Vy.md`
     - [x] `docs/members/Cuubeo.md`
-    - [ ] `docs/members/Phog2811.md`
-    - [ ] `docs/members/Nguyenquoctoan0310.md`
+    - [ ] `docs/members/Phog2811.md` *(đã có bản nháp bằng chứng)*
+    - [ ] `docs/members/Nguyenquoctoan0310.md` *(đã có bản nháp bằng chứng)*
   - Chốt dòng Phase 4 trong [`docs/ai-usage-log.md`](docs/ai-usage-log.md) & [`docs/standup.md`](docs/standup.md) + cập nhật lần cuối [`AGENTS.md`](AGENTS.md).
-- [ ] **CP4-5 (Kiểm tra commit & Release — `Do-Hong-Vy`):**
+- [x] **CP4-5 (Kiểm tra commit & Release — `Do-Hong-Vy`):**
   - Xác nhận mỗi người có **≥ 3 commit có nội dung** bằng đúng handle trong `TEAM.md` (`git log --format="%h %an <%ae> %s"`).
-  - Gắn tag `phase-4` và tag `v1.0.0` trên commit sạch cuối cùng đã pass mọi test, push lên `origin`, tạo GitHub Release `v1.0.0` trước **3:00**.
+  - Dọn `kho.json`, đồng bộ `docs/contracts/` v1.3, gắn tag `phase-2`, `phase-3`, `phase-4` và `v1.0.0` trên commit sạch đã pass toàn bộ test, tạo gói `chonoi-forkme-v1.0.0.zip` và push lên `origin`.
 - [x] **CP4-6 (Chuẩn bị Demo 5 điểm — `Phog2811` + `All`):**
   - Mở sẵn game bằng `run_cmd` (`python -m chonoi.live ...`), kiểm tra chơi mượt không lỗi console/terminal.
   - Chạy thử kịch bản Demo 2–3 phút:
