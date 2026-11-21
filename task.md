@@ -39,11 +39,11 @@
 
 Kết quả rà soát sau các commit CP0 (`902de7f`):
 1. **Phần đã hoàn thành ở CP0:** [`TEAM.md`](TEAM.md), [`game.contract.json`](game.contract.json) (`"team": "ForkMe"`), [`tests/test_team_check.py`](tests/test_team_check.py) (5/5 pass), [`AGENTS.md`](AGENTS.md), 2 skills ([`check-contract`](.agents/skills/check-contract/SKILL.md) & [`verify-phase`](.agents/skills/verify-phase/SKILL.md)), [`docs/plan/phase-1.md`](docs/plan/phase-1.md), và [`docs/clarify.md`](docs/clarify.md) đã có trên `main`; cả 4 thành viên đã có commit bằng tài khoản GitHub của mình.
-2. **Xung đột nội dung trong `docs/contracts/` (cần chốt lại 1 nguồn):** [`docs/contracts/README.md`](docs/contracts/README.md) hiện chứa đặc tả chi tiết nội tuyến (chưa đối chiếu PRD-0) và **chưa đồng bộ / chưa liên kết** với [`docs/contracts/sim-ui-interface.md`](docs/contracts/sim-ui-interface.md) & [`docs/contracts/events.md`](docs/contracts/events.md) (2 file đang được [`AGENTS.md`](AGENTS.md) dẫn chiếu). Cần thống nhất trước khi code CP1.
-3. **Chờ mở đề `PRD-0` trên Lab Board:** Theo [`docs/clarify.md`](docs/clarify.md) #6, tab Phase 1 chưa mở nên `AC-P1-??` và các câu #1–#4, #7 đang tạm giả định theo khung `TODO(nhóm)`.
+2. **Đồng bộ `docs/contracts/`:** Đã hợp nhất [`docs/contracts/README.md`](docs/contracts/README.md) với [`sim-ui-interface.md`](docs/contracts/sim-ui-interface.md) & [`events.md`](docs/contracts/events.md) làm 1 nguồn chuẩn duy nhất; các trường/payload chưa có trong starter đều ghi rõ `[Đề xuất nhóm — chờ PO đối chiếu PRD-0]` để tránh code lệch schema.
+3. **Chờ mở đề `PRD-0` trên Lab Board:** Theo [`docs/clarify.md`](docs/clarify.md) #6, tab Phase 1 chưa mở nên `AC-P1-??` và các câu #1–#4, #7 đang tạm giả định theo khung `TODO(nhóm)` và đề xuất trong `docs/contracts/`.
 4. **Môi trường test Windows local & CI:**
-   - Trên máy `Do-Hong-Vy` hiện tại: `test_team_check` (5/5) và `test_python_starter_units` (7/7) đều **pass**; 20 test `test_smoke_p1` báo `[WinError 1920]` do thiếu `python3.exe` (mới có alias Windows Store); 1 test `test_live` báo `[WinError 10013]` khi chạy trong sandbox. Làm theo hướng dẫn tạo `python3.exe` cục bộ (không commit) trong [`AGENTS.md`](AGENTS.md#L12-L13) để chạy full `33/33` tests trên máy.
-   - GitHub Actions (`gh run list`) chưa có lượt chạy nào (`[]`): kiểm tra bật **Actions** trên repo fork nếu nhóm dùng [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+   - Đã kiểm chứng toàn bộ **33/33 tests PASS** (`32/32` với `test_team_check` + `test_python_starter_units` + `test_smoke_p1` qua venv shim `python3.exe` tạm, và `1/1` với `test_live` khi cho phép bind socket localhost). Nếu máy Windows của thành viên nào chưa có `python3.exe` trong PATH, làm theo hướng dẫn cục bộ (không commit) trong [`AGENTS.md`](AGENTS.md#L12-L13).
+   - GitHub Actions workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) đang ở trạng thái `active` trên repo fork (sẽ chạy khi có push/PR mới).
 
 ---
 
@@ -60,13 +60,11 @@ Kết quả rà soát sau các commit CP0 (`902de7f`):
 - [x] **CP0-3 (`Do-Hong-Vy`):** Cập nhật `"team": "ForkMe"`, `"team_size": 4` trong [`game.contract.json`](game.contract.json).
 - [ ] **CP0-4 (`Cuubeo` — PO):**
   - [x] Điền kế hoạch tổng quan [`docs/plan/phase-1.md`](docs/plan/phase-1.md) và ghi câu hỏi #6–#7 vào [`docs/clarify.md`](docs/clarify.md).
-  - [ ] Trích danh sách `AC-P1-??` chính thức và giải đáp các mục #1–#4, #7 trong [`docs/clarify.md`](docs/clarify.md) ngay khi Lab Board mở `PRD-0`.
-- [ ] **CP0-5 (`Do-Hong-Vy` + `Cuubeo` + `Phog2811` — Hợp đồng tích hợp):**
-  - [x] Đã có [`docs/contracts/inventory.sample.json`](docs/contracts/inventory.sample.json), [`docs/contracts/README.md`](docs/contracts/README.md), [`docs/contracts/sim-ui-interface.md`](docs/contracts/sim-ui-interface.md), [`docs/contracts/events.md`](docs/contracts/events.md).
-  - [ ] **Đồng bộ 1 nguồn chuẩn:** Gộp/liên kết thống nhất giữa [`docs/contracts/README.md`](docs/contracts/README.md) với [`sim-ui-interface.md`](docs/contracts/sim-ui-interface.md) & [`events.md`](docs/contracts/events.md), đánh dấu rõ chỗ đang giả định tạm chờ `PRD-0`.
-- [ ] **CP0-6 (`Nguyenquoctoan0310` + `All` — Môi trường & Smoke Test):**
-  - [x] `Nguyenquoctoan0310` đã sửa `test_template_is_rejected` và thêm `test_repo_team_md_is_valid` trong [`tests/test_team_check.py`](tests/test_team_check.py) (5/5 pass), giữ `python3` trong `game.contract.json` cho CI Linux, bổ sung hướng dẫn fix Windows vào [`AGENTS.md`](AGENTS.md).
-  - [ ] Tạo `python3.exe` cục bộ (không commit) trên máy Windows của các thành viên chưa có shim (trong đó có máy `Do-Hong-Vy`) để chạy pass toàn bộ `33/33` tests (`test_smoke_p1.py` + `test_live.py`). *(Tùy chọn: bật GitHub Actions trên repo fork để CI `.github/workflows/ci.yml` chạy tự động).*
+  - [ ] *(Phụ thuộc Lab Board)* Trích danh sách `AC-P1-??` chính thức và giải đáp các mục #1–#4, #7 trong [`docs/clarify.md`](docs/clarify.md) ngay khi Lab Board mở `PRD-0`.
+- [x] **CP0-5 (`Do-Hong-Vy` + `Cuubeo` + `Phog2811` — Hợp đồng tích hợp):** Đã tạo và đồng bộ thống nhất 1 nguồn chuẩn tại [`docs/contracts/README.md`](docs/contracts/README.md), [`docs/contracts/sim-ui-interface.md`](docs/contracts/sim-ui-interface.md), [`docs/contracts/events.md`](docs/contracts/events.md), [`docs/contracts/inventory.sample.json`](docs/contracts/inventory.sample.json) (đánh dấu rõ đề xuất chờ PO đối chiếu khi `PRD-0` mở).
+- [x] **CP0-6 (`Nguyenquoctoan0310` + `Do-Hong-Vy` — Môi trường & Smoke Test):**
+  - `Nguyenquoctoan0310` đã sửa `test_template_is_rejected` và thêm `test_repo_team_md_is_valid` trong [`tests/test_team_check.py`](tests/test_team_check.py) (5/5 pass), giữ `python3` trong `game.contract.json` cho CI Linux, bổ sung hướng dẫn fix Windows vào [`AGENTS.md`](AGENTS.md).
+  - Đã kiểm chứng trên máy `Do-Hong-Vy` qua shim `python3.exe` tạm + `test_live`: **33/33 tests PASS**. *(Nhắc các bạn dùng Windows tạo `python3.exe` cục bộ không commit nếu máy chưa có sẵn).*
 - [ ] **CP0-7 (`Do-Hong-Vy` + `Nguyenquoctoan0310` + `All` — Harness AI):**
   - [x] **Skill 1 (`Do-Hong-Vy`):** [`.agents/skills/check-contract/SKILL.md`](.agents/skills/check-contract/SKILL.md) + cập nhật [`AGENTS.md`](AGENTS.md).
   - [x] **Skill 2 (`Nguyenquoctoan0310`):** [`.agents/skills/verify-phase/SKILL.md`](.agents/skills/verify-phase/SKILL.md) + cập nhật [`AGENTS.md`](AGENTS.md).
