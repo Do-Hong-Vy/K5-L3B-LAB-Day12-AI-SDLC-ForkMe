@@ -24,7 +24,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from .contract import load_contract
 from .errors import BadInput
 from .inputs import LiveInputs
-from .inventory import read_inventory
+from .inventory import is_individual, read_inventory
 from .creative import load_kitchen
 from .runner import Session
 from .scenario import check_quan_stock, load_scenario
@@ -235,13 +235,15 @@ def main(argv=None) -> int:
             raise BadInput("--inventory chỉ dùng với quan")
         if a.inventory_out and a.mode != "gather":
             raise BadInput("--inventory-out chỉ dùng với gather")
-        tuning = load_contract()["tuning"]
+        contract = load_contract()
+        contract_ver = contract.get("contract_version")
+        tuning = contract["tuning"]
         scenario = load_scenario(a.scenario, a.mode, tuning)
-        inventory = read_inventory(a.inventory) if a.inventory else None
+        inventory = (read_inventory(a.inventory, individual=is_individual(contract_ver)) if a.inventory else None)
         if inventory is not None and "stock" in scenario:
             raise BadInput("vừa có quan.stock vừa có --inventory")
         if a.mode == "quan":
-            check_quan_stock(scenario, inventory if inventory is not None else scenario.get("stock", {}), tuning)
+            check_quan_stock(scenario, inventory if inventory is not None else scenario.get("stock", [] if "freshness" in tuning else {}), tuning)
         kitchen = None if a.no_creative or a.mode != "quan" else load_kitchen()
         if a.mode == "day" and not (1 <= a.days <= 5):
             raise BadInput("--days phải từ 1 đến 5")
