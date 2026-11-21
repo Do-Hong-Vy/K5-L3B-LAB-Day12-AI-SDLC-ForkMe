@@ -18,9 +18,9 @@
 | AC-P1-11 (JSONL: snapshot/event/end, đủ trường mục E) | `test_con_01_ticks_zero_and_end_line`, `test_gather_snapshot_has_gather_fields`, `test_snapshot_quan_player_co_vel`, `test_khach_den_dung_first_customer_tick_va_giu_cho` | [gather_sample.jsonl](../proof/phase-1/gather_sample.jsonl), [quan_sample.jsonl](../proof/phase-1/quan_sample.jsonl) | Đạt |
 | AC-P1-12 (tất định từng byte, JSONL + file kho) | Chuỗi `gather` (seed 42, có inputs) → kho → `quan` (seed 42, 10800 tick) chạy 2 lần, so `cmp`/sha256 cả 3 file; `test_scenario_quan_p1.py::Determinism`, `test_con_02_deterministic_bytes`, `test_gather_full_flow_deterministic_bytes`, `test_cung_seed_cung_byte` | [determinism.txt](../proof/phase-1/determinism.txt), [quan-determinism.log](../proof/phase-1/quan-determinism.log) | Đạt — 3/3 file IDENTICAL |
 | AC-P1-13 (smoke 2 tiến trình) | Lệnh mẫu PRD-0 mục G, seed 42 | [smoke-gather-quan.log](../proof/phase-1/smoke-gather-quan.log) | Đạt — quán tick 0 `stock:{"bong_sung":2,"ca_loc":1}` |
-| AC-P1-14 (chơi được 2 buổi, HUD đủ chỉ số) | Chơi thử `python3 -m chonoi.live --mode gather|quan` + ảnh chụp HUD | — (chờ `Phog2811` gửi ảnh chụp) | Chưa kiểm chứng |
-| AC-P1-15 (README chạy ≤ 3 lệnh, contract khớp) | Clone sạch, làm theo README | — | Chưa kiểm chứng |
-| AC-P1-16 (ghi chép + tag `phase-1`) | `TEAM.md` OK, hợp đồng kho, verification + proof (file này), clarify, ai-usage-log | [check_team.txt](../proof/phase-1/check_team.txt) | Chưa đạt — chờ tag `phase-1` (Integrator) |
+| AC-P1-14 (chơi được 2 buổi, HUD đủ chỉ số) | Chơi thử trực tiếp trên trình duyệt `python -m chonoi.live --mode gather\|quan` (kiểm tra input `D/S/A/W/R`, 0 lỗi JS) + `tests/test_live.py` (1/1 OK) + ảnh chụp HUD | [live-ui-check.md](../proof/phase-1/live-ui-check.md), [ui-gather-live.png](../proof/phase-1/ui-gather-live.png), [ui-quan-live.png](../proof/phase-1/ui-quan-live.png) | Đạt |
+| AC-P1-15 (README chạy ≤ 3 lệnh, contract khớp) | Kiểm tra [README.md](../../README.md) (clone/test 1 lệnh/live ≤ 3 lệnh, điều khiển, công thức điểm) khớp [game.contract.json](../../game.contract.json) + chạy `headless`/`live` trực tiếp | [readme-contract-check.txt](../proof/phase-1/readme-contract-check.txt) | Đạt |
+| AC-P1-16 (ghi chép + tag `phase-1`) | `TEAM.md` OK (`check_team.py`), hợp đồng kho/UI/events, `verification` + `proof`, `clarify`, `ai-usage-log`, review chéo 2 chiều `gather` ↔ `quan` | [check_team.txt](../proof/phase-1/check_team.txt), [review-gather-by-Cuubeo.md](../proof/phase-1/review-gather-by-Cuubeo.md), [review-quan-by-Do-Hong-Vy.md](../proof/phase-1/review-quan-by-Do-Hong-Vy.md) | Đạt phần hồ sơ — sẵn sàng gắn tag `phase-1` sau commit chốt |
 
 ## Ghi chú
 1. **Giữ chỗ quá tồn** cần biết kho, mà kho có thể đến từ `--inventory` (đọc sau `load_scenario`). Vì vậy `scenario.check_quan_stock` được gọi trong `headless.py`/`live.py` ngay sau khi đọc kho — vẫn trước khi dựng sim và mở `--out`. Đơn `reserved` thiếu `reserved` được cấp theo công thức, duyệt `(order_tick, id bàn)` (PRD-0 D).
@@ -28,5 +28,5 @@
 3. Windows: test hộp đen gọi `python3` qua `subprocess`; chạy local cần shim `python3.exe` (xem `AGENTS.md`). Không đổi `headless_cmd`.
 
 ## Đánh giá ngắn
-- Yêu cầu nào đạt / chưa đạt: Lõi luật + headless (AC-P1-01..13) **đạt** với bằng chứng tự động. Chưa kiểm chứng: AC-P1-14 (HUD), AC-P1-15 (README); AC-P1-16 chờ tag.
+- Yêu cầu nào đạt / chưa đạt: **15/16 AC đạt hoàn toàn** (`AC-P1-01..15` có bằng chứng tự động 90/90 test, kiểm tra tất định từng byte, smoke 2 tiến trình, kiểm tra README/contract và ảnh chụp live HUD `gather` + `quan` không lỗi JS). `AC-P1-16` đã đủ toàn bộ tài liệu & review chéo, chỉ còn thao tác gắn tag `phase-1` lên commit chốt ở `main`.
 - Điều cần chỉnh cho phase sau: thêm test riêng cho hòa khoảng cách "bếp trước bàn" (cần scenario dời bếp/bàn); kiểm mâu thuẫn mức luật cho `gather` mới dừng ở khung giảng viên — rà lại khi Phase 2 thêm cơ chế.

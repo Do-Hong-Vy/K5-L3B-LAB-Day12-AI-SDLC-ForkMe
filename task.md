@@ -91,7 +91,8 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
   - Bước cuối `time_left_ticks == 0`: kết thúc `time` ở mọi độ sâu *sau* các hành động trên, giữ giỏ hiện có.
 - [ ] **CP1-G3 (Tích hợp, `README` & Tag P1 | `AC-P1-15`, `AC-P1-16`):**
   - [x] Rà soát [README.md](README.md) (`≤ 3` lệnh clone-to-run macOS/Linux, điều khiển, cách tính điểm, lệnh test `1` lệnh), đối chiếu [game.contract.json](game.contract.json), và ghi standup Phase 1 vào [docs/standup.md](docs/standup.md).
-  - [ ] *(Chờ `Cuubeo`, `Phog2811`, `Nguyenquoctoan0310`)* Review code cho `Cuubeo`, gộp sạch vào `main`, chạy `check-contract` + cùng QA chốt tag `phase-1` trước `1:00`.
+  - [x] Review code cho `Cuubeo` (`docs/proof/phase-1/review-quan-by-Do-Hong-Vy.md`), tạo `gather_sample.jsonl`/`quan_sample.jsonl`, kiểm chứng `AC-P1-14`/`AC-P1-15`, chạy `check-contract` (`90/90` tests OK).
+  - [ ] Commit bản chốt cuối & gắn tag `phase-1` + `git push origin main --tags` trước `1:00`.
 
 #### B. `Cuubeo` (`sim/quan` — [`chonoi/sim/quan.py`](chonoi/sim/quan.py) + PO)
 - [x] **CP1-Q1 (Lát 3 — Khách, giữ chỗ, kiên nhẫn, bỏ đi | `AC-P1-06`, `AC-P1-08`):**
@@ -115,22 +116,18 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
 - [x] **CP1-U3 (Scrum):** Nhắc cả nhóm điền [`docs/standup.md`](docs/standup.md) giữa Phase 1 (phút 20–25) và kiểm tra tiến độ trước `0:50`.
 
 #### D. `Nguyenquoctoan0310` (`qa` — Validation, Tests & Verification Phase 1)
-- [ ] **CP1-T1 (Validation mức luật — mã thoát 2 | `AC-P1-09`, `AC-P1-10`):**
-  - Hoàn thiện `TODO(nhóm)` trong [`chonoi/scenario.py`](chonoi/scenario.py) theo đúng danh sách mục D [`docs/prd0.md`](docs/prd0.md#L207-L208): `quan.stoves`/`tables`/`hand`/`customers` (trạng thái `reserved`/`assigned`/`unfulfillable`/`served`, thiếu `reserved` thì suy từ công thức nếu đủ tồn, `assigned` phải có đúng 1 món ở bếp hoặc tay và `reserved` rỗng, `eating` phải là `served` có `eat_ticks_left > 0` và `base_price`/`tip`, bếp `cooking` timer dương khớp đơn, không trùng đơn giữa bếp & tay, giữ khác công thức hoặc quá tồn kho, liên kết thiếu, bộ đếm âm/mâu thuẫn → thoát `2` trước khi ghi file).
-  - Rà soát [`chonoi/contract.py`](chonoi/contract.py) kiểm các khóa `quan` & `menu` còn thiếu (giá nguyên dương, `tip_rate > 0`, `reputation`, `stoves`, `tables`...).
-- [ ] **CP1-T2 (Bộ test Phase 1 — `tests/test_phase1_rules.py` | `AC-P1-01`..`AC-P1-13`):**
-  - Test `gather`: biên bơi, `dive`/`surface`, oxy hồi/trừ, `oxygen_empty`, `choke` đúng `t+59`, nổi lên đúng tick ngạt không mất máu, `faint` mất giỏ LIFO + kho rỗng, hái nút + tie-break + mọc lại, bắt cá xóa đàn + cooldown, `hold_full` giữ nguyên nút/đàn/cooldown, hành động hợp lệ ở tick cuối, cập bến ở tick khác 0.
-  - Test `quan`: `player.vel` trong snapshot, lịch khách, chọn bàn id nhỏ nhất, chọn món đều theo seed, giữ chỗ khi gọi, `no_dish`, `customer_left` nhả giữ chỗ & `-0.5` uy tín, `interact` theo `(khoảng cách, bếp trước bàn, id)`, `cook_started` → `dish_ready` → `dish_picked` → `served` (boa `floor`, phục vụ đúng tick kiên nhẫn 0), `paid` & `tip_reputation`, đóng ca `closing` (`eating` trả tiền, `waiting` không trừ uy tín), `quan_end`.
-  - Test scenario mâu thuẫn (mã `2` không tạo file), smoke 2 tiến trình (`AC-P1-13`), và **Determinism** chạy 2 lần cùng seed + inputs cho cả `gather` & `quan` so byte-by-byte (`AC-P1-12`).
-- [ ] **CP1-T3 (Bằng chứng & Ma trận truy vết P1 | `AC-P1-16`):**
-  - Chạy skill `verify-phase`, lưu log & JSONL mẫu vào `docs/proof/phase-1/` và điền đầy đủ [`docs/verification/phase-1.md`](docs/verification/phase-1.md) theo đúng 16 mã `AC-P1-01..16`.
+- [x] **CP1-T1 (Validation mức luật — mã thoát 2 | `AC-P1-09`, `AC-P1-10`):**
+  - Hoàn thiện [`chonoi/scenario.py`](chonoi/scenario.py) (`_validate_quan_rules`, `check_quan_stock` trong `headless.py`/`live.py`) và [`chonoi/contract.py`](chonoi/contract.py) (`_validate_quan_layout`, `_validate_menu`).
+- [x] **CP1-T2 (Bộ test Phase 1 | `AC-P1-01`..`AC-P1-13`):** `tests/test_gather_p1.py` (11), `tests/test_quan_p1.py` (14), `tests/test_scenario_quan_p1.py` (12), `tests/test_contract_quan.py` (20) + smoke/unit/live = **90/90 OK**.
+- [x] **CP1-T3 (Bằng chứng & Ma trận truy vết P1 | `AC-P1-14`, `AC-P1-15`, `AC-P1-16`):**
+  - Chạy `verify-phase` + kiểm chứng live UI (`browser`) + kiểm README/contract; đầy đủ bằng chứng trong `docs/proof/phase-1/` và [`docs/verification/phase-1.md`](docs/verification/phase-1.md).
 
 #### E. Checklist đóng CP1 (trước `1:00`)
-- [ ] Toàn bộ unit test + smoke test + test Phase 1 xanh (`python3 -m unittest discover -s tests -v`), `python3 tools/check_team.py` đạt `OK`.
-- [ ] Đủ bằng chứng trong `docs/proof/phase-1/` và [`docs/verification/phase-1.md`](docs/verification/phase-1.md) cho `AC-P1-01..16`.
-- [ ] [`docs/ai-usage-log.md`](docs/ai-usage-log.md) & [`docs/standup.md`](docs/standup.md) cập nhật đủ cho cả 4 thành viên.
-- [ ] Cả 4 thành viên đều có commit nội dung mới gắn với tài khoản GitHub thật.
-- [ ] Chạy `check-contract` + `verify-phase`, push `main`, gắn tag `phase-1` và `git push origin phase-1` trước **1:00**.
+- [x] Toàn bộ unit test + smoke test + test Phase 1 xanh (**90/90 OK**), `python3 tools/check_team.py` đạt `OK`.
+- [x] Đủ bằng chứng trong `docs/proof/phase-1/` và [`docs/verification/phase-1.md`](docs/verification/phase-1.md) cho `AC-P1-01..15`.
+- [x] [`docs/ai-usage-log.md`](docs/ai-usage-log.md) & [`docs/standup.md`](docs/standup.md) cập nhật đủ cho cả 4 thành viên.
+- [x] Cả 4 thành viên đều có `≥ 3` commit có nội dung gắn với tài khoản GitHub thật (`Cuubeo`: 9, `Do-Hong-Vy`: 7+, `Phog2811`: 4, `nguyenquoctoan0310`: 3).
+- [ ] Commit bản chốt cuối, gắn tag `phase-1` và `git push origin main --tags` trước **1:00**.
 
 ---
 
