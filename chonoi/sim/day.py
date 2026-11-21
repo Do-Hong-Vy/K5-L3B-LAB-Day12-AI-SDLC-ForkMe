@@ -31,12 +31,12 @@ class ShopPhase:
     def __init__(self, tuning, day_sim, leftover_stock):
         self.t = tuning["shop"]
         self.day = day_sim
-        self.stock = dict(leftover_stock)
+        self.stock = leftover_stock  # kho dư từ ca (v1.1 map / v1.2 mảng cá thể); hàng ở Shop không hao tươi
         self.time_left_ticks = int(self.t["max_ticks"])
         self.done = False
 
     def snapshot(self) -> dict:
-        return {"stock": {k: self.stock[k] for k in sorted(self.stock) if self.stock[k] > 0}}
+        return {"stock": self.stock}
 
     def step(self, inp):
         events = []
@@ -151,7 +151,7 @@ class DaySim:
     def _start_shop(self, events):
         self.phase = "shop"
         self.phase_tick = 0
-        self.cur = ShopPhase(self.tuning, self, self.cur.stock)
+        self.cur = ShopPhase(self.tuning, self, self.cur.stock_view())
         self._ev(events, "phase_start", {})
 
     def _sync_into(self, sim):
