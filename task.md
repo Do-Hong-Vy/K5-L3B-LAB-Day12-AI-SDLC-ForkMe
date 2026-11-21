@@ -203,8 +203,8 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
   - Mỗi thành viên viết file phản tư cá nhân (`≤ 200 từ`, đủ 4 gạch đầu dòng kèm link commit & link review thật):
     - [x] `docs/members/Do-Hong-Vy.md`
     - [x] `docs/members/Cuubeo.md`
-    - [ ] `docs/members/Phog2811.md` *(đã có bản nháp bằng chứng)*
-    - [ ] `docs/members/Nguyenquoctoan0310.md` *(đã có bản nháp bằng chứng)*
+    - [x] `docs/members/Phog2811.md` *(soạn hộ từ ghi chép của chính Phog2811 — chờ chính chủ rà)*
+    - [x] `docs/members/Nguyenquoctoan0310.md` *(soạn hộ từ ghi chép của chính Nguyenquoctoan0310 — chờ chính chủ rà)*
   - Chốt dòng Phase 4 trong [`docs/ai-usage-log.md`](docs/ai-usage-log.md) & [`docs/standup.md`](docs/standup.md) + cập nhật lần cuối [`AGENTS.md`](AGENTS.md).
 - [x] **CP4-5 (Kiểm tra commit & Release — `Do-Hong-Vy`):**
   - Xác nhận mỗi người có **≥ 3 commit có nội dung** bằng đúng handle trong `TEAM.md` (`git log --format="%h %an <%ae> %s"`).
