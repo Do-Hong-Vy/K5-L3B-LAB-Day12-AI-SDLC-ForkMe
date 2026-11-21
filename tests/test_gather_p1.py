@@ -149,6 +149,8 @@ class GatherPhase1Rules(unittest.TestCase):
             sc = write_json(w.path("sc.json"), {
                 "gather": {
                     "player": {"pos": [20, 10]},
+                    # v1.1: cá bơi khi random_fish=True nên cố định cá để test cooldown bắt ở tọa độ cũ
+                    "random_fish": False,
                     "fish": [
                         {"id": "F10", "kind": "ca_loc", "pos": [22, 10]},
                         {"id": "F2", "kind": "ca_linh", "pos": [18, 10]},
@@ -300,6 +302,7 @@ class GatherPhase1Rules(unittest.TestCase):
             "player": {"pos": [20, 1.1], "oxygen_ticks": 1, "hp": 2},
             "nodes": [{"id": "N1", "kind": "bong_sung", "pos": [20, 0]}],
             "fish": [{"id": "F1", "kind": "ca_loc", "pos": [20, 1.5]}],
+            "random_fish": False,
         }
         sim = GatherSim(custom, sc, Streams(1), IdAllocator())
         # Ở d = 1.1 <= 1.2 (surface_depth tùy biến), hái nút cho node_yield = 2 và regrow = 30

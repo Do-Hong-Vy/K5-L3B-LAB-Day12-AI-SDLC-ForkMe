@@ -127,32 +127,36 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
 - [x] Đủ bằng chứng trong `docs/proof/phase-1/` và [`docs/verification/phase-1.md`](docs/verification/phase-1.md) cho `AC-P1-01..15`.
 - [x] [`docs/ai-usage-log.md`](docs/ai-usage-log.md) & [`docs/standup.md`](docs/standup.md) cập nhật đủ cho cả 4 thành viên.
 - [x] Cả 4 thành viên đều có `≥ 3` commit có nội dung gắn với tài khoản GitHub thật (`Cuubeo`: 9, `Do-Hong-Vy`: 7+, `Phog2811`: 4, `nguyenquoctoan0310`: 3).
-- [ ] Commit bản chốt cuối, gắn tag `phase-1` và `git push origin main --tags` trước **1:00**.
+- [x] Commit bản chốt cuối, gắn tag `phase-1` (`199f067`) và `git push origin main --tags` (`AC-P1-01..16` hoàn tất).
 
 ---
 
 ### CP2 — Phase 2: Mở rộng & Đổi yêu cầu đợt 1 (1:00 – 1:55 | Hạn tag `phase-2`: trước 1:55)
 
-> **Lưu ý:** Yêu cầu cụ thể của Phase 2 mở trên Lab Board lúc **1:00** (thường bổ sung hành vi/sinh vật/cơ chế mới hoặc đổi yêu cầu từ Phase 1 — ví dụ trong khung đã để chỗ cho cá bơi/sinh thêm, cơ chế mới, nút mới, `burn_s`, v.v.). Chỉ triển khai đúng theo đề Lab Board công bố lúc 1:00.
+> Kế hoạch chi tiết & mã AC chính thức: [`docs/ticket-02.md`](docs/ticket-02.md) (Test Contract v1.1), [`docs/plan/phase-2.md`](docs/plan/phase-2.md) (`AC-P2-01..15`), [`docs/adr/0001-contract-v1-1.md`](docs/adr/0001-contract-v1-1.md).
 
 - [x] **CP2-0 (PO `Cuubeo` + Integrator `Do-Hong-Vy`, 1:00 – 1:08):**
-  - Đọc đề Phase 2 trên Lab Board, tách toàn bộ AC (`AC-P2-??`) vào `docs/plan/phase-2.md` (`≤ 1 trang`).
-  - Ghi mọi câu hỏi/đổi yêu cầu vào [`docs/clarify.md`](docs/clarify.md).
-  - Nếu có thay đổi `game.contract.json`, schema snapshot/event/inventory hoặc quy tắc sẵn có: tạo **ADR** trong `docs/adr/0001-<tieu-de>.md` (theo `0000-template.md`, có bảng tác động module/file/test) và thông báo cả nhóm trước khi code.
-- [ ] **CP2-1 (`All` — Standup nhanh):** Điền dòng Phase 2 trong [`docs/standup.md`](docs/standup.md).
-- [ ] **CP2-2 (`Do-Hong-Vy` — `sim/gather`):** Triển khai các lát tính năng/đổi yêu cầu Phase 2 thuộc buổi sáng (`gather`) — giữ nguyên quy tắc `Streams` tách luồng (`rng.get("<ten_luong>")`) để không làm lệch RNG cũ; đọc mọi tham số mới từ `game.contract.json`.
-- [ ] **CP2-3 (`Cuubeo` — `sim/quan`):** Triển khai các lát tính năng/đổi yêu cầu Phase 2 thuộc buổi tối (`quan`) hoặc ghép ca/chế độ mới theo đề Phase 2.
-- [ ] **CP2-4 (`Phog2811` — `client/ui`):** Cập nhật UI/HUD hiển thị đầy đủ các thực thể/trạng thái/nút bấm/cơ chế mới của Phase 2; trau chuốt hình ảnh thay thế hình khối tạm (đảm bảo mọi hiệu ứng thêm chỉ chạy phía client/live, không chạm vào output headless).
-- [ ] **CP2-5 (`Nguyenquoctoan0310` — `qa`):**
-  - Cập nhật validation mới trong `contract.py` / `scenario.py` / `inputs.py` (nếu contract nâng cấp).
-  - Viết bộ test Phase 2 (`tests/test_phase2_*.py`) + **chạy lại toàn bộ test Phase 1 (regression)**.
-  - Xuất bằng chứng vào `docs/proof/phase-2/` và hoàn thiện `docs/verification/phase-2.md`.
-- [ ] **CP2-6 (`Phog2811` + `All` — Retro nhanh Phase 2, ~1:45):**
-  - Điền mục **Phase 2 (nhanh)** trong [`docs/retro.md`](docs/retro.md): *Điều tốt*, *Điều tệ*, *1 hành động cụ thể cho Phase 3*.
-- [ ] **CP2-7 (`Do-Hong-Vy` + `All` — Harness & Tag P2):**
-  - Cập nhật [`AGENTS.md`](AGENTS.md) với quy tắc/bẫy mới phát hiện ở Phase 1–2 (tạo diff rõ trong git history).
-  - Cập nhật [`docs/ai-usage-log.md`](docs/ai-usage-log.md) cho cả 4 người (Phase 2).
-  - Kiểm tra mọi người đã có `≥ 2` commit tích lũy; chạy full test xanh; gắn tag `phase-2` và push trước **1:55**.
+  - Đọc `docs/ticket-02.md`, tách `AC-P2-01..15` vào [`docs/plan/phase-2.md`](docs/plan/phase-2.md).
+  - Ghi clarify #12–#16 vào [`docs/clarify.md`](docs/clarify.md).
+  - Lập [`docs/adr/0001-contract-v1-1.md`](docs/adr/0001-contract-v1-1.md) (nâng `contract_version: "1.1"`, bảng tác động theo lát).
+- [ ] **CP2-1 (`All` — Standup nhanh & Contract v1.1 `AC-P2-01`):**
+  - [x] `Do-Hong-Vy`: nâng `contract_version: "1.1"`, khối `gather` (N5/N6, 8 đàn, cá bơi/sinh, `gather.monsters`) + 6 nguyên liệu trong `inventory.py` / `contract.py` / `scenario.py` tương thích L1.
+  - [ ] `Cuubeo`: khối `quan`, `menu` (6 món, B2, T2–T4), `day_plan` (D1–D5), `shop` (oxygen, hp) trong `game.contract.json`.
+  - [ ] Điền đầy đủ dòng Phase 2 của cả 4 thành viên trong [`docs/standup.md`](docs/standup.md) (`Do-Hong-Vy` đã điền).
+- [x] **CP2-2 (`Do-Hong-Vy` — L1 `sim/gather`: `AC-P2-02`, `AC-P2-03`, `AC-P2-05`):**
+  - Cá bơi 1.5 m/s trong `fish_x × fish_depths[loài]`, đổi hướng mỗi 120 bước bơi (`age_ticks`, luồng `Streams("fish_turn")`), phản xạ mép/góc; `random_fish: false` đứng yên.
+  - Sinh cá tại `phase_tick = 360*k` (`k >= 1`), trần 12, clearance `> 1 m`, trọng số chuẩn hóa + hướng lúc sinh (`Streams("fish_spawn")`), `IdAllocator("F")`, `fish_spawned`; thứ tự bước 4.5 (bắt trước khi bơi, còn giờ mới bơi/sinh); `tests/test_gather_p2.py`.
+- [ ] **CP2-3 (`Nguyenquoctoan0310` pair `Do-Hong-Vy` — L2 Cá Sấu, Máu/ngất: `AC-P2-04`, `AC-P2-05`):** Cá Sấu M1/M2 (`from_day: 3`), patrol/chase/recoil, hit −1 Máu + mất `floor(n/2)` LIFO + bất tử 90 tick + `monster_hit` + `faint(cause:"monster")`.
+- [ ] **CP2-4 (`Cuubeo` — L3 `sim/quan` & L4 `--mode day` / Shop / pause: `AC-P2-06..10`):** Quán 2 bếp/4 bàn/6 món, lọc thực đơn theo `day_plan`, luồng `--mode day --days 1..5`, Shop nâng cấp, pause 3 mode.
+- [ ] **CP2-5 (`Phog2811` — `client/ui`: `AC-P2-13`):** Menu chính, DayIntro/EveningIntro/DayResult/Summary, pause menu, HUD v1.1 (cá bơi, Cá Sấu + cảnh báo thủy quái, N5/N6, 2 bếp/4 bàn/6 món, danh sách cần lấy).
+- [ ] **CP2-6 (`Nguyenquoctoan0310` — `qa`: `AC-P2-11`, `AC-P2-12`, `AC-P2-14`, `AC-P2-15`):**
+  - Validator v1.1 đầy đủ trong `contract.py` / `scenario.py` / `inputs.py` (mâu thuẫn → mã 2).
+  - Bộ test Phase 2 (`tests/test_*_p2.py`) + regression Phase 1 xanh (test P1 đổi theo số chuẩn ghi rõ lý do).
+  - Xuất bằng chứng vào `docs/proof/phase-2/` (gồm smoke 2 tiến trình `integration.*`) và điền `docs/verification/phase-2.md`.
+- [ ] **CP2-7 (`Phog2811`, `Do-Hong-Vy` + `All` — Retro, Harness & Tag `phase-2` trước 1:55):**
+  - Điền mục **Phase 2 (nhanh)** trong [`docs/retro.md`](docs/retro.md).
+  - Cập nhật [`AGENTS.md`](AGENTS.md) và [`docs/ai-usage-log.md`](docs/ai-usage-log.md) cho cả 4 thành viên.
+  - Kiểm tra mọi người `≥ 2` commit mới / tích lũy đạt quy định, chạy `check-contract` + `verify-phase`, gắn tag `phase-2` và push trước **1:55**.
 
 ---
 

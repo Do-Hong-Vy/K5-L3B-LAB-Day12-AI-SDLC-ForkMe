@@ -1,6 +1,7 @@
-# Giao diện tích hợp `sim/*` ↔ `client/ui` (Contract v1.0)
+# Giao diện tích hợp `sim/*` ↔ `client/ui` (Contract v1.1)
 
 > UI chỉ **ĐỌC** snapshot từ `GET /state` (hoặc `Session.snapshot()`) và **GỬI** input qua `POST /input`, `POST /restart`. Tuyệt đối không tự tính lại luật chơi ở phía client.
+> Ghi chú v1.1: Lát L1 đã cập nhật mục `gather` (N1–N6 gồm `keo_neo`, 8 đàn `ca_linh`/`ca_loc`/`ca_keo`, cá bơi & sinh thêm). Các mục L2 (`monsters[]`), L3 (`B2`, `T2–T4`, 6 món), L4 (`--mode day`, `shop`, `pause`) sẽ được điền tiếp khi các lát tương ứng gộp.
 
 ---
 
@@ -29,9 +30,9 @@
 ## 3. Snapshot riêng của `gather` ([`chonoi/sim/gather.py`](../../chonoi/sim/gather.py))
 
 - `player`: `{pos: [x, d], vel: [vx, vd], heading_deg, oxygen_ticks, oxygen_max_ticks, hp, hp_max, zero_oxy_ticks, invuln_ticks, catch_cd_ticks, at_surface}`
-- `hold`: `list[str]` (thứ tự nhặt, phần tử cuối là mới nhất — LIFO), `hold_count`: `int`, `hold_capacity`: `int`
-- `nodes`: `[{id, pos: [x, d], kind, ready, regrow_ticks}]` (sắp theo `sort_by_id`)
-- `fish`: `[{id, pos: [x, d], kind, heading_deg}]` (sắp theo `sort_by_id`)
+- `hold`: `list[str]` (thứ tự nhặt, phần tử cuối là mới nhất — LIFO; gồm 6 loại v1.1: `ca_loc`, `ca_linh`, `ca_keo`, `bong_dien_dien`, `bong_sung`, `keo_neo`), `hold_count`: `int`, `hold_capacity`: `int`
+- `nodes`: `[{id, pos: [x, d], kind, ready, regrow_ticks}]` (6 nút `N1–N6`, sắp theo `sort_by_id`)
+- `fish`: `[{id, pos: [x, d], kind, heading_deg}]` (mặc định 8 đàn đầu ca ở 8 điểm khác nhau, tối đa 12, bơi & sinh theo tick khi `random_fish=true`; sắp theo `sort_by_id`)
 
 ---
 
