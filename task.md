@@ -135,7 +135,7 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
 
 > **Lưu ý:** Yêu cầu cụ thể của Phase 2 mở trên Lab Board lúc **1:00** (thường bổ sung hành vi/sinh vật/cơ chế mới hoặc đổi yêu cầu từ Phase 1 — ví dụ trong khung đã để chỗ cho cá bơi/sinh thêm, cơ chế mới, nút mới, `burn_s`, v.v.). Chỉ triển khai đúng theo đề Lab Board công bố lúc 1:00.
 
-- [ ] **CP2-0 (PO `Cuubeo` + Integrator `Do-Hong-Vy`, 1:00 – 1:08):**
+- [x] **CP2-0 (PO `Cuubeo` + Integrator `Do-Hong-Vy`, 1:00 – 1:08):**
   - Đọc đề Phase 2 trên Lab Board, tách toàn bộ AC (`AC-P2-??`) vào `docs/plan/phase-2.md` (`≤ 1 trang`).
   - Ghi mọi câu hỏi/đổi yêu cầu vào [`docs/clarify.md`](docs/clarify.md).
   - Nếu có thay đổi `game.contract.json`, schema snapshot/event/inventory hoặc quy tắc sẵn có: tạo **ADR** trong `docs/adr/0001-<tieu-de>.md` (theo `0000-template.md`, có bảng tác động module/file/test) và thông báo cả nhóm trước khi code.
