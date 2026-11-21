@@ -1,19 +1,19 @@
 # TEAM
 
-**Tên nhóm:** …  **Số người:** …  (khớp `team_size` trong `game.contract.json`)
+**Tên nhóm:** ForkMe  **Số người:** 4  (khớp `team_size` trong `game.contract.json`)
 
 | Thành viên | GitHub handle | Module chính | Vai quy trình | Người dự phòng cho |
 |---|---|---|---|---|
-| | | `sim/gather` | | |
-| | | `sim/quan` | | |
-| | | `client/ui` | | |
-| | | `qa` | | |
+|Đỗ Hồng Vỹ |Do-Hong-Vy | `sim/gather` | | |
+|Bùi Phước Anh |Cuubeo | `sim/quan` | | |
+|Đinh Hoàng Phong |Phog2811 | `client/ui` | | |
+|Nguyễn Quốc Toàn |Nguyenquoctoan0310 | `qa` | | |
 
 **Vai quy trình:** PO (đầu mối hỏi giảng viên, giữ `docs/clarify.md`) · Integrator (giữ `docs/contracts/`, gắn tag) · QA lead · Scrum/Release. Có thể kiêm.
 
 ## Thỏa thuận làm việc nhóm (điền trong 15 phút kickoff, ≤ 10 dòng)
 
-- Kênh liên lạc: …
+- Kênh liên lạc: Trực tiếp
 - Khi bất đồng về thiết kế: … (ví dụ: nói 2 phút, không xong thì Integrator quyết và ghi lại lý do)
 - Khi ai đó trễ hoặc vướng quá 10 phút: … (ví dụ: nói ngay trong kênh, người dự phòng nhận việc)
 - Giờ standup giữa phase: …
