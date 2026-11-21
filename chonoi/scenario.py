@@ -13,8 +13,6 @@ from .ids import id_key
 from .inventory import KINDS, validate_individuals, validate_items
 
 GATHER_KEYS = {"player", "hold", "nodes", "fish", "random_fish", "time_left_ticks", "monsters"}
-MONSTER_KEYS = {"id", "kind", "pos", "waypoints", "target_idx", "state", "state_ticks_left", "recoil_dir"}
-MONSTER_STATES = ("patrol", "chase", "recoil")
 GATHER_PLAYER_KEYS = {"pos", "vel", "heading_deg", "hp", "oxygen_ticks", "zero_oxy_ticks",
                       "invuln_ticks", "catch_cd_ticks"}
 FISH_KEYS = {"id", "kind", "pos", "heading_deg", "age_ticks"}
@@ -164,8 +162,6 @@ def _validate_gather(b, tuning):
             _check_ids(arr, b[arr])
     if "random_fish" in b and not isinstance(b["random_fish"], bool):
         raise BadInput("random_fish phải là boolean")
-    if "monsters" in b:
-        _validate_monsters(b["monsters"], g, bounds)
     if "hold" in b:
         h = b["hold"]
         if "freshness" in tuning:  # v1.2: mảng cá thể {id, kind, fresh}
@@ -239,6 +235,8 @@ MONSTER_STATES = ("patrol", "chase", "recoil")  # stunned chỉ có khi bật m�
 def _validate_monsters(arr, g):
     """gather.monsters[] (Ticket-02 4.3): thay danh sách mặc định; mâu thuẫn -> mã 2."""
     _check_ids("monsters", arr)
+    if "monsters" not in g:
+        raise BadInput("gather.monsters chỉ dùng khi tuning có thủy quái (gather.monsters)")
     species = g["monsters"]["species"]
     for m in arr:
         mid = m["id"]
@@ -527,37 +525,3 @@ def _check_reserved_ids(order, stock, tuning):
             counts[it["kind"]] = counts.get(it["kind"], 0) + 1
         if counts != recipe:
             raise BadInput(f"customers.{c['id']}.reserved khác công thức món {c['dish_id']}")
-
-
-def _validate_monsters(arr, g, bounds):
-    """Ticket-02 mục 4.3: monsters[] {id,kind,pos,waypoints,target_idx,state,state_ticks_left,recoil_dir}."""
-    _check_ids("monsters", arr)
-    species = (g.get("monsters") or {}).get("species", {})
-    for m in arr:
-        mid = m["id"]
-        if set(m) - MONSTER_KEYS:
-            raise BadInput(f"monsters.{mid}: trường lạ/chưa hỗ trợ {sorted(set(m) - MONSTER_KEYS)}")
-        if m.get("kind") not in species:
-            raise BadInput(f"monsters.{mid}.kind phải là loài có trong tuning ({sorted(species)})")
-        _pos(f"monsters.{mid}.pos", m.get("pos"), bounds)
-        wps = m.get("waypoints")
-        if not isinstance(wps, list) or len(wps) != 2:
-            raise BadInput(f"monsters.{mid}.waypoints phải có đúng hai điểm")
-        for i, w in enumerate(wps):
-            _pos(f"monsters.{mid}.waypoints[{i}]", w, bounds)
-        if m.get("target_idx", 1) not in (0, 1) or isinstance(m.get("target_idx", 1), bool):
-            raise BadInput(f"monsters.{mid}.target_idx phải là 0 hoặc 1")
-        state = m.get("state", "patrol")
-        if state not in MONSTER_STATES:
-            raise BadInput(f"monsters.{mid}.state phải là một trong {MONSTER_STATES}")
-        t = m.get("state_ticks_left", 0)
-        _nonneg_int(f"monsters.{mid}.state_ticks_left", t)
-        rd = m.get("recoil_dir")
-        if state == "recoil":
-            if t <= 0:
-                raise BadInput(f"monsters.{mid}: recoil cần state_ticks_left > 0")
-            if not (isinstance(rd, list) and len(rd) == 2 and all(_num(c) for c in rd)
-                    and abs(math.hypot(*rd) - 1) < 1e-6):
-                raise BadInput(f"monsters.{mid}.recoil_dir phải là vector đơn vị khi recoil")
-        elif rd is not None:
-            raise BadInput(f"monsters.{mid}.recoil_dir chỉ có khi recoil (mặc định null)")

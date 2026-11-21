@@ -9,7 +9,7 @@ import json
 import math
 import unittest
 
-from helpers import Workdir, events, frames, read_jsonl, run_headless, snapshots, write_json
+from helpers import Workdir, counts, events, frames, hold, kinds, read_jsonl, run_headless, snapshots, write_json
 
 from chonoi.contract import load_contract
 from chonoi.sim.monsters import MonsterSystem
@@ -262,16 +262,16 @@ class HeadlessMonsters(unittest.TestCase):
 
     def test_hit_qua_headless(self):
         with Workdir() as w:
-            rows = self.run_gather(w, {"player": {"pos": [60, 24]}, "hold": ["ca_loc", "bong_sung"],
+            rows = self.run_gather(w, {"player": {"pos": [60, 24]}, "hold": hold(["ca_loc", "bong_sung"]),
                                        "fish": [], "monsters": [self.STILL]})
         hit = events(rows, "monster_hit")
         self.assertEqual(len(hit), 1)
         self.assertEqual(hit[0]["tick"], 1)
-        self.assertEqual(hit[0]["data"]["lost"], ["bong_sung"])
+        self.assertEqual(kinds(hit[0]["data"]["lost"]), ["bong_sung"])
         s1 = snapshots(rows)[-1]
         self.assertEqual(s1["player"]["hp"], G["hp_max"] - 1)
         self.assertEqual(s1["player"]["invuln_ticks"], INVULN)
-        self.assertEqual(s1["hold"], ["ca_loc"])
+        self.assertEqual(kinds(s1["hold"]), ["ca_loc"])
         self.assertEqual(s1["monsters"][0]["state"], "recoil")
 
     def test_bat_tu_tu_scenario_chan_hit(self):
@@ -282,16 +282,17 @@ class HeadlessMonsters(unittest.TestCase):
 
     def test_ngat_do_quai_kho_rong(self):
         with Workdir() as w:
-            rows = self.run_gather(w, {"player": {"pos": [60, 24], "hp": 1}, "hold": ["ca_loc", "ca_linh", "keo_neo"],
+            rows = self.run_gather(w, {"player": {"pos": [60, 24], "hp": 1}, "hold": hold(["ca_loc", "ca_linh", "keo_neo"]),
                                        "fish": [], "monsters": [self.STILL]}, ticks=5)
             with open(w.path("inv.json"), encoding="utf-8") as f:
                 inv = json.load(f)
         names = [e["name"] for e in events(rows)]
         self.assertEqual(names[-3:], ["monster_hit", "faint", "gather_end"])
         faint = events(rows, "faint")[0]["data"]
-        self.assertEqual(faint, {"cause": "monster", "lost": ["ca_linh", "ca_loc"], "hp": 0})
+        self.assertEqual(kinds(faint.pop("lost")), ["ca_linh", "ca_loc"])  # v1.2: mảng cá thể LIFO
+        self.assertEqual(faint, {"cause": "monster", "hp": 0})
         self.assertEqual(events(rows, "gather_end")[0]["data"]["reason"], "fainted")
-        self.assertEqual(inv, {"items": {}})
+        self.assertEqual(counts(inv["items"]), {})
         self.assertEqual(rows[-1]["reason"], "fainted")
 
     def test_ngat_truoc_hit_cung_tick(self):

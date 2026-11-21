@@ -17,7 +17,8 @@ from chonoi.errors import BadInput
 def v11():
     """Tuning v1.1 của repo (contract_version "1.1", số chuẩn Ticket-02 do Integrator khai)."""
     c = load_contract()
-    assert c["contract_version"] == "1.1", "test v1.1 cần game.contract.json đã nâng lên 1.1"
+    # v1.2 (Ticket-03) giữ nguyên mọi khóa v1.1 và thêm freshness -> test v1.1 vẫn áp dụng.
+    assert c["contract_version"] in ("1.1", "1.2"), "test v1.1 cần game.contract.json từ 1.1"
     return copy.deepcopy(c["tuning"])
 
 

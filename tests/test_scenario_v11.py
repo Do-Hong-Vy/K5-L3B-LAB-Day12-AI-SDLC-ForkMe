@@ -7,7 +7,7 @@ Gọi thẳng load_scenario / load_frames với tuning v1.1 chuẩn (test_contra
 import copy
 import unittest
 
-from helpers import Workdir, frames, write_json
+from helpers import Workdir, frames, hold, kinds, write_json
 from test_contract_v11 import v11
 
 from chonoi.errors import BadInput
@@ -40,7 +40,7 @@ class GatherV11(unittest.TestCase):
 
     def test_hop_le(self):
         self.ok({"player": {"pos": [60, 22], "invuln_ticks": 30},
-                 "hold": ["ca_keo", "keo_neo", "ca_loc"],
+                 "hold": hold(["ca_keo", "keo_neo", "ca_loc"]),
                  "nodes": [{"id": "N5", "kind": "keo_neo", "pos": [76, 0], "regrow_ticks": 5}],
                  "fish": [{"id": "F1", "kind": "ca_keo", "pos": [40, 25], "heading_deg": 90, "age_ticks": 119}],
                  "monsters": [m1(), m1(id="M9", pos=[62, 24], state="recoil", state_ticks_left=10,
@@ -128,9 +128,9 @@ class DayScenario(unittest.TestCase):
 
     def test_vi_du_ticket_hop_le(self):
         sc = load({"day": {"money": 200, "earned": 200},
-                   "gather": {"hold": ["ca_loc", "bong_sung", "bong_sung"], "random_fish": False}}, "day")
+                   "gather": {"hold": hold(["ca_loc", "bong_sung", "bong_sung"]), "random_fish": False}}, "day")
         self.assertEqual(sc["day"], {"money": 200, "earned": 200})
-        self.assertEqual(sc["gather"]["hold"], ["ca_loc", "bong_sung", "bong_sung"])
+        self.assertEqual(kinds(sc["gather"]["hold"]), ["ca_loc", "bong_sung", "bong_sung"])
         self.assertEqual(sc.get("quan", {}), {})
 
     def test_day_day_du_hop_le(self):

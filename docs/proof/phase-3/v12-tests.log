@@ -18,6 +18,40 @@ test_stove_without_id (test_contract_quan.QuanContractUnit.test_stove_without_id
 test_stoves_empty (test_contract_quan.QuanContractUnit.test_stoves_empty) ... ok
 test_table_pos_out_of_bounds (test_contract_quan.QuanContractUnit.test_table_pos_out_of_bounds) ... ok
 test_tables_missing (test_contract_quan.QuanContractUnit.test_tables_missing) ... ok
+test_day_plan_ingredients_sai_tong (test_contract_v11.ContractV11.test_day_plan_ingredients_sai_tong) ... ok
+test_day_plan_mon_la (test_contract_v11.ContractV11.test_day_plan_mon_la) ... ok
+test_day_plan_sai_thu_tu (test_contract_v11.ContractV11.test_day_plan_sai_thu_tu) ... ok
+test_day_plan_thieu_ngay (test_contract_v11.ContractV11.test_day_plan_thieu_ngay) ... ok
+test_diem_sinh_ngoai_dai_loai (test_contract_v11.ContractV11.test_diem_sinh_ngoai_dai_loai) ... ok
+test_exit_nho_hon_detect (test_contract_v11.ContractV11.test_exit_nho_hon_detect) ... ok
+test_fish_depths_thieu_loai (test_contract_v11.ContractV11.test_fish_depths_thieu_loai) ... ok
+test_fish_depths_tren_mat_nuoc (test_contract_v11.ContractV11.test_fish_depths_tren_mat_nuoc) ... ok
+test_fish_initial_khong_du_8_dan (test_contract_v11.ContractV11.test_fish_initial_khong_du_8_dan) ... ok
+test_fish_initial_trung_vi_tri (test_contract_v11.ContractV11.test_fish_initial_trung_vi_tri) ... ok
+test_fish_x_ngoai_bien (test_contract_v11.ContractV11.test_fish_x_ngoai_bien) ... ok
+test_from_day_ngoai_1_5 (test_contract_v11.ContractV11.test_from_day_ngoai_1_5) ... ok
+test_khong_con_nao_tu_ngay_1 (test_contract_v11.ContractV11.test_khong_con_nao_tu_ngay_1) ... ok
+test_loss_ratio_ngoai_0_1 (test_contract_v11.ContractV11.test_loss_ratio_ngoai_0_1) ... ok
+test_menu_nhan_6_nguyen_lieu (test_contract_v11.ContractV11.test_menu_nhan_6_nguyen_lieu) ... ok
+test_mot_waypoint (test_contract_v11.ContractV11.test_mot_waypoint) ... ok
+test_shop_cap_sai_thu_tu (test_contract_v11.ContractV11.test_shop_cap_sai_thu_tu) ... ok
+test_shop_gia_khong_duong (test_contract_v11.ContractV11.test_shop_gia_khong_duong) ... ok
+test_shop_max_ticks_am (test_contract_v11.ContractV11.test_shop_max_ticks_am) ... ok
+test_shop_thieu_hp (test_contract_v11.ContractV11.test_shop_thieu_hp) ... ok
+test_so_chuan_v11_hop_le (test_contract_v11.ContractV11.test_so_chuan_v11_hop_le) ... ok
+test_spawn_id_trung (test_contract_v11.ContractV11.test_spawn_id_trung) ... ok
+test_spawn_ngoai_dai_do_sau (test_contract_v11.ContractV11.test_spawn_ngoai_dai_do_sau) ... ok
+test_spawn_x_ngoai_fish_x (test_contract_v11.ContractV11.test_spawn_x_ngoai_fish_x) ... ok
+test_species_thieu_khoa (test_contract_v11.ContractV11.test_species_thieu_khoa) ... ok
+test_thieu_ca_keo_trong_yield (test_contract_v11.ContractV11.test_thieu_ca_keo_trong_yield) ... ok
+test_thieu_khoa_fish_speed (test_contract_v11.ContractV11.test_thieu_khoa_fish_speed) ... ok
+test_thieu_monsters (test_contract_v11.ContractV11.test_thieu_monsters) ... ok
+test_thieu_nut_keo_neo (test_contract_v11.ContractV11.test_thieu_nut_keo_neo) ... ok
+test_trong_so_am (test_contract_v11.ContractV11.test_trong_so_am) ... ok
+test_turn_ticks_khong_nguyen (test_contract_v11.ContractV11.test_turn_ticks_khong_nguyen) ... ok
+test_waypoint_dau_khac_vi_tri (test_contract_v11.ContractV11.test_waypoint_dau_khac_vi_tri) ... ok
+test_day_plan_sai_exit_2 (test_contract_v11.ContractVersionBlackBox.test_day_plan_sai_exit_2) ... ok
+test_version_la_exit_2 (test_contract_v11.ContractVersionBlackBox.test_version_la_exit_2) ... ok
 test_tat_o_headless (test_creative_kitchen.HeadlessUnchanged.test_tat_o_headless) ... ok
 test_bep_tu_choi_don_chua_so_che (test_creative_kitchen.Kitchen.test_bep_tu_choi_don_chua_so_che) ... ok
 test_khach_roi_huy_so_che (test_creative_kitchen.Kitchen.test_khach_roi_huy_so_che) ... ok
@@ -57,6 +91,39 @@ test_contract_and_scenario_reject_invalid_v11_gather (test_gather_p2.GatherContr
 test_contract_v11_gather_fields_and_standards (test_gather_p2.GatherContractV11Tests.test_contract_v11_gather_fields_and_standards) ... ok
 test_harvest_keo_neo_and_catch_ca_keo_handover (test_gather_p2.GatherContractV11Tests.test_harvest_keo_neo_and_catch_ca_keo_handover) ... ok
 test_state_input_and_clean_stop (test_live.LiveServerTest.test_state_input_and_clean_stop) ... ok
+test_chan_trong_dai_do_sau_loai (test_monsters_p2.Chase.test_chan_trong_dai_do_sau_loai) ... ok
+test_giu_chase_trong_16m (test_monsters_p2.Chase.test_giu_chase_trong_16m) ... ok
+test_ngoai_10m_khong_phat_hien (test_monsters_p2.Chase.test_ngoai_10m_khong_phat_hien) ... ok
+test_nguoi_choi_nong_khong_bi_duoi (test_monsters_p2.Chase.test_nguoi_choi_nong_khong_bi_duoi) ... ok
+test_phat_hien_trong_10m_chase_3ms (test_monsters_p2.Chase.test_phat_hien_trong_10m_chase_3ms) ... ok
+test_roi_chase_khi_nguoi_choi_len_nong (test_monsters_p2.Chase.test_roi_chase_khi_nguoi_choi_len_nong) ... ok
+test_roi_chase_khi_xa_hon_16m (test_monsters_p2.Chase.test_roi_chase_khi_xa_hon_16m) ... ok
+test_cung_dau_vao_cung_ket_qua (test_monsters_p2.Deterministic.test_cung_dau_vao_cung_ket_qua) ... ok
+test_mau_ve_0_ngat_cause_monster (test_monsters_p2.Faint.test_mau_ve_0_ngat_cause_monster) ... ok
+test_M2_tu_ngay_3_trong_day (test_monsters_p2.HeadlessMonsters.test_M2_tu_ngay_3_trong_day) ... ok
+test_bat_tu_tu_scenario_chan_hit (test_monsters_p2.HeadlessMonsters.test_bat_tu_tu_scenario_chan_hit) ... ok
+test_cap_ben_khi_bi_quai_duoi_van_docked (test_monsters_p2.HeadlessMonsters.test_cap_ben_khi_bi_quai_duoi_van_docked) ... ok
+test_hit_qua_headless (test_monsters_p2.HeadlessMonsters.test_hit_qua_headless) ... ok
+test_ngat_choke_khong_xet_hit (test_monsters_p2.HeadlessMonsters.test_ngat_choke_khong_xet_hit) ... ok
+test_ngat_do_quai_kho_rong (test_monsters_p2.HeadlessMonsters.test_ngat_do_quai_kho_rong) ... ok
+test_ngat_truoc_hit_cung_tick (test_monsters_p2.HeadlessMonsters.test_ngat_truoc_hit_cung_tick) ... ok
+test_snapshot_tick0_co_monsters_ngay_1 (test_monsters_p2.HeadlessMonsters.test_snapshot_tick0_co_monsters_ngay_1) ... ok
+test_tat_dinh_tung_byte_co_quai_duoi (test_monsters_p2.HeadlessMonsters.test_tat_dinh_tung_byte_co_quai_duoi) ... ok
+test_dang_bat_tu_khong_hit_khong_recoil (test_monsters_p2.Hit.test_dang_bat_tu_khong_hit_khong_recoil) ... ok
+test_dung_mep_hit_radius (test_monsters_p2.Hit.test_dung_mep_hit_radius) ... ok
+test_gio_rong_va_le_lam_tron_xuong (test_monsters_p2.Hit.test_gio_rong_va_le_lam_tron_xuong) ... ok
+test_hit_mat_1_mau_roi_nua_gio_lifo_bat_tu (test_monsters_p2.Hit.test_hit_mat_1_mau_roi_nua_gio_lifo_bat_tu) ... ok
+test_mot_hit_moi_buoc_con_gan_nhat_hoa_id (test_monsters_p2.Hit.test_mot_hit_moi_buoc_con_gan_nhat_hoa_id) ... ok
+test_nguoi_choi_nong_khong_bi_hit (test_monsters_p2.Hit.test_nguoi_choi_nong_khong_bi_hit) ... ok
+test_mac_dinh_target_1_patrol (test_monsters_p2.Layout.test_mac_dinh_target_1_patrol) ... ok
+test_ngay_1_chi_M1_ngay_3_co_M2 (test_monsters_p2.Layout.test_ngay_1_chi_M1_ngay_3_co_M2) ... ok
+test_scenario_thay_danh_sach (test_monsters_p2.Layout.test_scenario_thay_danh_sach) ... ok
+test_tuning_khong_co_monsters_thi_tat (test_monsters_p2.Layout.test_tuning_khong_co_monsters_thi_tat) ... ok
+test_patrol_1ms_toi_waypoint_roi_doi_muc_tieu (test_monsters_p2.Patrol.test_patrol_1ms_toi_waypoint_roi_doi_muc_tieu) ... ok
+test_recoil_chan_mep_do_sau (test_monsters_p2.Recoil.test_recoil_chan_mep_do_sau) ... ok
+test_recoil_lui_xa_nguoi_choi_60_buoc_khong_hit_roi_patrol (test_monsters_p2.Recoil.test_recoil_lui_xa_nguoi_choi_60_buoc_khong_hit_roi_patrol) ... ok
+test_sau_recoil_xet_cham_tu_buoc_ke (test_monsters_p2.Recoil.test_sau_recoil_xet_cham_tu_buoc_ke) ... ok
+test_trung_tam_dung_huong_x_duong (test_monsters_p2.Recoil.test_trung_tam_dung_huong_x_duong) ... ok
 test_bad_frames_raise (test_python_starter_units.Units.test_bad_frames_raise) ... ok
 test_catch_is_a_v10_button_and_attack_is_not (test_python_starter_units.Units.test_catch_is_a_v10_button_and_attack_is_not) ... ok
 test_id_allocator_continues_after_max (test_python_starter_units.Units.test_id_allocator_continues_after_max) ... ok
@@ -111,6 +178,56 @@ test_reserved_suy_tu_cong_thuc_du_ton (test_scenario_quan_p1.QuanScenarioAccepte
 test_uy_tin_dung_mep (test_scenario_quan_p1.QuanScenarioAccepted.test_uy_tin_dung_mep) ... ok
 test_giu_qua_ton_voi_file_inventory_exit_2 (test_scenario_quan_p1.QuanScenarioRejected.test_giu_qua_ton_voi_file_inventory_exit_2) ... ok
 test_moi_mau_thuan_exit_2_khong_tao_file (test_scenario_quan_p1.QuanScenarioRejected.test_moi_mau_thuan_exit_2_khong_tao_file) ... ok
+test_cam_quan_reputation (test_scenario_v11.DayScenario.test_cam_quan_reputation) ... ok
+test_cam_quan_stock (test_scenario_v11.DayScenario.test_cam_quan_stock) ... ok
+test_day_day_du_hop_le (test_scenario_v11.DayScenario.test_day_day_du_hop_le) ... ok
+test_day_plan_ingredients_sai (test_scenario_v11.DayScenario.test_day_plan_ingredients_sai) ... ok
+test_day_plan_mon_la (test_scenario_v11.DayScenario.test_day_plan_mon_la) ... ok
+test_day_plan_ngay_6 (test_scenario_v11.DayScenario.test_day_plan_ngay_6) ... ok
+test_day_plan_ngay_trung (test_scenario_v11.DayScenario.test_day_plan_ngay_trung) ... ok
+test_day_plan_thieu_dishes (test_scenario_v11.DayScenario.test_day_plan_thieu_dishes) ... ok
+test_day_truong_la (test_scenario_v11.DayScenario.test_day_truong_la) ... ok
+test_gather_mau_van_duoc_kiem (test_scenario_v11.DayScenario.test_gather_mau_van_duoc_kiem) ... ok
+test_khoi_la (test_scenario_v11.DayScenario.test_khoi_la) ... ok
+test_mode_doc_lap_khong_nhan_khoi_day (test_scenario_v11.DayScenario.test_mode_doc_lap_khong_nhan_khoi_day) ... ok
+test_money_am (test_scenario_v11.DayScenario.test_money_am) ... ok
+test_money_khong_khai_earned (test_scenario_v11.DayScenario.test_money_khong_khai_earned) ... ok
+test_money_lon_hon_earned (test_scenario_v11.DayScenario.test_money_lon_hon_earned) ... ok
+test_nang_cap_la (test_scenario_v11.DayScenario.test_nang_cap_la) ... ok
+test_nang_cap_vuot_cap_toi_da (test_scenario_v11.DayScenario.test_nang_cap_vuot_cap_toi_da) ... ok
+test_uy_tin_ngoai_khoang (test_scenario_v11.DayScenario.test_uy_tin_ngoai_khoang) ... ok
+test_vi_du_ticket_hop_le (test_scenario_v11.DayScenario.test_vi_du_ticket_hop_le) ... ok
+test_age_ticks_am (test_scenario_v11.GatherV11.test_age_ticks_am) ... ok
+test_attack_cd_chua_bat_lao (test_scenario_v11.GatherV11.test_attack_cd_chua_bat_lao) ... ok
+test_ca_ho_chua_bat_so_tay (test_scenario_v11.GatherV11.test_ca_ho_chua_bat_so_tay) ... ok
+test_fish_truong_la (test_scenario_v11.GatherV11.test_fish_truong_la) ... ok
+test_hop_le (test_scenario_v11.GatherV11.test_hop_le) ... ok
+test_invuln_vuot_tran (test_scenario_v11.GatherV11.test_invuln_vuot_tran) ... ok
+test_loai_ca_la (test_scenario_v11.GatherV11.test_loai_ca_la) ... ok
+test_monster_id_trung (test_scenario_v11.GatherV11.test_monster_id_trung) ... ok
+test_monster_kind_la (test_scenario_v11.GatherV11.test_monster_kind_la) ... ok
+test_monster_mot_waypoint (test_scenario_v11.GatherV11.test_monster_mot_waypoint) ... ok
+test_monster_ngoai_dai_do_sau (test_scenario_v11.GatherV11.test_monster_ngoai_dai_do_sau) ... ok
+test_monster_truong_la (test_scenario_v11.GatherV11.test_monster_truong_la) ... ok
+test_monster_waypoint_ngoai_ban_do (test_scenario_v11.GatherV11.test_monster_waypoint_ngoai_ban_do) ... ok
+test_monsters_khi_tuning_khong_co_quai (test_scenario_v11.GatherV11.test_monsters_khi_tuning_khong_co_quai) ... ok
+test_monsters_rong_hop_le (test_scenario_v11.GatherV11.test_monsters_rong_hop_le) ... ok
+test_node_truong_la (test_scenario_v11.GatherV11.test_node_truong_la) ... ok
+test_patrol_co_recoil_dir (test_scenario_v11.GatherV11.test_patrol_co_recoil_dir) ... ok
+test_patrol_co_timer (test_scenario_v11.GatherV11.test_patrol_co_timer) ... ok
+test_recoil_huong_khong_don_vi (test_scenario_v11.GatherV11.test_recoil_huong_khong_don_vi) ... ok
+test_recoil_thieu_huong (test_scenario_v11.GatherV11.test_recoil_thieu_huong) ... ok
+test_recoil_timer_0 (test_scenario_v11.GatherV11.test_recoil_timer_0) ... ok
+test_recoil_timer_vuot (test_scenario_v11.GatherV11.test_recoil_timer_vuot) ... ok
+test_state_stunned_chua_bat_lao (test_scenario_v11.GatherV11.test_state_stunned_chua_bat_lao) ... ok
+test_target_idx_2 (test_scenario_v11.GatherV11.test_target_idx_2) ... ok
+test_attack_photo_van_bi_tu_choi (test_scenario_v11.InputsV11.test_attack_photo_van_bi_tu_choi) ... ok
+test_bo_nut_v10_tu_choi_pause (test_scenario_v11.InputsV11.test_bo_nut_v10_tu_choi_pause) ... ok
+test_buy_lenh_la_van_hop_le_o_inputs (test_scenario_v11.InputsV11.test_buy_lenh_la_van_hop_le_o_inputs) ... ok
+test_buy_phai_la_chuoi_khac_rong (test_scenario_v11.InputsV11.test_buy_phai_la_chuoi_khac_rong) ... ok
+test_nut_v11 (test_scenario_v11.InputsV11.test_nut_v11) ... ok
+test_pause_phai_boolean (test_scenario_v11.InputsV11.test_pause_phai_boolean) ... ok
+test_pause_shop_done_buy (test_scenario_v11.InputsV11.test_pause_shop_done_buy) ... ok
 test_con_01_ticks_zero_and_end_line (test_smoke_p1.Contract.test_con_01_ticks_zero_and_end_line) ... ok
 test_con_02_deterministic_bytes (test_smoke_p1.Contract.test_con_02_deterministic_bytes) ... ok
 test_con_03_bad_input_exit_2 (test_smoke_p1.Contract.test_con_03_bad_input_exit_2) ... ok
@@ -135,10 +252,10 @@ test_time_ends_gather_and_keeps_hold (test_smoke_p1.Movement.test_time_ends_gath
 test_khoi_sai_mode_exit_2 (test_smoke_p1.ScenarioModes.test_khoi_sai_mode_exit_2) ... ok
 test_quan_fixture_khong_hop_le_exit_2 (test_smoke_p1.ScenarioModes.test_quan_fixture_khong_hop_le_exit_2) ... ok
 test_quan_player_vel_hop_le (test_smoke_p1.ScenarioModes.test_quan_player_vel_hop_le) ... ok
-test_10_ngay_khong_crash_va_tat_dinh (test_soak_p4.Soak.test_10_ngay_khong_crash_va_tat_dinh) ... c:\VinAI\K5-L3B-LAB-Day12-AI-SDLC-ForkMe\tests\test_soak_p4.py:19: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\Sheep\\AppData\\Local\\Temp\\tmp2lgr9wia\\a.json' mode='r' encoding='utf-8'>
+test_10_ngay_khong_crash_va_tat_dinh (test_soak_p4.Soak.test_10_ngay_khong_crash_va_tat_dinh) ... c:\VinAI\K5-L3B-LAB-Day12-AI-SDLC-ForkMe\tests\test_soak_p4.py:19: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\Sheep\\AppData\\Local\\Temp\\tmp0nhnkhjk\\a.json' mode='r' encoding='utf-8'>
   return p.returncode, (json.load(open(out, encoding="utf-8")) if p.returncode == 0 else p.stderr)
 ResourceWarning: Enable tracemalloc to get the object allocation traceback
-c:\VinAI\K5-L3B-LAB-Day12-AI-SDLC-ForkMe\tests\test_soak_p4.py:19: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\Sheep\\AppData\\Local\\Temp\\tmp2lgr9wia\\b.json' mode='r' encoding='utf-8'>
+c:\VinAI\K5-L3B-LAB-Day12-AI-SDLC-ForkMe\tests\test_soak_p4.py:19: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\Sheep\\AppData\\Local\\Temp\\tmp0nhnkhjk\\b.json' mode='r' encoding='utf-8'>
   return p.returncode, (json.load(open(out, encoding="utf-8")) if p.returncode == 0 else p.stderr)
 ResourceWarning: Enable tracemalloc to get the object allocation traceback
 ok
@@ -156,13 +273,13 @@ test_scenario_quai_sai_ma_2 (test_v12_monsters.Crocodile.test_scenario_quai_sai_
 test_hang_moi_cap_id_tiep_theo_va_hao_tu_buoc_sau (test_v12_monsters.FreshGather.test_hang_moi_cap_id_tiep_theo_va_hao_tu_buoc_sau) ... ok
 test_id_ca_the_tiep_tuc_qua_ngay (test_v12_monsters.FreshGather.test_id_ca_the_tiep_tuc_qua_ngay) ... ok
 test_kho_dem_bi_tu_choi_o_v12 (test_v12_monsters.FreshGather.test_kho_dem_bi_tu_choi_o_v12) ... ok
-test_smoke_ban_giao_file_ticket03 (test_v12_monsters.FreshGather.test_smoke_ban_giao_file_ticket03) ... c:\VinAI\K5-L3B-LAB-Day12-AI-SDLC-ForkMe\tests\test_v12_monsters.py:43: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\Sheep\\AppData\\Local\\Temp\\tmp1w4ijiez\\inv.json' mode='r' encoding='utf-8'>
+test_smoke_ban_giao_file_ticket03 (test_v12_monsters.FreshGather.test_smoke_ban_giao_file_ticket03) ... c:\VinAI\K5-L3B-LAB-Day12-AI-SDLC-ForkMe\tests\test_v12_monsters.py:43: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\Sheep\\AppData\\Local\\Temp\\tmp5mu8lga4\\inv.json' mode='r' encoding='utf-8'>
   saved = json.load(open(inv, encoding="utf-8"))
 ResourceWarning: Enable tracemalloc to get the object allocation traceback
 ok
 test_vi_du_nguong_ticket03 (test_v12_monsters.FreshGather.test_vi_du_nguong_ticket03) ... ok
 
 ----------------------------------------------------------------------
-Ran 150 tests in 47.271s
+Ran 267 tests in 50.194s
 
 OK (skipped=1)

@@ -31,11 +31,27 @@ def load_contract(path=DEFAULT_PATH) -> dict:
     if version not in SUPPORTED_VERSIONS:
         raise BadInput(f"contract_version phải là một trong {list(SUPPORTED_VERSIONS)}, đang là {version!r}")
     validate_tuning(c.get("tuning"))
+    if version == "1.2":
+        _validate_freshness(c["tuning"].get("freshness"))
+    elif "freshness" in c["tuning"]:
+        raise BadInput("tuning.freshness chỉ có từ contract_version 1.2")
     return c
 
 
-# Validator hiện tại kiểm schema v1.1 (Ticket-02). Nâng v1.2 (Ticket-03) thì thêm vào đây cùng lúc với validator.
-SUPPORTED_VERSIONS = ("1.1",)
+def _validate_freshness(fr):
+    """Ticket-03: freshness {initial, gather_decay_per_s, quan_decay_per_s, spoiled_below} = 100, 0.5, 0.25, 30."""
+    keys = ("initial", "gather_decay_per_s", "quan_decay_per_s", "spoiled_below")
+    if not isinstance(fr, dict) or set(fr) != set(keys):
+        raise BadInput(f"tuning.freshness phải có đúng khóa {list(keys)} (contract 1.2)")
+    for k in keys:
+        if not _num(fr[k]) or fr[k] < 0 or fr[k] > 100:
+            raise BadInput(f"tuning.freshness.{k} phải là số trong [0, 100]")
+    if not (0 < fr["spoiled_below"] <= fr["initial"]) or fr["gather_decay_per_s"] <= 0 or fr["quan_decay_per_s"] <= 0:
+        raise BadInput("tuning.freshness: hao tươi > 0 và 0 < spoiled_below <= initial")
+
+
+# Validator kiểm schema v1.1 (Ticket-02) + v1.2 (Ticket-03: thêm freshness, kho cá thể).
+SUPPORTED_VERSIONS = ("1.1", "1.2")
 MAX_DAYS = 5
 
 
