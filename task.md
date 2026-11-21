@@ -94,12 +94,12 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
   - [ ] *(Chờ `Cuubeo`, `Phog2811`, `Nguyenquoctoan0310`)* Review code cho `Cuubeo`, gộp sạch vào `main`, chạy `check-contract` + cùng QA chốt tag `phase-1` trước `1:00`.
 
 #### B. `Cuubeo` (`sim/quan` — [`chonoi/sim/quan.py`](chonoi/sim/quan.py) + PO)
-- [ ] **CP1-Q1 (Lát 3 — Khách, giữ chỗ, kiên nhẫn, bỏ đi | `AC-P1-06`, `AC-P1-08`):**
+- [x] **CP1-Q1 (Lát 3 — Khách, giữ chỗ, kiên nhẫn, bỏ đi | `AC-P1-06`, `AC-P1-08`):**
   - Khởi tạo khách từ `scenario["customers"]` (suy `reserved` theo công thức nếu đơn `reserved` thiếu `reserved`, theo `order_tick` rồi `id` bàn).
   - Bước 1: giảm timer ca, nấu, ăn, kiên nhẫn; tăng `ready_ticks` **chỉ cho món đã `ready` ở đầu bước**.
   - Bước 5 (khi còn giờ, đúng lịch `first_customer_tick` + `customer_interval_s * 60` theo `phase_tick` sau tăng): còn bàn trống → chọn bàn trống id nhỏ nhất; chọn **đều theo `Streams`** trong các món đủ nguyên liệu khả dụng (`stock - tổng reserved`, ứng viên sắp theo mã Unicode id món); giữ chỗ ngay (`order_status: "reserved"`, `order_tick = phase_tick`, kiên nhẫn đầy và giảm từ bước sau), phát `customer_arrived`. Không có món đủ → phát `no_dish` (`{}`).
   - Bước 4 (duyệt theo id bàn): nếu còn giờ, khách `waiting` có `patience_ticks_left == 0` → nhả giữ chỗ, cộng `left_reputation_delta` (kẹp `[reputation_min, reputation_max]`), phát `customer_left` (`reason: "patience"`).
-- [ ] **CP1-Q2 (Lát 4 — Bếp, bưng, phục vụ, tiền, boa, uy tín, `player.vel` | `AC-P1-07`, `AC-P1-08`, `AC-P1-11`):**
+- [x] **CP1-Q2 (Lát 4 — Bếp, bưng, phục vụ, tiền, boa, uy tín, `player.vel` | `AC-P1-07`, `AC-P1-08`, `AC-P1-11`):**
   - Bổ sung `"vel": self.vel` vào `QuanSim.snapshot()["player"]` (`clarify #9`, `AC-P1-11`).
   - Bước 2 (duyệt bếp theo `sort_by_id`): `cooking` hết giờ → `ready` (`ready_ticks = 0`), phát `dish_ready`.
   - Bước 3 (`interact` tối đa 1 đối tượng theo `(khoảng cách, bếp trước bàn, id_key)`): bếp `idle` lấy đơn `reserved` cũ nhất theo `(order_tick, table_id)`, tiêu nguyên liệu giữ, chốt `base_price` → `cook_started`; bếp `ready` & tay trống → `dish_picked`; bàn có khách khớp `hand.order_id` → chốt `tip = floor(base_price * tip_rate)` nếu tỷ lệ kiên nhẫn còn lại **sau bước 1** `>= tip_min_patience_ratio` (ngược lại `0`), chuyển `eating` → `served` (hợp lệ cả đúng tick kiên nhẫn về 0 hoặc hết ca).
