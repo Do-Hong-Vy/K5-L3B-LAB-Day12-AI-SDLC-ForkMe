@@ -139,13 +139,13 @@ class MonsterSystem:
         sp = self.species[m["kind"]]
         sim.hp = max(0, sim.hp - 1)
         n_lost = math.floor(len(sim.hold) * self.loss_ratio)
-        lost = [sim.hold.pop() for _ in range(n_lost)]  # nhặt sau mất trước
+        lost = [sim._view(sim.hold.pop()) for _ in range(n_lost)]  # nhặt sau mất trước; v1.2 -> {id,kind,fresh}
         sim.invuln_ticks = self.invuln
         m["state"], m["state_ticks_left"] = "recoil", int(sp["recoil_ticks"])
         m["recoil_dir"] = _unit(m["pos"][0] - sim.pos[0], m["pos"][1] - sim.pos[1])
         events.append(("monster_hit", {"monster_id": m["id"], "hp": sim.hp, "lost": lost, "pos": list(sim.pos)}))
         if sim.hp <= 0:
-            rest = list(reversed(sim.hold))
+            rest = [sim._view(h) for h in reversed(sim.hold)]
             sim.hold.clear()
             events.append(("faint", {"cause": "monster", "lost": rest, "hp": 0}))
             sim._finish("fainted", events)

@@ -85,6 +85,7 @@ class DaySim:
         self.active_upgrades = {}
         self.plan = self._plan(d.get("day_plan", []))
         self.days_completed = 0
+        self.item_ids = IdAllocator()  # v1.2: id cá thể I<n> tiếp tục xuyên pha và Ngày (Ticket-03)
         self.day = 0
         self.cur = None
         self.phase = "gather"
@@ -132,8 +133,11 @@ class DaySim:
         self.day_tuning = self._day_tuning()
         self.phase = "gather"
         self.phase_tick = 0
-        self.cur = GatherSim(self.day_tuning, copy.deepcopy(self.scenario.get("gather", {})), self.rng, IdAllocator(),
-                             day=self.day)  # M2 Cá Sấu từ Ngày 3
+        g = copy.deepcopy(self.scenario.get("gather", {}))
+        if self.day > 1 and "freshness" in self.tuning and g.get("hold"):
+            # Ticket-03 4.3: Ngày đầu giữ id trong mẫu gather.hold; Ngày kế cấp id mới theo thứ tự mảng
+            g["hold"] = [dict(h, id=self.item_ids.new("I")) for h in g["hold"]]
+        self.cur = GatherSim(self.day_tuning, g, self.rng, IdAllocator(), item_ids=self.item_ids, day=self.day)
         self._sync_into(self.cur)
         plan = self.plan_of(self.day)
         self._ev(events, "day_start", {})
@@ -145,7 +149,7 @@ class DaySim:
         self.phase_tick = 0
         plan = self.plan_of(self.day)
         self.cur = QuanSim(self.day_tuning, copy.deepcopy(self.scenario.get("quan", {})), self.rng, IdAllocator(),
-                           inventory=dict(items), dish_ids=list(plan["dishes"]))
+                           inventory=copy.deepcopy(items), dish_ids=list(plan["dishes"]))
         self._sync_into(self.cur)
         self._ev(events, "phase_start", {})
 
