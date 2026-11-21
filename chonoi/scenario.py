@@ -34,6 +34,9 @@ def _check_ids(name, arr):
         seen.add(e["id"])
 
 
+DAY_KEYS = {"money", "earned", "reputation", "upgrades", "day_plan"}
+
+
 def load_scenario(path, mode: str, tuning: dict) -> dict:
     if path is None:
         return {}
@@ -42,11 +45,16 @@ def load_scenario(path, mode: str, tuning: dict) -> dict:
             data = json.load(f)
     except (OSError, ValueError) as e:
         raise BadInput(f"không đọc được scenario {path}: {e}")
+    if mode == "day":
+        return _load_day(data, tuning)
     if not isinstance(data, dict) or not set(data) <= {"gather", "quan"}:
         raise BadInput("scenario chỉ được có khối 'gather' hoặc 'quan'")
     if set(data) - {mode}:
         raise BadInput(f"khối sai mode: chạy --mode {mode} chỉ nhận khối '{mode}'")
-    block = data.get(mode, {})
+    return _load_block(mode, data.get(mode, {}), tuning)
+
+
+def _load_block(mode, block, tuning):
     if not isinstance(block, dict):
         raise BadInput(f"khối {mode} phải là object")
     allowed = GATHER_KEYS if mode == "gather" else QUAN_KEYS
@@ -63,6 +71,65 @@ def load_scenario(path, mode: str, tuning: dict) -> dict:
     else:
         _validate_quan(block, tuning)
     return block
+
+
+def _load_day(data, tuning):
+    """Ticket-02 mục 4.3: day nhận gather/quan làm mẫu mỗi Ngày + khối day dựng trạng thái xuyên Ngày."""
+    if not isinstance(data, dict) or not set(data) <= {"day", "gather", "quan"}:
+        raise BadInput("scenario day chỉ nhận khối 'day', 'gather', 'quan'")
+    out = {}
+    for mode in ("gather", "quan"):
+        if mode in data:
+            out[mode] = _load_block(mode, data[mode], tuning)
+    q = out.get("quan", {})
+    for banned in ("stock", "reputation"):
+        if banned in q:
+            raise BadInput(f"cấm quan.{banned} khi chạy day (dùng gather.hold / day.reputation)")
+    d = data.get("day", {})
+    if not isinstance(d, dict) or set(d) - DAY_KEYS:
+        raise BadInput(f"khối day chỉ có {sorted(DAY_KEYS)}")
+    money, earned = d.get("money", 0), d.get("earned", 0)
+    for name, v in (("money", money), ("earned", earned)):
+        if isinstance(v, bool) or not isinstance(v, int) or v < 0:
+            raise BadInput(f"day.{name} phải là số nguyên >= 0")
+    if ("money" in d) != ("earned" in d) and money > 0:
+        raise BadInput("khai cả day.money và day.earned khi có tiền đầu kỳ")
+    if money > earned:
+        raise BadInput("cần 0 <= day.money <= day.earned")
+    q_t = tuning["quan"]
+    if "reputation" in d and not (_num(d["reputation"]) and q_t["reputation_min"] <= d["reputation"] <= q_t["reputation_max"]):
+        raise BadInput("day.reputation ngoài miền uy tín")
+    ups = d.get("upgrades", {})
+    shop = tuning["shop"]["upgrades"]
+    if not isinstance(ups, dict):
+        raise BadInput("day.upgrades phải là object")
+    for k, lv in ups.items():
+        levels = [u["level"] for u in shop.get(k, [])]
+        if k not in shop or isinstance(lv, bool) or not isinstance(lv, int) or not (0 <= lv <= max(levels)):
+            raise BadInput(f"day.upgrades.{k} không hợp lệ")
+    plan = d.get("day_plan", [])
+    days_known = {p["day"] for p in tuning["day_plan"]}
+    if not isinstance(plan, list):
+        raise BadInput("day.day_plan phải là mảng")
+    seen = set()
+    for p in plan:
+        if not isinstance(p, dict) or p.get("day") not in days_known or p["day"] in seen:
+            raise BadInput("day.day_plan: mỗi mục cần day hợp lệ, không trùng")
+        seen.add(p["day"])
+        dishes = p.get("dishes")
+        if not isinstance(dishes, dict) or not dishes or any(
+                k not in tuning["menu"] or isinstance(n, bool) or not isinstance(n, int) or n <= 0
+                for k, n in dishes.items()):
+            raise BadInput(f"day.day_plan[{p['day']}].dishes phải là map id món -> số nguyên dương")
+        if "ingredients" in p:
+            need = {}
+            for dish, n in dishes.items():
+                for k, qn in tuning["menu"][dish]["recipe"].items():
+                    need[k] = need.get(k, 0) + qn * n
+            if p["ingredients"] != need:
+                raise BadInput(f"day.day_plan[{p['day']}].ingredients khác tổng công thức × suất")
+    out["day"] = d
+    return out
 
 
 def _num(v):
