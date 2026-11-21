@@ -10,12 +10,10 @@ import tempfile
 
 from .errors import BadInput
 
-# v1.1 (Ticket-02, ADR-0001): thêm ca_keo (cá kèo), keo_neo (kèo nèo). Giữ tên KINDS_P1 để các module cũ không phải đổi import.
-KINDS = ("ca_loc", "ca_linh", "bong_dien_dien", "bong_sung", "ca_keo", "keo_neo")
-KINDS_P1 = KINDS
+KINDS_P1 = ("ca_loc", "ca_linh", "bong_dien_dien", "bong_sung")
 
 
-def validate_items(items, kinds=KINDS_P1):
+def validate_items(items, kinds=KINDS):
     if not isinstance(items, dict):
         raise BadInput("items phải là object")
     out = {}
@@ -29,7 +27,7 @@ def validate_items(items, kinds=KINDS_P1):
     return out
 
 
-def read_inventory(path: str, kinds=KINDS_P1) -> dict:
+def read_inventory(path: str, kinds=KINDS) -> dict:
     try:
         with open(path, encoding="utf-8") as f:
             data = json.load(f)

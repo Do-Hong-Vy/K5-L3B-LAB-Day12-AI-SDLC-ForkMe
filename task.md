@@ -127,13 +127,13 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
 - [x] Đủ bằng chứng trong `docs/proof/phase-1/` và [`docs/verification/phase-1.md`](docs/verification/phase-1.md) cho `AC-P1-01..15`.
 - [x] [`docs/ai-usage-log.md`](docs/ai-usage-log.md) & [`docs/standup.md`](docs/standup.md) cập nhật đủ cho cả 4 thành viên.
 - [x] Cả 4 thành viên đều có `≥ 3` commit có nội dung gắn với tài khoản GitHub thật (`Cuubeo`: 9, `Do-Hong-Vy`: 7+, `Phog2811`: 4, `nguyenquoctoan0310`: 3).
-- [ ] Commit bản chốt cuối, gắn tag `phase-1` và `git push origin main --tags` trước **1:00**.
+- [x] Commit bản chốt cuối, gắn tag `phase-1` (`199f067`) và `git push origin main --tags` (`AC-P1-01..16` hoàn tất).
 
 ---
 
 ### CP2 — Phase 2: Mở rộng & Đổi yêu cầu đợt 1 (1:00 – 1:55 | Hạn tag `phase-2`: trước 1:55)
 
-> **Lưu ý:** Yêu cầu cụ thể của Phase 2 mở trên Lab Board lúc **1:00** (thường bổ sung hành vi/sinh vật/cơ chế mới hoặc đổi yêu cầu từ Phase 1 — ví dụ trong khung đã để chỗ cho cá bơi/sinh thêm, cơ chế mới, nút mới, `burn_s`, v.v.). Chỉ triển khai đúng theo đề Lab Board công bố lúc 1:00.
+> Kế hoạch chi tiết & mã AC chính thức: [`docs/ticket-02.md`](docs/ticket-02.md) (Test Contract v1.1), [`docs/plan/phase-2.md`](docs/plan/phase-2.md) (`AC-P2-01..15`), [`docs/adr/0001-contract-v1-1.md`](docs/adr/0001-contract-v1-1.md).
 
 - [x] **CP2-0 (PO `Cuubeo` + Integrator `Do-Hong-Vy`, 1:00 – 1:08):**
   - Đọc đề Phase 2 trên Lab Board, tách toàn bộ AC (`AC-P2-??`) vào `docs/plan/phase-2.md` (`≤ 1 trang`).
@@ -142,12 +142,12 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
 - [ ] **CP2-1 (`All` — Standup nhanh):** Điền dòng Phase 2 trong [`docs/standup.md`](docs/standup.md).
 - [ ] **CP2-2 (`Do-Hong-Vy` — `sim/gather`):** Triển khai các lát tính năng/đổi yêu cầu Phase 2 thuộc buổi sáng (`gather`) — giữ nguyên quy tắc `Streams` tách luồng (`rng.get("<ten_luong>")`) để không làm lệch RNG cũ; đọc mọi tham số mới từ `game.contract.json`.
 - [ ] **CP2-3 (`Cuubeo` — `sim/quan`):** Triển khai các lát tính năng/đổi yêu cầu Phase 2 thuộc buổi tối (`quan`) hoặc ghép ca/chế độ mới theo đề Phase 2.
-- [x] **CP2-4 (`Phog2811` — `client/ui`):** Cập nhật UI/HUD hiển thị đầy đủ các thực thể/trạng thái/nút bấm/cơ chế mới của Phase 2 (`AC-P2-10`, `AC-P2-13`: Menu chính, DayIntro/EveningIntro/DayResult/Shop/Pause/Summary, 6 nguyên liệu/6 món/2 bếp/4 bàn/thủy quái, HUD ≥ 18px) + đồ họa 2.5D VFX, âm thanh Web Audio & Chế độ Sáng tạo A-Qua-Mèn × Gô-Ku SSJ3 (tắt 100% ở headless).
+- [ ] **CP2-4 (`Phog2811` — `client/ui`):** Cập nhật UI/HUD hiển thị đầy đủ các thực thể/trạng thái/nút bấm/cơ chế mới của Phase 2; trau chuốt hình ảnh thay thế hình khối tạm (đảm bảo mọi hiệu ứng thêm chỉ chạy phía client/live, không chạm vào output headless).
 - [ ] **CP2-5 (`Nguyenquoctoan0310` — `qa`):**
   - Cập nhật validation mới trong `contract.py` / `scenario.py` / `inputs.py` (nếu contract nâng cấp).
   - Viết bộ test Phase 2 (`tests/test_phase2_*.py`) + **chạy lại toàn bộ test Phase 1 (regression)**.
   - Xuất bằng chứng vào `docs/proof/phase-2/` và hoàn thiện `docs/verification/phase-2.md`.
-- [x] **CP2-6 (`Phog2811` + `All` — Retro nhanh Phase 2, ~1:45):**
+- [ ] **CP2-6 (`Phog2811` + `All` — Retro nhanh Phase 2, ~1:45):**
   - Điền mục **Phase 2 (nhanh)** trong [`docs/retro.md`](docs/retro.md): *Điều tốt*, *Điều tệ*, *1 hành động cụ thể cho Phase 3*.
 - [ ] **CP2-7 (`Do-Hong-Vy` + `All` — Harness & Tag P2):**
   - Cập nhật [`AGENTS.md`](AGENTS.md) với quy tắc/bẫy mới phát hiện ở Phase 1–2 (tạo diff rõ trong git history).

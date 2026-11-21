@@ -1,7 +1,7 @@
-# Danh sách sự kiện tích hợp (`events`, Contract v1.0)
+# Danh sách sự kiện tích hợp (`events`, Contract v1.1)
 
 > Mọi sự kiện được `sim.step(inp)` trả về dạng `(name, data)` và `runner.Session` ghi thành dòng JSONL **trước** snapshot cuối tick đó:
-> `{"type":"event","tick":<k+1>,"phase":<phase>,"name":<name>,"data":<dict>}`
+> `{"type":"event","tick":<k+1>,"phase":<phase>,["day":<int>],"name":<name>,"data":<dict>}` *(trường `"day"` thêm khi chạy `--mode day` ở v1.1)*.
 >
 > Nhiều thực thể được duyệt trong cùng tick phải đi theo thứ tự `ids.sort_by_id`.
 
@@ -16,10 +16,11 @@
 | `surface` | `{"pos": [x, d]}` | Sau bước 2, khi chuyển từ dưới nước lên mặt nước (`d <= surface_depth`). | **Đã chốt (PRD-0 mục E)** |
 | `oxygen_empty` | `{"oxygen_ticks": 0}` | Bước 2, khi `oxygen_ticks` dưới nước giảm từ `> 0` xuống `0`. | **Đã chốt (PRD-0 mục E)** |
 | `choke` | `{"hp": int}` | Bước 2, dưới nước với `oxygen_ticks == 0` khi `zero_oxy_ticks` đạt `choke_interval_ticks`, reset đếm về `0` và trừ `1` HP. | **Đã chốt (PRD-0 mục E)** |
-| `faint` | `{"cause": "choke", "lost": [kind, ...], "hp": 0}` | Bước 2, khi `choke` làm `hp == 0`; `lost` là các vật phẩm trong giỏ mất theo LIFO. | **Đã chốt (PRD-0 mục E)** |
-| `gather` | `{"node_id": str, "kind": str, "amount": int}` | Bước 3 (`interact` ngoài bến, ở mặt nước), hái nút `ready` gần nhất trong `interact_radius`. | **Đã chốt (PRD-0 mục E)** |
-| `fish_caught` | `{"fish_id": str, "kind": str, "yield": int}` | Bước 4 (`catch` dưới nước, `catch_cd_ticks == 0`), bắt đàn cá gần nhất trong `catch_radius`. | **Đã chốt (PRD-0 mục E)** |
-| `hold_full` | `{"action": "gather"\|"catch", "node_id"\|"fish_id": str, "required": int, "free": int}` | Bước 3 hoặc 4, khi nút/đàn cá trong tầm nhưng chỗ trống giỏ `free < required`. | **Đã chốt (PRD-0 mục E)** |
+| `faint` | `{"cause": "choke"\|"monster", "lost": [kind, ...], "hp": 0}` | Khi `choke` hoặc `monster_hit` (L2) làm `hp == 0`; `lost` là các vật phẩm trong giỏ mất theo LIFO. | **Cập nhật v1.1 (Ticket-02)** |
+| `gather` | `{"node_id": str, "kind": str, "amount": int}` | Bước `interact` ngoài bến ở mặt nước, hái nút `ready` gần nhất (`N1–N6`, thêm `keo_neo`). | **Cập nhật v1.1 (Ticket-02)** |
+| `fish_caught` | `{"fish_id": str, "kind": str, "yield": int}` | Bước `catch` dưới nước (`catch_cd_ticks == 0`), bắt đàn cá gần nhất trong `catch_radius` **theo vị trí trước khi cá bơi** (`ca_linh`/`ca_loc`/`ca_keo`). | **Cập nhật v1.1 (Ticket-02)** |
+| `hold_full` | `{"action": "gather"\|"catch", "node_id"\|"fish_id": str, "required": int, "free": int}` | Bước hái hoặc bắt cá, khi nút/đàn cá trong tầm nhưng chỗ trống giỏ `free < required`. | **Đã chốt (PRD-0 mục E)** |
+| `fish_spawned` | `{"id": str, "kind": str, "pos": [x, d]}` | Bước sau hết giờ (khi còn giờ và `random_fish=true`), tại `phase_tick = 360·k` (`k >= 1`) sau khi cá bơi nếu còn `< fish_max` và có điểm hợp lệ (`clearance > 1 m`). | **Mới v1.1 — L1 (`Do-Hong-Vy`)** |
 | `gather_end` | `{"reason": "time"\|"docked"\|"fainted", "inventory": {"items": {...}}}` | Khi ngất (`fainted`), cập bến (`docked`), hoặc hết giờ (`time`). Dừng sim & kích hoạt ghi kho. | **Đã khóa (starter)** |
 
 *Bên nghe:* Headless JSONL, Live UI (`gather_end` còn kích hoạt `runner` ghi file kho).
