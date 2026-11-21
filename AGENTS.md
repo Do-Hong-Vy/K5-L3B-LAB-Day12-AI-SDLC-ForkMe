@@ -10,6 +10,7 @@
 - Chơi thử trên trình duyệt: `python -m chonoi.live --mode gather|quan` (mở địa chỉ in ra; WASD, E, Space, R)
 
 > Lưu ý Windows: `game.contract.json` đang giữ `"headless_cmd": "python3 -m chonoi.headless"` cho CI `ubuntu-latest` và máy chấm Linux. Trên Windows có thể gặp `[WinError 1920]` với alias `python3`; không tự ý sửa `headless_cmd` khi chưa kiểm chứng tương thích chấm điểm.
+> Test hộp đen gọi `python3` qua `subprocess`; nếu Windows không có `python3` thì 20 test smoke/live báo `FileNotFoundError`. Cách sửa cục bộ (không commit): tạo `python3.exe` cạnh `python.exe` (copy), hoặc dùng venv rồi copy `Scripts/python.exe` → `Scripts/python3.exe`.
 
 ## Cấu trúc & quy ước
 - Kế hoạch & phân công theo CP: xem [`task.md`](task.md) và [`TEAM.md`](TEAM.md).
@@ -33,4 +34,4 @@
 
 ## Skills / hooks của nhóm
 - **Skill 1 — `check-contract`** ([`.agents/skills/check-contract/SKILL.md`](.agents/skills/check-contract/SKILL.md)): do `Do-Hong-Vy` (Integrator) duy trì. Dùng trước khi merge lát tính năng, khi có Change Request đụng contract, và trước khi gắn tag `phase-1..4` để kiểm tra `check_team`, không hard-code tuning, determinism từng byte và đồng bộ `docs/contracts/`.
-- **Skill 2 — *(QA skill, do `Nguyenquoctoan0310` bổ sung trong CP0)***: kiểm chứng AC và xuất bằng chứng vào `docs/verification/` & `docs/proof/`.
+- **Skill 2 — `verify-phase`** ([`.agents/skills/verify-phase/SKILL.md`](.agents/skills/verify-phase/SKILL.md)): do `Nguyenquoctoan0310` (QA Lead) duy trì. Dùng sau khi gộp một lát, sau mỗi Change Request, và trước tag `phase-N` (chạy sau `check-contract`): chạy full test + regression, kiểm tra determinism từng byte và mã thoát `2`, lưu log vào `docs/proof/phase-N/` và điền `docs/verification/phase-N.md`.
