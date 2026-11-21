@@ -335,6 +335,27 @@ Object.entries(SPRITE_FILES).forEach(([key, file]) => {
   img.onload = () => { SPRITES[key] = img; };
   img.src = `/assets/kenney/${file}.png`;
 });
+// Kenney Food Kit 2.0 + Animal Pack Redux (CC0): món ăn theo id món, dụng cụ bếp, kèo nèo, Cá Sấu
+const EXTRA_FILES = {
+  "dish:ca_loc_nuong_trui": "food/fish", "dish:goi_bong_sung": "food/salad", "dish:lau_ca_linh_dien_dien": "food/pot_stew",
+  "dish:canh_chua_ca_loc": "food/bowl_soup", "dish:ca_keo_nuong": "food/skewer", "dish:lau_mam": "food/pan_stew",
+  "tool:pan": "food/frying_pan", "tool:pot": "food/pot", "tool:plate": "food/plate", "node:keo_neo": "food/leek",
+  "croc": "animal/crocodile",
+};
+Object.entries(EXTRA_FILES).forEach(([key, file]) => {
+  const img = new Image();
+  img.onload = () => { SPRITES[key] = img; };
+  img.src = `/assets/${file}.png`;
+});
+// Vẽ sprite vuông theo tâm; trả false nếu chưa tải (để vẽ dự phòng)
+function drawIcon(key, cx, cy, size, alpha = 1) {
+  const img = SPRITES[key];
+  if (!img) return false;
+  ctx.save(); ctx.globalAlpha *= alpha;
+  ctx.drawImage(img, cx - size / 2, cy - size / 2, size, size);
+  ctx.restore();
+  return true;
+}
 
 // ---------- Từ điển chuẩn Contract v1.0 & v1.1 (6 nguyên liệu, 6 món) ----------
 const KIND_COLOR = {
@@ -1604,7 +1625,23 @@ function drawMonster(m, sx, sy, s, tNow) {
     ctx.fillStyle = `rgba(168, 85, 247, ${0.22 + 0.14 * Math.sin(tNow * 10)})`;
     ctx.beginPath(); ctx.arc(0, 0, 2.2 * s, 0, Math.PI * 2); ctx.fill();
   }
-  // Thân Cá Sấu / Rắn
+  // Cá Sấu: sprite Kenney Animal Pack (CC0) lắc lư khi bơi, đỏ khi rượt, mờ khi choáng/recoil
+  if (m.kind !== "ran" && SPRITES.croc) {
+    const sz = 2.6 * s * (chasing ? 1.08 : 1);
+    ctx.rotate(Math.sin(tNow * (chasing ? 12 : 4)) * 0.12);
+    ctx.globalAlpha = stunned || recoil ? 0.55 : 1;
+    ctx.drawImage(SPRITES.croc, -sz / 2, -sz / 2, sz, sz);
+    if (chasing) {
+      ctx.globalCompositeOperation = "source-atop";
+      ctx.fillStyle = "rgba(220, 38, 38, 0.28)";
+      ctx.fillRect(-sz / 2, -sz / 2, sz, sz);
+    }
+    ctx.restore();
+    const lbl = `${m.id} Cá Sấu (${m.state})`;
+    text(lbl, mx, my - 1.7 * s, { size: 11, align: "center", bold: true, color: chasing ? "#fecaca" : "#f1f5f9", shadow: true });
+    return;
+  }
+  // Thân Cá Sấu / Rắn (dự phòng khi sprite chưa tải)
   const col = stunned ? "#94a3b8" : (m.kind === "ran" ? "#7e22ce" : (chasing ? "#dc2626" : "#15803d"));
   ctx.fillStyle = col;
   ctx.beginPath(); ctx.ellipse(0, 0, 1.8 * s, 0.72 * s, 0, 0, Math.PI * 2); ctx.fill();
@@ -1645,10 +1682,11 @@ function drawRecipeCard(w, h) {
     ctx.fillStyle = portions > 0 ? "rgba(34, 197, 94, 0.16)" : "rgba(255, 255, 255, 0.04)";
     ctx.fill();
     const labelName = planTarget ? `${dName(id)} (cần ${planTarget})` : dName(id);
-    text(labelName, cx + 14, ry + 11, { size: 12, bold: true, color: portions > 0 ? "#f8fafc" : "#cbd5e1" });
+    const hasIcon = drawIcon(`dish:${id}`, cx + 26, ry + 14, 26, portions > 0 ? 1 : 0.45);
+    text(labelName, cx + (hasIcon ? 44 : 14), ry + 11, { size: 12, bold: true, color: portions > 0 ? "#f8fafc" : "#cbd5e1" });
     text(`${info.price}k · ${info.cook_s}s`, cx + cw - 14, ry + 11, { size: 11, align: "right", bold: true, color: "#facc15" });
     const ingStr = Object.entries(info.recipe).map(([k, n]) => `${KIND_SHORT[k] || kName(k)}×${n}`).join(" + ");
-    text(ingStr, cx + 14, ry + 24, { size: 11, color: "#94a3b8" });
+    text(ingStr, cx + (hasIcon ? 44 : 14), ry + 24, { size: 11, color: "#94a3b8" });
     text(portions > 0 ? `Nấu ×${portions}` : "Thiếu NL", cx + cw - 14, ry + 24, {
       size: 11, align: "right", bold: true, color: portions > 0 ? "#4ade80" : "#64748b"
     });
@@ -1865,10 +1903,32 @@ function drawGather(w, h, dt) {
     const nx = sx(n.pos[0]), ny = sy(n.pos[1]);
     ctx.save();
     ctx.globalAlpha = ready ? 1 : 0.38;
+    // lá súng nổi trên mặt nước (có khe lá)
     ctx.fillStyle = "#15803d";
-    ctx.beginPath(); ctx.ellipse(nx, ny + 0.1 * s, 1.2 * s, 0.36 * s, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = kc(n.kind);
-    ctx.beginPath(); ctx.ellipse(nx, ny - 0.25 * s, 0.9 * s, 0.48 * s, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(nx, ny + 0.1 * s, 1.25 * s, 0.38 * s, 0, 0.25, Math.PI * 2 - 0.25); ctx.lineTo(nx, ny + 0.1 * s); ctx.fill();
+    ctx.fillStyle = "#22c55e";
+    ctx.beginPath(); ctx.ellipse(nx - 0.15 * s, ny + 0.04 * s, 0.9 * s, 0.22 * s, 0, 0, Math.PI * 2); ctx.fill();
+    const sway = Math.sin(tNow * 2 + nx * 0.01) * 0.06;
+    ctx.save();
+    if (n.kind === "keo_neo" && SPRITES["node:keo_neo"]) {
+      ctx.translate(nx, ny - 0.55 * s); ctx.rotate(sway);
+      ctx.drawImage(SPRITES["node:keo_neo"], -0.85 * s, -0.85 * s, 1.7 * s, 1.7 * s);
+    } else {
+      // hoa: bông súng 8 cánh hồng, bông điên điển chùm cánh vàng
+      ctx.translate(nx, ny - 0.4 * s); ctx.rotate(sway);
+      const petals = n.kind === "bong_sung" ? 8 : 6;
+      const pr = n.kind === "bong_sung" ? 0.55 * s : 0.42 * s;
+      for (let k = 0; k < petals; k++) {
+        const ang = (k / petals) * Math.PI * 2;
+        ctx.fillStyle = k % 2 ? kc(n.kind) : (n.kind === "bong_sung" ? "#fbcfe8" : "#fde68a");
+        ctx.beginPath();
+        ctx.ellipse(Math.cos(ang) * pr * 0.55, Math.sin(ang) * pr * 0.35, pr * 0.55, pr * 0.22, ang, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = n.kind === "bong_sung" ? "#facc15" : "#ea580c";
+      ctx.beginPath(); ctx.arc(0, 0, pr * 0.28, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
     if (inRange) {
       ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2.5;
       ctx.beginPath(); ctx.arc(nx, ny - 0.1 * s, 1.4 * s, 0, Math.PI * 2); ctx.stroke();
@@ -2238,7 +2298,14 @@ function drawQuan(w, h) {
       ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
       ctx.beginPath(); ctx.arc(bx + Math.sin(tNow * 6) * 5, by - 0.7 * s - ((tNow * 20) % 16), fSize, 0, Math.PI * 2); ctx.fill();
     }
-    text(st.id, bx, by + 5, { size: 13, align: "center", bold: true, color: st.state === "idle" ? "#e2e8f0" : "#0f172a" });
+    // dụng cụ / món trên bếp (Kenney Food Kit, CC0)
+    if (st.state === "idle") {
+      drawIcon(st.id === "B1" ? "tool:pan" : "tool:pot", bx, by - 0.05 * s, 1.15 * s, 0.9);
+    } else {
+      const bob = st.state === "cooking" ? Math.sin(tNow * 10) * 0.05 * s : 0;
+      drawIcon(`dish:${dishKey}`, bx, by - 0.08 * s + bob, 1.25 * s);
+    }
+    text(st.id, bx + 0.7 * s, by + 0.62 * s, { size: 12, align: "center", bold: true, color: "#e2e8f0", shadow: true });
 
     if (st.state === "cooking") {
       const cookMax = ((DEFAULT_MENU[dishKey] && DEFAULT_MENU[dishKey].cook_s) || 6) * 60;
@@ -2297,6 +2364,7 @@ function drawQuan(w, h) {
         ctx.beginPath(); ctx.arc(cx, cy, 0.54 * s, 0, Math.PI * 2); ctx.fill();
         ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2; ctx.stroke();
       }
+      if (c.state === "eating") drawIcon(`dish:${c.dish_id}`, tx, ty - 0.1 * s, 1.1 * s);
       if (isCritical && uiScreen === "playing" && prefs.creative) addShake(0.6);
       text(c.id, cx, cy - 1.45 * s, { size: 12, align: "center", bold: true, color: "#ffffff", shadow: true });
 
@@ -2361,6 +2429,7 @@ function drawQuan(w, h) {
     text("Út Sen", px, py + 0.9 * s, { size: 12, align: "center", bold: true, color: "#271206" });
 
     if (snap.hand) {
+      drawIcon(`dish:${dId(snap.hand)}`, px + 0.55 * s, py - 0.35 * s, 0.95 * s);
       const hName = dName(snap.hand);
       const hOrder = typeof snap.hand === "object" && snap.hand.order_id ? ` (${snap.hand.order_id})` : "";
       panel(px - 88, py - 0.65 * s - 30, 176, 26, { bg: "rgba(22, 163, 74, 0.95)", border: "#bbf7d0", r: 7 });
