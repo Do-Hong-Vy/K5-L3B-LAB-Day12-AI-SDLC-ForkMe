@@ -58,9 +58,9 @@ Kết quả rà soát sau các commit CP0 (`902de7f`):
 - [x] **CP0-1 (`Do-Hong-Vy` — Integrator):** Repo `K5-L3B-LAB-Day12-AI-SDLC-ForkMe` đã ở chế độ **Public** (`private: false`), đủ 4 collaborator có quyền Push/Write, và **cả 4 người đã có commit trên `main`** (`Do-Hong-Vy`, `Phog2811`, `Cuubeo`, `nguyenquoctoan0310`).
 - [x] **CP0-2 (`All`):** Hoàn thiện [`TEAM.md`](TEAM.md) (đủ `Vai quy trình`, `Người dự phòng cho`, `Thỏa thuận làm việc nhóm ≤ 10 dòng` không còn `…`), `python tools/check_team.py` đạt `OK: 4 thành viên`.
 - [x] **CP0-3 (`Do-Hong-Vy`):** Cập nhật `"team": "ForkMe"`, `"team_size": 4` trong [`game.contract.json`](game.contract.json).
-- [ ] **CP0-4 (`Cuubeo` — PO):**
+- [x] **CP0-4 (`Cuubeo` — PO):**
   - [x] Điền kế hoạch tổng quan [`docs/plan/phase-1.md`](docs/plan/phase-1.md) và ghi câu hỏi #6–#7 vào [`docs/clarify.md`](docs/clarify.md).
-  - [ ] *(Phụ thuộc Lab Board)* Trích danh sách `AC-P1-??` chính thức và giải đáp các mục #1–#4, #7 trong [`docs/clarify.md`](docs/clarify.md) ngay khi Lab Board mở `PRD-0`.
+  - [x] *(Phụ thuộc Lab Board — xong, nguồn `docs/prd0.md`)* Trích danh sách `AC-P1-??` chính thức và giải đáp các mục #1–#4, #7 trong [`docs/clarify.md`](docs/clarify.md) ngay khi Lab Board mở `PRD-0`.
 - [x] **CP0-5 (`Do-Hong-Vy` + `Cuubeo` + `Phog2811` — Hợp đồng tích hợp):** Đã tạo và đồng bộ thống nhất 1 nguồn chuẩn tại [`docs/contracts/README.md`](docs/contracts/README.md), [`docs/contracts/sim-ui-interface.md`](docs/contracts/sim-ui-interface.md), [`docs/contracts/events.md`](docs/contracts/events.md), [`docs/contracts/inventory.sample.json`](docs/contracts/inventory.sample.json) (đánh dấu rõ đề xuất chờ PO đối chiếu khi `PRD-0` mở).
 - [x] **CP0-6 (`Nguyenquoctoan0310` + `Do-Hong-Vy` — Môi trường & Smoke Test):**
   - `Nguyenquoctoan0310` đã sửa `test_template_is_rejected` và thêm `test_repo_team_md_is_valid` trong [`tests/test_team_check.py`](tests/test_team_check.py) (5/5 pass), giữ `python3` trong `game.contract.json` cho CI Linux, bổ sung hướng dẫn fix Windows vào [`AGENTS.md`](AGENTS.md).
