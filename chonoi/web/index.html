@@ -801,6 +801,48 @@
         }
       });
 
+      // 3b. Sáng tạo của nhóm — Bếp nhiều section (chỉ có khi chonoi.live bật; headless không có trường này)
+      if (snap.sections) {
+        const prepped = snap.prepped || {};
+        const needOf = (kind) => reservedOrders.some((c) => {
+          const need = (c.reserved || {})[kind] || 0;
+          const done = (prepped[c.id] || {})[kind] || 0;
+          const working = snap.sections.filter((x) => x.state === "working" && x.order_id === c.id && x.kind === kind).length;
+          return need - done - working > 0;
+        });
+        snap.sections.forEach((sec) => {
+          const cx = sx(sec.pos[0]), cy = sy(sec.pos[1]);
+          const dist = p ? Math.hypot(p.pos[0] - sec.pos[0], p.pos[1] - sec.pos[1]) : 999;
+          const inRange = dist <= intR;
+          const working = sec.state === "working";
+          roundRect(cx - 0.8 * s, cy - 0.6 * s, 1.6 * s, 1.2 * s, 6);
+          ctx.fillStyle = working ? "#fef3c7" : "#f8fafc";
+          ctx.fill();
+          ctx.lineWidth = inRange ? 2.5 : 1.5;
+          ctx.strokeStyle = inRange ? "#fde047" : kc(sec.kind);
+          ctx.stroke();
+          ctx.fillStyle = kc(sec.kind);
+          ctx.beginPath(); ctx.arc(cx, cy - 0.15 * s, 0.25 * s, 0, Math.PI * 2); ctx.fill();
+          text(`${sec.id} · ${kName(sec.kind)}`, cx, cy + 0.35 * s, { size: 11, align: "center", bold: true, color: "#1e293b" });
+          if (working) {
+            const total = sec.ticks_total || 1;
+            bar(cx - 0.8 * s, cy + 0.7 * s, 1.6 * s, 10, 1 - sec.ticks_left / total, "#f59e0b",
+                `Sơ chế ${sec.order_id}`, { fontSize: 9 });
+          } else if (needOf(sec.kind)) {
+            text(inRange ? "👉 [E] Sơ chế" : "Cần sơ chế", cx, cy + 0.85 * s, { size: 10, align: "center", bold: true, color: "#9a3412" });
+          }
+        });
+        // tiến độ sơ chế từng đơn: đủ thì mới gộp ở bếp
+        let ly = sy(Z) + 18;
+        text("SƠ CHẾ (gộp ở bếp khi đủ)", sx(X) + 14, ly, { size: 12, bold: true, color: "#fde68a" });
+        reservedOrders.forEach((c) => {
+          ly += 18;
+          const parts = Object.entries(c.reserved || {}).map(([k, n]) => `${kName(k)} ${((prepped[c.id] || {})[k] || 0)}/${n}`);
+          const full = Object.entries(c.reserved || {}).every(([k, n]) => ((prepped[c.id] || {})[k] || 0) >= n);
+          text(`${full ? "✅" : "⏳"} ${c.id}: ${parts.join(", ")}`, sx(X) + 14, ly, { size: 11, color: full ? "#86efac" : "#e2e8f0" });
+        });
+      }
+
       // 4. Bàn & Khách (Tables & Customers — T1)
       const patMax = (meta.patience_s || 60) * 60;
       const eatMax = (meta.eat_s || 10) * 60;

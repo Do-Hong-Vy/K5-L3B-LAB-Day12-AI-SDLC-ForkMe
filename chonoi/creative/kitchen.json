@@ -1,0 +1,12 @@
+{
+  "_note": "Sáng tạo của nhóm ForkMe — Bếp nhiều section. CHỈ bật trong chonoi.live; headless không đọc file này (Test Contract giữ nguyên).",
+  "sections": [
+    {"id": "S1", "kind": "ca_loc", "pos": [1.2, 3.4]},
+    {"id": "S2", "kind": "ca_linh", "pos": [3.4, 3.4]},
+    {"id": "S3", "kind": "ca_keo", "pos": [5.6, 3.4]},
+    {"id": "S4", "kind": "bong_dien_dien", "pos": [1.2, 1.2]},
+    {"id": "S5", "kind": "bong_sung", "pos": [3.4, 1.2]},
+    {"id": "S6", "kind": "keo_neo", "pos": [5.6, 1.2]}
+  ],
+  "prep_s": {"ca_loc": 2.0, "ca_linh": 1.5, "ca_keo": 1.5, "bong_dien_dien": 1.0, "bong_sung": 1.0, "keo_neo": 1.0}
+}
