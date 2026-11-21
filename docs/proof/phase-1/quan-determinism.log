@@ -1,0 +1,9 @@
+run a exit=0
+run b exit=0
+quan seed 3, 10800 tick: deterministic OK (2 lần giống từng byte)
+ffa0d60146d28edea24aa27e6a17041e0530961f42c3f15230832cbc0e4c74ab
+--- đếm sự kiện cả ca (không input):
+      3 "name":"customer_arrived"
+      3 "name":"customer_left"
+      1 "name":"quan_end"
+{"type":"end","ticks":10800,"sim_tick":10800,"mode":"quan","state":"finished","reason":"time","money":0,"earned":0,"reputation":2.0,"score":200}
