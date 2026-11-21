@@ -107,12 +107,12 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
 - [x] **CP1-Q3 (PO):** *(review `gather` xong: `docs/proof/phase-1/review-gather-by-Cuubeo.md`)* Giữ [`docs/clarify.md`](docs/clarify.md) luôn cập nhật nếu phát sinh câu hỏi mới; review code cho `Do-Hong-Vy`.
 
 #### C. `Phog2811` (`client/ui` — [`chonoi/web/index.html`](chonoi/web/index.html) & `README.md`)
-- [ ] **CP1-U1 (Nâng cấp UI/HUD Gather & Quán v1.0 | `AC-P1-14`):**
+- [x] **CP1-U1 (Nâng cấp UI/HUD Gather & Quán v1.0 | `AC-P1-14`):**
   - Đọc hoàn toàn từ `GET /state`, gửi `POST /input`, `POST /restart` (giữ pass `tests/test_live.py`).
   - HUD buổi sáng (`gather`): thời gian, thanh Oxy (cảnh báo khi thấp), Tim HP, trạng thái ngạt (`zero_oxy_ticks`), hồi chiêu bắt cá, giỏ LIFO, nút hái + đếm ngược mọc lại, đàn cá, vùng bến (`E`).
   - HUD buổi tối (`quan`): kho khả dụng (`stock - reserved`), bếp (`idle`/`cooking`/`ready` + đọc đúng `st.dish.dish_id ?? st.dish`), món trên tay (`hand.dish_id ?? hand`), bàn + khách + món gọi + thanh kiên nhẫn + trạng thái `eating`, tiền, uy tín, điểm, log sự kiện.
-- [ ] **CP1-U2 (Trải nghiệm & README DoD | `AC-P1-14`, `AC-P1-15`):** Thêm bảng công thức 3 món trên HUD, màn hình kết thúc ca rõ ràng; rà soát [README.md](README.md) đảm bảo đủ hướng dẫn chạy từ clone sạch `≤ 3` lệnh macOS/Linux, điều khiển, công thức tính điểm và lệnh test 1 lệnh.
-- [ ] **CP1-U3 (Scrum):** Nhắc cả nhóm điền [`docs/standup.md`](docs/standup.md) giữa Phase 1 (phút 20–25) và kiểm tra tiến độ trước `0:50`.
+- [x] **CP1-U2 (Trải nghiệm & README DoD | `AC-P1-14`, `AC-P1-15`):** Thêm bảng công thức 3 món trên HUD, màn hình kết thúc ca rõ ràng; rà soát [README.md](README.md) đảm bảo đủ hướng dẫn chạy từ clone sạch `≤ 3` lệnh macOS/Linux, điều khiển, công thức tính điểm và lệnh test 1 lệnh.
+- [x] **CP1-U3 (Scrum):** Nhắc cả nhóm điền [`docs/standup.md`](docs/standup.md) giữa Phase 1 (phút 20–25) và kiểm tra tiến độ trước `0:50`.
 
 #### D. `Nguyenquoctoan0310` (`qa` — Validation, Tests & Verification Phase 1)
 - [ ] **CP1-T1 (Validation mức luật — mã thoát 2 | `AC-P1-09`, `AC-P1-10`):**
