@@ -37,13 +37,13 @@
 
 ## 3. Hiện trạng repo & Rủi ro kỹ thuật cần xử lý ngay
 
-Kết quả kiểm tra repo trước khi bắt đầu:
-1. **`TEAM.md` đang sửa dở (unstaged):** Đã điền 4 thành viên (`Do-Hong-Vy`, `Cuubeo`, `Phog2811`, `Nguyenquoctoan0310`), **chưa điền** `Vai quy trình`, `Người dự phòng cho`, và `Thỏa thuận làm việc nhóm`.
-2. **`game.contract.json`:** Trường `"team"` vẫn là `"ten-nhom"` → cần đổi thành `"ForkMe"` (giữ `"team_size": 4`).
-3. **Xung đột ở `tests/test_team_check.py`:** Hàm `test_template_is_rejected` hiện đọc trực tiếp `TEAM.md` và bắt buộc `TEAM.md` phải chưa hợp lệ. Ngay khi điền đủ `TEAM.md`, unit test này **FAIL**.
-   - *Cách xử lý:* Cập nhật `test_template_is_rejected` để test chuỗi template mẫu (hoặc kiểm tra `TEAM.md` phải **pass** `check_team.validate` trên repo nhóm), và **ghi rõ lý do sửa test trong commit** theo quy tắc `AGENTS.md`.
-4. **Môi trường Windows vs Linux CI (`python3`):** `game.contract.json` khai `"headless_cmd": "python3 -m chonoi.headless"`. Trên máy Windows có Windows Store alias, `python3` trong `subprocess` có thể báo `OSError: [WinError 1920]`, trong khi `python` chạy bình thường và CI (`ubuntu-latest`) dùng `python3`.
-   - *Cách xử lý:* Kiểm tra ngay trên máy từng thành viên; **không tự ý đổi `headless_cmd`** làm hỏng môi trường chấm Linux nếu máy chấm chỉ có `python3` (hoặc kiểm chứng trước xem máy chấm/CI chấp nhận `python` không). Khi chạy test local trên Windows, đảm bảo `python` hoạt động hoặc tạo virtualenv / alias hợp lệ.
+Kết quả rà soát sau các commit CP0 (`902de7f`):
+1. **Phần đã hoàn thành ở CP0:** [`TEAM.md`](TEAM.md), [`game.contract.json`](game.contract.json) (`"team": "ForkMe"`), [`tests/test_team_check.py`](tests/test_team_check.py) (5/5 pass), [`AGENTS.md`](AGENTS.md), 2 skills ([`check-contract`](.agents/skills/check-contract/SKILL.md) & [`verify-phase`](.agents/skills/verify-phase/SKILL.md)), [`docs/plan/phase-1.md`](docs/plan/phase-1.md), và [`docs/clarify.md`](docs/clarify.md) đã có trên `main`; cả 4 thành viên đã có commit bằng tài khoản GitHub của mình.
+2. **Xung đột nội dung trong `docs/contracts/` (cần chốt lại 1 nguồn):** [`docs/contracts/README.md`](docs/contracts/README.md) hiện chứa đặc tả chi tiết nội tuyến (chưa đối chiếu PRD-0) và **chưa đồng bộ / chưa liên kết** với [`docs/contracts/sim-ui-interface.md`](docs/contracts/sim-ui-interface.md) & [`docs/contracts/events.md`](docs/contracts/events.md) (2 file đang được [`AGENTS.md`](AGENTS.md) dẫn chiếu). Cần thống nhất trước khi code CP1.
+3. **Chờ mở đề `PRD-0` trên Lab Board:** Theo [`docs/clarify.md`](docs/clarify.md) #6, tab Phase 1 chưa mở nên `AC-P1-??` và các câu #1–#4, #7 đang tạm giả định theo khung `TODO(nhóm)`.
+4. **Môi trường test Windows local & CI:**
+   - Trên máy `Do-Hong-Vy` hiện tại: `test_team_check` (5/5) và `test_python_starter_units` (7/7) đều **pass**; 20 test `test_smoke_p1` báo `[WinError 1920]` do thiếu `python3.exe` (mới có alias Windows Store); 1 test `test_live` báo `[WinError 10013]` khi chạy trong sandbox. Làm theo hướng dẫn tạo `python3.exe` cục bộ (không commit) trong [`AGENTS.md`](AGENTS.md#L12-L13) để chạy full `33/33` tests trên máy.
+   - GitHub Actions (`gh run list`) chưa có lượt chạy nào (`[]`): kiểm tra bật **Actions** trên repo fork nếu nhóm dùng [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ---
 
@@ -55,18 +55,22 @@ Kết quả kiểm tra repo trước khi bắt đầu:
 
 > **Mục tiêu:** Chốt toàn bộ nền tảng nhóm, hợp đồng tích hợp, harness AI và môi trường chạy test xanh trước khi code luật Phase 1.
 
-- [x] **CP0-1 (`Do-Hong-Vy` — Integrator):** Kiểm tra repo GitHub `K5-L3B-LAB-Day12-AI-SDLC-ForkMe` đã ở chế độ **Public** (`private: false`) và đã thêm đủ 4 collaborator có quyền Push/Write (`Do-Hong-Vy`, `Cuubeo`, `Phog2811`, `nguyenquoctoan0310`). *(Nhắc 4 người tự kiểm tra `git config user.name/email` khớp tài khoản GitHub).*
-- [x] **CP0-2 (`Do-Hong-Vy` khởi tạo bản đầy đủ — chờ cả nhóm xác nhận nhanh):** Điền hoàn chỉnh [`TEAM.md`](TEAM.md) (đủ `Vai quy trình`, `Người dự phòng cho`, `Thỏa thuận làm việc nhóm ≤ 10 dòng` không còn dấu `…`). *(Cả nhóm đọc lướt và chỉnh lại nếu cần trước khi commit).*
-- [x] **CP0-3 (`Do-Hong-Vy`):** Cập nhật `"team": "ForkMe"` trong [`game.contract.json`](game.contract.json) và chạy `python tools/check_team.py` xác nhận `OK: 4 thành viên`.
-- [x] **CP0-4 (`Cuubeo` — PO — plan + clarify xong; chờ PRD-0 mở để trích AC):** Mở Lab Board (**Chợ Nổi Lab**), lấy toàn bộ yêu cầu **Phase 1 (PRD-0)** và danh sách AC (`AC-P1-??`). Giải đáp các mục đang chờ trong [`docs/clarify.md`](docs/clarify.md) và điền [`docs/plan/phase-1.md`](docs/plan/phase-1.md) (`≤ 1 trang`: mục tiêu, việc/người/phụ thuộc, rủi ro).
-- [x] **CP0-5 (`Do-Hong-Vy` khởi tạo — chờ `Cuubeo` & `Phog2811` xác nhận/bổ sung theo PRD-0):** Chốt **Hợp đồng tích hợp** trong [`docs/contracts/`](docs/contracts/README.md):
-  - Xác nhận schema file kho ([`docs/contracts/inventory.sample.json`](docs/contracts/inventory.sample.json): `{"items": {"bong_sung": 2, "ca_loc": 1}}`).
-  - Tạo [`docs/contracts/sim-ui-interface.md`](docs/contracts/sim-ui-interface.md) khóa cấu trúc `snapshot()` & `/state`, `/input`, `/restart`.
-  - Tạo [`docs/contracts/events.md`](docs/contracts/events.md) liệt kê các sự kiện `gather` & `quan` (đánh dấu rõ các payload `[Chờ PO đối chiếu PRD-0]` trong [`docs/clarify.md`](docs/clarify.md)).
-- [ ] **CP0-6 (`Nguyenquoctoan0310` — QA):** Sửa lỗi môi trường chạy test local (Windows `python` vs `python3`), xử lý `test_template_is_rejected` trong [`tests/test_team_check.py`](tests/test_team_check.py) (ghi rõ lý do trong commit), xác nhận chạy xanh toàn bộ test suite hiện có (32 tests).
-- [ ] **CP0-7 (`Do-Hong-Vy` xong Skill 1; chờ `Nguyenquoctoan0310` làm Skill 2 — Harness AI):**
-  - [x] **Skill 1 (`Do-Hong-Vy`):** Tạo [`.agents/skills/check-contract/SKILL.md`](.agents/skills/check-contract/SKILL.md) và cập nhật [`AGENTS.md`](AGENTS.md) (lần 1).
-  - [ ] **Skill 2 (`Nguyenquoctoan0310`):** Tạo skill QA kiểm chứng AC / sinh bằng chứng `docs/verification/` & `docs/proof/` trong `.agents/skills/` và bổ sung vào [`AGENTS.md`](AGENTS.md).
+- [x] **CP0-1 (`Do-Hong-Vy` — Integrator):** Repo `K5-L3B-LAB-Day12-AI-SDLC-ForkMe` đã ở chế độ **Public** (`private: false`), đủ 4 collaborator có quyền Push/Write, và **cả 4 người đã có commit trên `main`** (`Do-Hong-Vy`, `Phog2811`, `Cuubeo`, `nguyenquoctoan0310`).
+- [x] **CP0-2 (`All`):** Hoàn thiện [`TEAM.md`](TEAM.md) (đủ `Vai quy trình`, `Người dự phòng cho`, `Thỏa thuận làm việc nhóm ≤ 10 dòng` không còn `…`), `python tools/check_team.py` đạt `OK: 4 thành viên`.
+- [x] **CP0-3 (`Do-Hong-Vy`):** Cập nhật `"team": "ForkMe"`, `"team_size": 4` trong [`game.contract.json`](game.contract.json).
+- [ ] **CP0-4 (`Cuubeo` — PO):**
+  - [x] Điền kế hoạch tổng quan [`docs/plan/phase-1.md`](docs/plan/phase-1.md) và ghi câu hỏi #6–#7 vào [`docs/clarify.md`](docs/clarify.md).
+  - [ ] Trích danh sách `AC-P1-??` chính thức và giải đáp các mục #1–#4, #7 trong [`docs/clarify.md`](docs/clarify.md) ngay khi Lab Board mở `PRD-0`.
+- [ ] **CP0-5 (`Do-Hong-Vy` + `Cuubeo` + `Phog2811` — Hợp đồng tích hợp):**
+  - [x] Đã có [`docs/contracts/inventory.sample.json`](docs/contracts/inventory.sample.json), [`docs/contracts/README.md`](docs/contracts/README.md), [`docs/contracts/sim-ui-interface.md`](docs/contracts/sim-ui-interface.md), [`docs/contracts/events.md`](docs/contracts/events.md).
+  - [ ] **Đồng bộ 1 nguồn chuẩn:** Gộp/liên kết thống nhất giữa [`docs/contracts/README.md`](docs/contracts/README.md) với [`sim-ui-interface.md`](docs/contracts/sim-ui-interface.md) & [`events.md`](docs/contracts/events.md), đánh dấu rõ chỗ đang giả định tạm chờ `PRD-0`.
+- [ ] **CP0-6 (`Nguyenquoctoan0310` + `All` — Môi trường & Smoke Test):**
+  - [x] `Nguyenquoctoan0310` đã sửa `test_template_is_rejected` và thêm `test_repo_team_md_is_valid` trong [`tests/test_team_check.py`](tests/test_team_check.py) (5/5 pass), giữ `python3` trong `game.contract.json` cho CI Linux, bổ sung hướng dẫn fix Windows vào [`AGENTS.md`](AGENTS.md).
+  - [ ] Tạo `python3.exe` cục bộ (không commit) trên máy Windows của các thành viên chưa có shim (trong đó có máy `Do-Hong-Vy`) để chạy pass toàn bộ `33/33` tests (`test_smoke_p1.py` + `test_live.py`). *(Tùy chọn: bật GitHub Actions trên repo fork để CI `.github/workflows/ci.yml` chạy tự động).*
+- [ ] **CP0-7 (`Do-Hong-Vy` + `Nguyenquoctoan0310` + `All` — Harness AI):**
+  - [x] **Skill 1 (`Do-Hong-Vy`):** [`.agents/skills/check-contract/SKILL.md`](.agents/skills/check-contract/SKILL.md) + cập nhật [`AGENTS.md`](AGENTS.md).
+  - [x] **Skill 2 (`Nguyenquoctoan0310`):** [`.agents/skills/verify-phase/SKILL.md`](.agents/skills/verify-phase/SKILL.md) + cập nhật [`AGENTS.md`](AGENTS.md).
+  - [ ] **Nhật ký AI CP0 (`Phog2811`):** Bổ sung dòng CP0 của `Phog2811` vào [`docs/ai-usage-log.md`](docs/ai-usage-log.md) (`Do-Hong-Vy`, `Nguyenquoctoan0310`, `Cuubeo` đã ghi).
 
 ---
 
