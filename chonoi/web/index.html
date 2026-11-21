@@ -1476,10 +1476,19 @@ function fmtTime(ticks) {
   const s = Math.max(0, Math.ceil((ticks || 0) / 60));
   return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
 }
-function countItems(arr) {
+// v1.2 (Ticket-03): giỏ/kho là mảng cá thể {id, kind, fresh}; v1.1 là mảng kind / map đếm. Đếm chung cả hai.
+const SPOIL_BELOW = 30;
+function countItems(arr, skipSpoiled) {
   const out = {};
-  (arr || []).forEach((k) => { out[k] = (out[k] || 0) + 1; });
+  (arr || []).forEach((x) => {
+    const k = (x && typeof x === "object") ? x.kind : x;
+    if (skipSpoiled && x && typeof x === "object" && x.fresh < SPOIL_BELOW) return;
+    out[k] = (out[k] || 0) + 1;
+  });
   return out;
+}
+function stockCounts(stock, skipSpoiled) {
+  return Array.isArray(stock) ? countItems(stock, skipSpoiled) : Object.assign({}, stock || {});
 }
 function getActiveMenu() {
   const full = getFullMenu();
@@ -1498,11 +1507,18 @@ function computeAvailableStock() {
     const c = countItems(snap.hold || []);
     return { stock: c, reserved: {}, avail: c };
   }
-  const stock = Object.assign({}, snap.stock || {});
+  // v1.2: kho khả dụng = cá thể chưa ươn − phần giữ (reserved là mảng id cá thể)
+  const stock = stockCounts(snap.stock, true);
+  const byId = {};
+  if (Array.isArray(snap.stock)) snap.stock.forEach((it) => { byId[it.id] = it; });
   const reserved = {};
   (snap.customers || []).forEach((c) => {
     const r = c.reserved || {};
-    Object.keys(r).forEach((k) => { reserved[k] = (reserved[k] || 0) + r[k]; });
+    if (Array.isArray(r)) {
+      r.forEach((iid) => { const it = byId[iid]; if (it) reserved[it.kind] = (reserved[it.kind] || 0) + 1; });
+    } else {
+      Object.keys(r).forEach((k) => { reserved[k] = (reserved[k] || 0) + r[k]; });
+    }
   });
   const avail = {};
   const allKeys = new Set([...Object.keys(stock), ...Object.keys(reserved)]);
@@ -2210,16 +2226,25 @@ function drawGather(w, h, dt) {
   const slotW = Math.min(44, Math.floor((w - 430) / cap) - 4);
   for (let i = 0; i < cap; i++) {
     const sx0 = 22 + i * (slotW + 4), sy0 = h - 38;
-    const item = hold[i];
+    const raw = hold[i];
+    // v1.2 (Ticket-03): cá thể {id, kind, fresh} -> màu theo kind, vạch độ tươi, ⚠ khi ươn (< 30)
+    const item = raw && typeof raw === "object" ? raw.kind : raw;
+    const fresh = raw && typeof raw === "object" ? raw.fresh : null;
+    const spoiled = fresh !== null && fresh < SPOIL_BELOW;
     const isNewest = i === hold.length - 1 && hold.length > 0;
     roundRect(sx0, sy0, slotW, 22, 5);
-    ctx.fillStyle = item ? kc(item) : "rgba(255, 255, 255, 0.08)";
+    ctx.fillStyle = item ? (spoiled ? "#78716c" : kc(item)) : "rgba(255, 255, 255, 0.08)";
     ctx.fill();
     ctx.strokeStyle = isNewest ? "#ffffff" : "rgba(255, 255, 255, 0.22)";
     ctx.lineWidth = isNewest ? 2 : 1;
     ctx.stroke();
     if (item) {
-      text(KIND_SHORT[item] || item, sx0 + slotW / 2, sy0 + 15, { size: 10, align: "center", bold: true, color: "#0f172a" });
+      text((spoiled ? "⚠" : "") + (KIND_SHORT[item] || item), sx0 + slotW / 2, sy0 + 15,
+           { size: 10, align: "center", bold: true, color: spoiled ? "#fef2f2" : "#0f172a" });
+      if (fresh !== null) {
+        ctx.fillStyle = fresh >= 60 ? "#22c55e" : fresh >= SPOIL_BELOW ? "#eab308" : "#ef4444";
+        ctx.fillRect(sx0 + 2, sy0 + 19, Math.max(1, (slotW - 4) * fresh / 100), 2);
+      }
     }
   }
   text("WASD: Bơi · [E]: Bến/Hái · [Space]: Bắt cá · [Q]: Chưởng · [R]: Chơi lại", w - 22, h - 22, {
