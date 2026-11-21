@@ -4,18 +4,18 @@
 
 | Thành viên | GitHub handle | Module chính | Vai quy trình | Người dự phòng cho |
 |---|---|---|---|---|
-|Đỗ Hồng Vỹ |Do-Hong-Vy | `sim/gather` | | |
-|Bùi Phước Anh |Cuubeo | `sim/quan` | | |
-|Đinh Hoàng Phong |Phog2811 | `client/ui` | | |
-|Nguyễn Quốc Toàn |Nguyenquoctoan0310 | `qa` | | |
+| Đỗ Hồng Vỹ | Do-Hong-Vy | `sim/gather` | Integrator | `sim/quan` (`Cuubeo`) |
+| Bùi Phước Anh | Cuubeo | `sim/quan` | PO | `sim/gather` (`Do-Hong-Vy`) |
+| Đinh Hoàng Phong | Phog2811 | `client/ui` | Scrum / Release | `qa` (`Nguyenquoctoan0310`) |
+| Nguyễn Quốc Toàn | Nguyenquoctoan0310 | `qa` | QA lead | `client/ui` (`Phog2811`) |
 
 **Vai quy trình:** PO (đầu mối hỏi giảng viên, giữ `docs/clarify.md`) · Integrator (giữ `docs/contracts/`, gắn tag) · QA lead · Scrum/Release. Có thể kiêm.
 
 ## Thỏa thuận làm việc nhóm (điền trong 15 phút kickoff, ≤ 10 dòng)
 
 - Kênh liên lạc: Trực tiếp
-- Khi bất đồng về thiết kế: … (ví dụ: nói 2 phút, không xong thì Integrator quyết và ghi lại lý do)
-- Khi ai đó trễ hoặc vướng quá 10 phút: … (ví dụ: nói ngay trong kênh, người dự phòng nhận việc)
-- Giờ standup giữa phase: …
-- Cách đọc code của nhau (tùy chọn): … (ví dụ: mỗi người đọc lát kế bên; PR hoặc xem trực tiếp)
-- Cách làm việc với Git: … (ví dụ: push thẳng nhánh chính / nhánh ngắn rồi gộp; thống nhất ai gắn tag)
+- Khi bất đồng về thiết kế: Thảo luận tối đa 2 phút; chưa chốt được thì Integrator (`Do-Hong-Vy`) quyết và ghi lại lý do.
+- Khi ai đó trễ hoặc vướng quá 10 phút: Báo ngay trực tiếp cho nhóm để người dự phòng nhận việc hoặc hỗ trợ.
+- Giờ standup giữa phase: Giữa mỗi phase (0:30, 1:25, 2:10, 2:45), mỗi người ghi 1 dòng vào `docs/standup.md`.
+- Cách đọc code của nhau: Mỗi người đọc lát kế bên (`Do-Hong-Vy` ↔ `Cuubeo`, `Phog2811` ↔ `Nguyenquoctoan0310`) trước khi đẩy/gộp.
+- Cách làm việc với Git: Chia lát nhỏ, chạy test trước khi push lên `main` hoặc gộp nhánh; Integrator (`Do-Hong-Vy`) gắn tag `phase-1`..`phase-4` và `v1.0.0`.
