@@ -11,7 +11,8 @@ Một bước (đúng thứ tự PRD-0 F):
        bàn       -> giao đúng order_id, khách ăn với timer đầy, chốt boa                    `served`
   4. theo id bàn: ăn xong trả tiền (`paid`) rồi rời; còn giờ + kiên nhẫn 0 -> `customer_left` (patience);
      hết ca: đang ăn trả ngay (closing), đang chờ rời (closing, không trừ uy tín) -> `quan_end`
-  5. còn giờ: lượt khách theo lịch -> bàn trống id nhỏ nhất, chọn đều theo seed trong món khả dụng,
+  5. còn giờ: lượt khách theo lịch -> bàn trống id nhỏ nhất, chọn đều theo seed trong món khả dụng
+     (trong `day`: chỉ món thuộc kế hoạch Ngày — Ticket-02 mục 2, 4.5),
      giữ chỗ ngay -> `customer_arrived`; có bàn mà không món nào đủ -> `no_dish`
 
 Số liệu chỉ đọc từ tuning (game.contract.json). Ngẫu nhiên chỉ qua Streams (luồng "customers").
@@ -34,10 +35,12 @@ class QuanSim:
     mode = "quan"
     phase = "quan"
 
-    def __init__(self, tuning, scenario, streams, ids, inventory=None):
+    def __init__(self, tuning, scenario, streams, ids, inventory=None, dish_ids=None):
         t = tuning["quan"]
         self.t = t
         self.menu = tuning["menu"]
+        # Ticket-02 mục 2: trong `day` khách chỉ gọi món thuộc kế hoạch Ngày; quán độc lập dùng cả menu.
+        self.dish_ids = sorted(dish_ids) if dish_ids is not None else sorted(self.menu)
         self.rng = streams
         self.ids = ids
         p = scenario.get("player", {})
@@ -276,7 +279,7 @@ class QuanSim:
         if not free:
             return
         avail = self._available()
-        dishes = [d for d in sorted(self.menu)
+        dishes = [d for d in self.dish_ids  # lọc theo kế hoạch trước, rồi mới lọc nguyên liệu khả dụng
                   if all(avail.get(k, 0) >= n for k, n in self.menu[d]["recipe"].items())]
         if not dishes:
             events.append(("no_dish", {}))
