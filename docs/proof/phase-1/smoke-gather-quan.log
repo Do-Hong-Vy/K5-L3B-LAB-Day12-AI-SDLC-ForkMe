@@ -1,0 +1,11 @@
+# Smoke 2 tiến trình (PRD-0 mục G) — gather (Do-Hong-Vy) -> quan (Cuubeo)
+gather exit=0
+catch.json: {"items":{"bong_sung":2,"ca_loc":1}}
+{"type":"event","tick":1,"phase":"gather","name":"gather_end","data":{"reason":"docked","inventory":{"items":{"bong_sung":2,"ca_loc":1}}}}
+quan exit=0
+"stock":{"bong_sung":2,"ca_loc":1}
+--- quan chơi tiếp 1 ca từ kho đó (seed 42):
+      3 "name":"customer_arrived"
+      3 "name":"customer_left"
+      1 "name":"quan_end"
+{"type":"end","ticks":10800,"sim_tick":10800,"mode":"quan","state":"finished","reason":"time","money":0,"earned":0,"reputation":2.0,"score":200}

@@ -104,7 +104,7 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
   - Bước 2 (duyệt bếp theo `sort_by_id`): `cooking` hết giờ → `ready` (`ready_ticks = 0`), phát `dish_ready`.
   - Bước 3 (`interact` tối đa 1 đối tượng theo `(khoảng cách, bếp trước bàn, id_key)`): bếp `idle` lấy đơn `reserved` cũ nhất theo `(order_tick, table_id)`, tiêu nguyên liệu giữ, chốt `base_price` → `cook_started`; bếp `ready` & tay trống → `dish_picked`; bàn có khách khớp `hand.order_id` → chốt `tip = floor(base_price * tip_rate)` nếu tỷ lệ kiên nhẫn còn lại **sau bước 1** `>= tip_min_patience_ratio` (ngược lại `0`), chuyển `eating` → `served` (hợp lệ cả đúng tick kiên nhẫn về 0 hoặc hết ca).
   - Bước 4: khách `eating` xong trả `paid` (`finished_eating`), boa dương cộng `tip_reputation` (kẹp `[min, max]`), rời bàn. Hết ca (`time_left_ticks == 0`): khách `eating` trả ngay `paid` (`closing`), khách `waiting` rời `customer_left` (`closing`, **không trừ uy tín**), phát `quan_end`.
-- [ ] **CP1-Q3 (PO):** Giữ [`docs/clarify.md`](docs/clarify.md) luôn cập nhật nếu phát sinh câu hỏi mới; review code cho `Do-Hong-Vy`.
+- [x] **CP1-Q3 (PO):** *(review `gather` xong: `docs/proof/phase-1/review-gather-by-Cuubeo.md`)* Giữ [`docs/clarify.md`](docs/clarify.md) luôn cập nhật nếu phát sinh câu hỏi mới; review code cho `Do-Hong-Vy`.
 
 #### C. `Phog2811` (`client/ui` — [`chonoi/web/index.html`](chonoi/web/index.html) & `README.md`)
 - [ ] **CP1-U1 (Nâng cấp UI/HUD Gather & Quán v1.0 | `AC-P1-14`):**
