@@ -4,6 +4,7 @@ import json
 import os
 
 from .errors import BadInput
+from .inventory import KINDS_P1
 
 DEFAULT_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "game.contract.json")
 
@@ -136,8 +137,48 @@ def validate_tuning(t):
         raise BadInput("quan.tip_reputation phải > 0")
     if q.get("burn_s") is not None:
         raise BadInput("burn_s phải là null ở Phase 1")
-    # TODO(nhóm): bổ sung kiểm các khóa còn lại nếu muốn chặt hơn (bếp/bàn, uy tín, ...).
+    _validate_quan_layout(q)
+    _validate_menu(menu)
+
+
+def _validate_quan_layout(q):
+    """Bếp/bàn, vị trí xuất phát và uy tín của quán (bổ sung của nhóm ForkMe, CP1-T1)."""
+    b = q["bounds"]
+    _pos_in("quan.start_pos", q.get("start_pos"), b, ("x", "z"))
+    for arr in ("stoves", "tables"):
+        items = q.get(arr)
+        if not isinstance(items, list) or not items:
+            raise BadInput(f"tuning.quan.{arr} phải là mảng không rỗng")
+        seen = set()
+        for e in items:
+            if not isinstance(e, dict) or not isinstance(e.get("id"), str) or not e["id"] or e["id"] in seen:
+                raise BadInput(f"tuning.quan.{arr}: mỗi phần tử cần id (chuỗi) duy nhất")
+            seen.add(e["id"])
+            _pos_in(f"quan.{arr}.{e['id']}.pos", e.get("pos"), b, ("x", "z"))
+    lo, hi, init = q.get("reputation_min"), q.get("reputation_max"), q.get("reputation_initial")
+    if not (_num(lo) and _num(hi) and _num(init)):
+        raise BadInput("tuning.quan.reputation_min/max/initial phải là số")
+    if not (lo < hi):
+        raise BadInput(f"tuning.quan.reputation_min ({lo}) phải < reputation_max ({hi})")
+    if not (lo <= init <= hi):
+        raise BadInput(f"tuning.quan.reputation_initial ({init}) phải trong [{lo}, {hi}]")
+
+
+def _validate_menu(menu):
+    """Món: giá nguyên > 0, cook_s > 0, công thức chỉ dùng nguyên liệu P1 với số lượng nguyên > 0."""
+    if not menu:
+        raise BadInput("tuning.menu không được rỗng")
     for dish_id, d in menu.items():
+        if not isinstance(d, dict):
+            raise BadInput(f"menu.{dish_id} phải là object")
         price, cook = d.get("price"), d.get("cook_s")
         if isinstance(price, bool) or not isinstance(price, int) or price <= 0 or not _num(cook) or cook <= 0:
             raise BadInput(f"menu.{dish_id}: price (nguyên) và cook_s phải > 0")
+        recipe = d.get("recipe")
+        if not isinstance(recipe, dict) or not recipe:
+            raise BadInput(f"menu.{dish_id}.recipe phải là object không rỗng")
+        for kind, n in recipe.items():
+            if kind not in KINDS_P1:
+                raise BadInput(f"menu.{dish_id}.recipe: nguyên liệu lạ {kind!r} (chỉ nhận {list(KINDS_P1)})")
+            if isinstance(n, bool) or not isinstance(n, int) or n <= 0:
+                raise BadInput(f"menu.{dish_id}.recipe.{kind} phải là số nguyên > 0")

@@ -1,0 +1,15 @@
+# AC-P1-12 — tất định từng byte (QA Nguyenquoctoan0310, 8354438 + thay đổi CP1-T1)
+$ python3 -m chonoi.headless --mode gather --seed 42 --scenario sc.json --inputs gin.json --ticks 7200 --out g_a.jsonl --inventory-out inv_a.json
+exit=0
+$ python3 -m chonoi.headless --mode quan --seed 42 --inventory inv_a.json --inputs qin.json --ticks 10800 --out q_a.jsonl
+exit=0
+$ python3 -m chonoi.headless --mode gather --seed 42 --scenario sc.json --inputs gin.json --ticks 7200 --out g_b.jsonl --inventory-out inv_b.json
+exit=0
+$ python3 -m chonoi.headless --mode quan --seed 42 --inventory inv_b.json --inputs qin.json --ticks 10800 --out q_b.jsonl
+exit=0
+g_a.jsonl vs g_b.jsonl: 6136 bytes, sha256 513dcb887f878f0e / 513dcb887f878f0e -> IDENTICAL
+inv_a.json vs inv_b.json: 37 bytes, sha256 b6bb9d2da81ecee6 / b6bb9d2da81ecee6 -> IDENTICAL
+q_a.jsonl vs q_b.jsonl: 708634 bytes, sha256 1c8bab7d1e1c5bae / 1c8bab7d1e1c5bae -> IDENTICAL
+kho: {"items":{"bong_sung":2,"ca_loc":1}}
+end gather: {"type":"end","ticks":32,"sim_tick":32,"mode":"gather","state":"finished","reason":"docked","money":0,"earned":0,"reputation":3.0,"score":300}
+end quan: {"type":"end","ticks":10800,"sim_tick":10800,"mode":"quan","state":"finished","reason":"time","money":0,"earned":0,"reputation":2.0,"score":200}

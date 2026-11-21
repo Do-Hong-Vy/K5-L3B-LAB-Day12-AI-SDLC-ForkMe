@@ -1,14 +1,32 @@
 # Ma trận truy vết Phase 1
 
+> QA lead: `Nguyenquoctoan0310` (skill [`verify-phase`](../../.agents/skills/verify-phase/SKILL.md)). Mã AC theo [`docs/plan/phase-1.md`](../plan/phase-1.md).
+> Toàn bộ suite: **90/90 test OK** — [unittest-full.txt](../proof/phase-1/unittest-full.txt); `check_team`: [check_team.txt](../proof/phase-1/check_team.txt).
+
 | AC | Cách kiểm chứng | Bằng chứng (link `docs/proof/phase-1/...`) | Kết quả (đạt / chưa đạt — ghi trung thực) |
 |---|---|---|---|
+| AC-P1-01 (bơi, ramp, chặn biên, hướng) | `tests/test_smoke_p1.py::Movement` (`test_move_01..03`, `test_move_ramp_doi_huong_trong_tran`, `test_move_mep_vel_ve_0`) | [unittest-full.txt](../proof/phase-1/unittest-full.txt) | Đạt |
+| AC-P1-02 (oxy, ngạt, Máu, ngất, dive/surface) | `tests/test_gather_p1.py`: `test_dive_surface_and_oxygen_refill_clamp`, `test_oxygen_empty_choke_at_t_plus_59`, `test_surface_on_choke_tick_prevents_choke`, `test_faint_drops_hold_lifo_and_writes_empty_inventory` | [unittest-full.txt](../proof/phase-1/unittest-full.txt) | Đạt |
+| AC-P1-03 (hái, bến xét trước, mọc lại, hold_full) | `test_harvest_nearest_tiebreak_regrow_and_hold_full`, `test_last_tick_dock_and_last_tick_catch` | [unittest-full.txt](../proof/phase-1/unittest-full.txt) | Đạt |
+| AC-P1-04 (bắt cá, cooldown, hold_full giữ đàn) | `test_catch_nearest_tiebreak_removes_school_cooldown_and_no_miss_cooldown`, `test_catch_hold_full_keeps_fish_and_cooldown_and_does_not_fallback`, `test_catch_miss_and_surface_catch_ignored_without_cooldown` | [unittest-full.txt](../proof/phase-1/unittest-full.txt) | Đạt |
+| AC-P1-05 (kết thúc docked/time/fainted, ghi kho 1 lần) | `test_time_ends_gather_and_keeps_hold`, `test_inv_01_gather_writes_inventory_quan_reads_it`, `test_inv_01_not_written_when_tick_limit_first`, `test_faint_...writes_empty_inventory` | [unittest-full.txt](../proof/phase-1/unittest-full.txt), [gather_sample.jsonl](../proof/phase-1/gather_sample.jsonl) | Đạt |
 | AC-P1-06 (khách, lịch, giữ chỗ, no_dish) | `tests/test_quan_p1.py::QuanCustomers` (7 test hộp đen qua `headless_cmd`) | [quan-tests.log](../proof/phase-1/quan-tests.log) | Đạt |
 | AC-P1-07 (interact: nấu, bưng, phục vụ, boa) | `QuanService.test_vong_phuc_vu_day_du_co_boa`, `test_boa_0_khi_kien_nhan_duoi_nguong`, `test_bep_dang_nau_khong_tuong_tac...` | [quan-tests.log](../proof/phase-1/quan-tests.log) | Đạt (thứ tự hòa "bếp trước bàn" chưa có test riêng vì preset bếp/bàn cách xa) |
 | AC-P1-08 (trả tiền, rời bàn, uy tín, đóng ca) | `test_het_kien_nhan_roi_ban_tru_uy_tin`, `test_khach_roi_bo_mon_dang_nau`, `test_dong_ca_tra_tien_closing...` | [quan-tests.log](../proof/phase-1/quan-tests.log) | Đạt |
-| AC-P1-11 (phần quan: snapshot có `player.vel`, customers đủ trường) | `test_snapshot_quan_player_co_vel`, `test_khach_den_dung_first_customer_tick_va_giu_cho` | [quan-tests.log](../proof/phase-1/quan-tests.log) | Đạt (phần quan) |
-| AC-P1-12 (phần quan: tất định) | Chạy 2 lần seed 3, 10800 tick, `cmp` từng byte + `test_cung_seed_cung_byte` | [quan-determinism.log](../proof/phase-1/quan-determinism.log) | Đạt (phần quan) |
+| AC-P1-09 (CLI headless, mã 0/1/2, kiểm trước khi ghi) | 14 lệnh CLI thật (thiếu cờ, mode lạ, `--ticks` âm/thực, `--snapshot-every 0`, cờ kho sai mode, đầu ra trùng đầu vào, inputs tick lặp, lỗi ghi → 1) + `test_smoke_p1.py::Contract`, `Integration.test_inventory_*` + `tests/test_contract_quan.py` (contract hỏng → 2, không tạo `--out`) | [exit_codes.txt](../proof/phase-1/exit_codes.txt), [unittest-full.txt](../proof/phase-1/unittest-full.txt) | Đạt |
+| AC-P1-10 (scenario/inputs mâu thuẫn → mã 2) | `tests/test_scenario_quan_p1.py::QuanScenarioRejected` — 42 ca mục D (trường lạ, món/nguyên liệu ngoài phạm vi, bộ đếm âm/vượt trần, giữ khác công thức, giữ quá tồn kể cả qua `--inventory`, eating thiếu giá/boa, bếp cooking timer 0, món không khớp đơn, bếp & tay cùng đơn, assigned không có món, id bếp/bàn lạ...) — mỗi ca đã đối chiếu đúng thông báo lỗi; `QuanScenarioAccepted` (8 fixture hợp lệ không bị chặn nhầm) | [scenario-rejections.txt](../proof/phase-1/scenario-rejections.txt) | Đạt cho quán + gather (khung) — xem ghi chú 1 |
+| AC-P1-11 (JSONL: snapshot/event/end, đủ trường mục E) | `test_con_01_ticks_zero_and_end_line`, `test_gather_snapshot_has_gather_fields`, `test_snapshot_quan_player_co_vel`, `test_khach_den_dung_first_customer_tick_va_giu_cho` | [gather_sample.jsonl](../proof/phase-1/gather_sample.jsonl), [quan_sample.jsonl](../proof/phase-1/quan_sample.jsonl) | Đạt |
+| AC-P1-12 (tất định từng byte, JSONL + file kho) | Chuỗi `gather` (seed 42, có inputs) → kho → `quan` (seed 42, 10800 tick) chạy 2 lần, so `cmp`/sha256 cả 3 file; `test_scenario_quan_p1.py::Determinism`, `test_con_02_deterministic_bytes`, `test_gather_full_flow_deterministic_bytes`, `test_cung_seed_cung_byte` | [determinism.txt](../proof/phase-1/determinism.txt), [quan-determinism.log](../proof/phase-1/quan-determinism.log) | Đạt — 3/3 file IDENTICAL |
 | AC-P1-13 (smoke 2 tiến trình) | Lệnh mẫu PRD-0 mục G, seed 42 | [smoke-gather-quan.log](../proof/phase-1/smoke-gather-quan.log) | Đạt — quán tick 0 `stock:{"bong_sung":2,"ca_loc":1}` |
+| AC-P1-14 (chơi được 2 buổi, HUD đủ chỉ số) | Chơi thử `python3 -m chonoi.live --mode gather|quan` + ảnh chụp HUD | — (chờ `Phog2811` gửi ảnh chụp) | Chưa kiểm chứng |
+| AC-P1-15 (README chạy ≤ 3 lệnh, contract khớp) | Clone sạch, làm theo README | — | Chưa kiểm chứng |
+| AC-P1-16 (ghi chép + tag `phase-1`) | `TEAM.md` OK, hợp đồng kho, verification + proof (file này), clarify, ai-usage-log | [check_team.txt](../proof/phase-1/check_team.txt) | Chưa đạt — chờ tag `phase-1` (Integrator) |
+
+## Ghi chú
+1. **Giữ chỗ quá tồn** cần biết kho, mà kho có thể đến từ `--inventory` (đọc sau `load_scenario`). Vì vậy `scenario.check_quan_stock` được gọi trong `headless.py`/`live.py` ngay sau khi đọc kho — vẫn trước khi dựng sim và mở `--out`. Đơn `reserved` thiếu `reserved` được cấp theo công thức, duyệt `(order_tick, id bàn)` (PRD-0 D).
+2. **Sửa test có lý do** (CP0): `test_template_is_rejected` đọc `TEAM.md` thật và đòi nó *không hợp lệ*; sau khi nhóm điền `TEAM.md` thì fail dù `check_team` đúng → đổi sang chuỗi template cố định, thêm `test_repo_team_md_is_valid` (commit `597baee`, clarify #5).
+3. Windows: test hộp đen gọi `python3` qua `subprocess`; chạy local cần shim `python3.exe` (xem `AGENTS.md`). Không đổi `headless_cmd`.
 
 ## Đánh giá ngắn
-- Yêu cầu nào đạt / chưa đạt:
-- Điều cần chỉnh cho phase sau:
+- Yêu cầu nào đạt / chưa đạt: Lõi luật + headless (AC-P1-01..13) **đạt** với bằng chứng tự động. Chưa kiểm chứng: AC-P1-14 (HUD), AC-P1-15 (README); AC-P1-16 chờ tag.
+- Điều cần chỉnh cho phase sau: thêm test riêng cho hòa khoảng cách "bếp trước bàn" (cần scenario dời bếp/bàn); kiểm mâu thuẫn mức luật cho `gather` mới dừng ở khung giảng viên — rà lại khi Phase 2 thêm cơ chế.

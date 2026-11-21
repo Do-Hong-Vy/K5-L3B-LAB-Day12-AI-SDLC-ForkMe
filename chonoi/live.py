@@ -26,7 +26,7 @@ from .errors import BadInput
 from .inputs import LiveInputs
 from .inventory import read_inventory
 from .runner import Session
-from .scenario import load_scenario
+from .scenario import check_quan_stock, load_scenario
 
 WEB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web")
 TICK_S = 1.0 / 60.0
@@ -233,6 +233,8 @@ def main(argv=None) -> int:
         inventory = read_inventory(a.inventory) if a.inventory else None
         if inventory is not None and "stock" in scenario:
             raise BadInput("vừa có quan.stock vừa có --inventory")
+        if a.mode == "quan":
+            check_quan_stock(scenario, inventory if inventory is not None else scenario.get("stock", {}), tuning)
         game = LiveGame(a.mode, tuning, scenario, a.seed, inventory, a.inventory_out)
         server = LiveServer(game, a.host, a.port)
     except BadInput as e:

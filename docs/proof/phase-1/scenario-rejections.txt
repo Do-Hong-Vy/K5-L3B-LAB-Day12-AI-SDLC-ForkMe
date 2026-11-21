@@ -1,0 +1,44 @@
+# AC-P1-10 — scenario quán mâu thuẫn (PRD-0 mục D) -> mã 2, không tạo --out
+# nguồn: tests/test_scenario_quan_p1.py::QuanScenarioRejected.CASES
+khach_truong_la                          exit=2 không file  đầu vào sai: customers.C1: trường lạ/chưa hỗ trợ ['vip']
+khach_mon_ngoai_menu                     exit=2 không file  đầu vào sai: customers.C1.dish_id phải là món có trong menu
+khach_thieu_mon                          exit=2 không file  đầu vào sai: customers.C1.dish_id phải là món có trong menu
+khach_state_sai                          exit=2 không file  đầu vào sai: customers.C1.state phải là một trong ('waiting', 'eating')
+order_status_sai                         exit=2 không file  đầu vào sai: customers.C1.order_status phải là một trong ('reserved', 'assigned', 'unfulfillable', 'served')
+kien_nhan_am                             exit=2 không file  đầu vào sai: customers.C1.patience_ticks_left phải là số nguyên không âm
+kien_nhan_vuot_tran                      exit=2 không file  đầu vào sai: customers.C1.patience_ticks_left vượt kiên nhẫn tối đa 3600
+order_tick_am                            exit=2 không file  đầu vào sai: customers.C1.order_tick phải là số nguyên không âm
+reputation_vuot_tran                     exit=2 không file  đầu vào sai: reputation phải là số trong [0, 5]
+reputation_duoi_san                      exit=2 không file  đầu vào sai: reputation phải là số trong [0, 5]
+random_customers_khong_bool              exit=2 không file  đầu vào sai: random_customers phải là boolean
+giu_khac_cong_thuc                       exit=2 không file  đầu vào sai: customers.C1: reserved khác công thức món ca_loc_nuong_trui
+giu_qua_ton_khai_reserved                exit=2 không file  đầu vào sai: customers.C1: giữ chỗ ca_loc vượt tồn kho (1 > 0)
+giu_qua_ton_suy_tu_cong_thuc             exit=2 không file  đầu vào sai: customers.C1: giữ chỗ ca_loc vượt tồn kho (1 > 0)
+unfulfillable_con_giu                    exit=2 không file  đầu vào sai: customers.C1: đơn unfulfillable phải có reserved rỗng
+nguyen_lieu_la_trong_reserved            exit=2 không file  đầu vào sai: nguyên liệu lạ: ca_map
+eating_khong_served                      exit=2 không file  đầu vào sai: customers.C1: khách eating phải có order_status served
+eating_timer_0                           exit=2 không file  đầu vào sai: customers.C1: khách eating phải có eat_ticks_left > 0
+eating_thieu_tip                         exit=2 không file  đầu vào sai: customers.C1: khách eating phải khai base_price và tip đã chốt
+eating_vuot_tran_an                      exit=2 không file  đầu vào sai: customers.C1.eat_ticks_left vượt thời gian ăn 600
+served_ma_waiting                        exit=2 không file  đầu vào sai: customers.C1: đơn served thì khách phải đang eating
+waiting_co_timer_an                      exit=2 không file  đầu vào sai: customers.C1: khách waiting không có eat_ticks_left
+bep_id_khong_ton_tai                     exit=2 không file  đầu vào sai: stoves.B9: id cập nhật không tồn tại trong tuning
+ban_id_khong_ton_tai                     exit=2 không file  đầu vào sai: tables.T9: id cập nhật không tồn tại trong tuning
+bep_truong_la                            exit=2 không file  đầu vào sai: stoves.B1: trường lạ/chưa hỗ trợ ['fire']
+bep_ngoai_mien                           exit=2 không file  đầu vào sai: stoves.B1.pos nằm ngoài vùng nước (x ∈ [0, 16])
+bep_state_sai                            exit=2 không file  đầu vào sai: stoves.B1.state phải là một trong ('idle', 'cooking', 'ready')
+bep_idle_co_mon                          exit=2 không file  đầu vào sai: stoves.B1: bếp idle không có món, cook_ticks_left = ready_ticks = 0
+bep_cooking_timer_0                      exit=2 không file  đầu vào sai: stoves.B1: bếp cooking phải có cook_ticks_left > 0
+bep_cooking_timer_vuot_thoi_gian_nau     exit=2 không file  đầu vào sai: stoves.B1: cook_ticks_left vượt thời gian nấu món
+bep_cooking_khong_mon                    exit=2 không file  đầu vào sai: stoves.B1: bếp cooking phải có món
+bep_ready_con_timer                      exit=2 không file  đầu vào sai: stoves.B1: bếp ready phải có cook_ticks_left = 0
+bep_ready_ticks_am                       exit=2 không file  đầu vào sai: stoves.B1.ready_ticks phải là số nguyên không âm
+mon_khong_khop_don                       exit=2 không file  đầu vào sai: stoves.B1: món goi_bong_sung không khớp đơn C1 (ca_loc_nuong_trui)
+mon_cua_don_khong_ton_tai                exit=2 không file  đầu vào sai: stoves.B1: món của đơn C7 không có khách tương ứng
+mon_cua_don_dang_reserved                exit=2 không file  đầu vào sai: stoves.B1: món của đơn C1 nhưng đơn đang reserved (phải assigned)
+bep_va_tay_cung_don                      exit=2 không file  đầu vào sai: đơn C1 có món ở hai nơi (hand và stoves.B1)
+assigned_khong_co_mon                    exit=2 không file  đầu vào sai: customers.C1: đơn assigned phải có đúng một món ở bếp hoặc tay
+assigned_con_giu_cho                     exit=2 không file  đầu vào sai: customers.C1: đơn assigned phải có reserved rỗng
+hand_payload_thieu_khoa                  exit=2 không file  đầu vào sai: hand phải là payload món có đúng khóa ['base_price', 'dish_id', 'order_id'] hoặc null
+hand_mon_ngoai_menu                      exit=2 không file  đầu vào sai: hand.dish_id 'pho_bo' không có trong menu
+hand_gia_khong_duong                     exit=2 không file  đầu vào sai: hand.base_price phải là số nguyên dương

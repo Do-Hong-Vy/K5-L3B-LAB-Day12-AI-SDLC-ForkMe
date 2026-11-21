@@ -1,0 +1,15 @@
+# AC-P1-09 — CLI headless & mã thoát (PRD-0 mục B, C)
+hợp lệ: gather --ticks 0 (chỉ dựng fixture)  exit=0  có file  
+hợp lệ: quan seed âm                            exit=0  có file  
+thiếu --out                                        exit=2  không file usage: chonoi.headless [-h] --mode {gather,quan,day} --seed SEED --ticks TICKS           
+thiếu --seed                                       exit=2  không file usage: chonoi.headless [-h] --mode {gather,quan,day} --seed SEED --ticks TICKS           
+mode lạ                                            exit=2  không file usage: chonoi.headless [-h] --mode {gather,quan,day} --seed SEED --ticks TICKS           
+--ticks âm                                          exit=2  không file đầu vào sai: --ticks phải >= 0 
+--ticks không phải số nguyên                   exit=2  không file usage: chonoi.headless [-h] --mode {gather,quan,day} --seed SEED --ticks TICKS           
+--snapshot-every 0                                   exit=2  không file đầu vào sai: --snapshot-every phải > 0 
+--inventory với gather                             exit=2  không file đầu vào sai: --inventory chỉ dùng với quan 
+--inventory-out với quan                           exit=2  không file đầu vào sai: --inventory-out chỉ dùng với gather 
+đầu ra trùng đầu vào                         exit=2  không file đầu vào sai: các đường dẫn đầu vào/đầu ra phải khác nhau 
+inputs tick lặp                                    exit=2  không file đầu vào sai: frame 1: tick trùng hoặc giảm 
+file scenario không tồn tại                     exit=2  không file đầu vào sai: không đọc được scenario $TMP/…
+lỗi ghi: thư mục --out không tồn tại       exit=1  không file lỗi ghi: [Errno 2] No such file or directory: '$TMP/…
