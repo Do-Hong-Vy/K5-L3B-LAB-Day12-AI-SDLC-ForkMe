@@ -1,0 +1,14 @@
+# AC-P2-14 — day --days 1: thời gian chạy (≤ 20 s) + tất định từng byte; day --days 5 (commit 7f29b9e)
+# máy: Windows 11, Python 3.11.0; đo wall-clock cả tiến trình
+day --days 1 có bot (lần a): exit=0, 6.17 s, 1366 dòng
+day --days 1 có bot (lần b): exit=0, 1.46 s, 1366 dòng
+so byte 2 lần: IDENTICAL, sha256 8983ea064e318ec4
+event đếm: {'choke': 2, 'day_plan': 1, 'day_start': 1, 'dive': 1, 'faint': 1, 'fish_spawned': 4, 'gather_end': 1, 'monster_hit': 1, 'no_dish': 12, 'oxygen_empty': 1, 'phase_start': 3, 'quan_end': 1, 'shop_end': 1}
+end: {"type": "end", "ticks": 13332, "sim_tick": 13332, "mode": "day", "state": "finished", "reason": "days_complete", "money": 0, "earned": 0, "reputation": 3.0, "score": 300, "days_completed": 1}
+day --days 1 không input: exit=0, 2.69 s; end: {"type":"end","ticks":22200,"sim_tick":22200,"mode":"day","state":"finished","reason":"days_complete","money":0,"earned":0,"reputation":3.0,"score":300,"days_completed":1}
+day --days 5 không input: exit=0, 12.20 s; end: {"type":"end","ticks":111000,"sim_tick":111000,"mode":"day","state":"finished","reason":"days_complete","money":0,"earned":0,"reputation":3.0,"score":300,"days_completed":5}
+  Ngày 1: monsters=['M1']
+  Ngày 2: monsters=['M1']
+  Ngày 3: monsters=['M1', 'M2']
+  Ngày 4: monsters=['M1', 'M2']
+  Ngày 5: monsters=['M1', 'M2']
