@@ -164,7 +164,7 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
 
 > **Mục tiêu:** Đáp ứng toàn bộ yêu cầu Phase 3 mở lúc 1:55 (ví dụ chế độ nối ngày `--mode day` / nâng cấp gameplay / cân bằng hệ thống theo đề), thực thi hành động cải tiến từ Retro P2, giữ regression P1+P2 xanh.
 
-- [ ] **CP3-0 (PO `Cuubeo`, 1:55 – 2:00):** Đọc đề Phase 3, cập nhật [`docs/clarify.md`](docs/clarify.md) & tạo `docs/plan/phase-3.md`; lập ADR (`docs/adr/0002-...md`) nếu đổi contract/schema.
+- [x] **CP3-0 (PO `Cuubeo`, 1:55 – 2:00):** Đọc đề Phase 3, cập nhật [`docs/clarify.md`](docs/clarify.md) & tạo `docs/plan/phase-3.md`; lập ADR (`docs/adr/0002-...md`) nếu đổi contract/schema.
 - [ ] **CP3-1 (`All` — Thực thi hành động Retro P2 & Standup):** Áp dụng ngay 1 hành động đã cam kết ở Retro Phase 2; điền dòng Phase 3 trong [`docs/standup.md`](docs/standup.md).
 - [ ] **CP3-2 (`Do-Hong-Vy` & `Cuubeo` — Core Sim & Tích hợp):**
   - Triển khai các thay đổi/tính năng Phase 3 trên `sim/gather`, `sim/quan`, và `sim/day` / `runner` (nếu Phase 3 mở khóa `--mode day` hoặc luồng chuyển sáng→tối).
