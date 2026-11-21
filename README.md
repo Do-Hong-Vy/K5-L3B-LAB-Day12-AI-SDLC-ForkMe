@@ -36,16 +36,17 @@ Ngoài phần đề yêu cầu, nhóm được **thêm** nhân vật, loài cá/
 
 ## Sáng tạo của nhóm
 
-Nhóm **ForkMe** (phụ trách UI/Sáng tạo: `Phog2811`) xây dựng chế độ **⚡ Đại Chiến Đa Vũ Trụ (A-Qua-Mèn × Gô-Ku SSJ3) + Đồ họa 2.5D VFX & Âm thanh Web Audio API** hoàn toàn ở tầng client ([`chonoi/web/index.html`](chonoi/web/index.html)):
+Nhóm **ForkMe** (phụ trách UI/Sáng tạo: `Phog2811`) xây dựng chế độ **⚡ Đại Chiến Chợ Nổi (Năm Chèo × Khách quen) + Đồ họa 2.5D VFX & Âm thanh Web Audio API** hoàn toàn ở tầng client ([`chonoi/web/index.html`](chonoi/web/index.html)):
 
-- **Đồ họa 2.5D Stylized & Particle VFX (60 FPS, 100% Canvas 2D tự vẽ, không thư viện ngoài):**
-  - *Buổi sáng (`gather`):* Bình minh sông Chín Khúc nhiều tầng parallax, rặng dừa nước đung đưa, sóng mặt nước động, tia nắng xuyên 3 tầng độ sâu (Nông / Giữa / Sâu), cỏ đáy sông, bong bóng khí, hiệu ứng sóng xung kích khi hái/bắt cá và rung màn hình khi ngạt hoặc gặp thủy quái.
+- **Đồ họa 2.5D Stylized & Particle VFX (60 FPS, Canvas 2D):**
+  - *Buổi sáng (`gather`):* Bình minh sông Chín Khúc nhiều tầng parallax, rặng dừa nước đung đưa, sóng mặt nước động, tia nắng xuyên 3 tầng độ sâu (Nông / Giữa / Sâu), rong/đá đáy sông, bong bóng khí, hiệu ứng sóng xung kích khi hái/bắt cá và rung màn hình khi ngạt hoặc gặp thủy quái.
   - *Buổi tối (`quan`):* Mặt sông đêm lung linh, sàn gỗ nhà bè có đổ bóng 2.5D, dây đèn lồng vàng tỏa sáng, lửa/khói bếp khi nấu ăn, mưa tiền xu khi thu tiền.
-- **Chế độ Sáng tạo Đa Vũ Trụ (bật/tắt trực tiếp bằng phím `C` hoặc nút trên HUD/Menu):**
-  - *Dưới sông (`gather`):* Xuất hiện Boss parody **A-Qua-Mèn — Thủy Thần Sông Chín Khúc** mặc giáp vảy vàng-xanh, cầm Đinh Ba Hoàng Kim phát tia sét nước và thanh Boss HP. Khi Út Sen bắt cá (`Space`) hoặc bấm `Q` / click chuột, Út Sen tung **Chưởng Sóng Bà Ba** đấu với Đinh Ba của A-Qua-Mèn kèm thoại hài hước giọng Nam Bộ.
-  - *Trên nhà bè (`quan`):* Thực khách VIP biến hình thành **Gô-Ku SSJ3** (tóc vàng dài nhiều tầng nhọn bay phấp phới, hào quang Ki vàng rực, tia sét xanh SSJ3 giật lách tách) cùng dàn khách Z-Warriors tại các bàn `T1–T4`. Khi kiên nhẫn xuống thấp, Gô-Ku gồng Ki rung sàn bè; khi phục vụ (`E`), Út Sen tung chiêu **Kamehame-Lẩu**; nhấn `Q` / `Space` / click chuột để kích hoạt hiệu ứng **Đấu Chưởng (Beam Clash)**.
+- **Nhân vật người & sinh vật bằng sprite CC0 (Kenney, xem [`CREDITS.md`](CREDITS.md)):** Út Sen (đứng / đi bộ có hoạt ảnh / lặn nằm ngang theo hướng bơi / bưng món / bị thương) và 3 dáng khách (chờ, gọi món, vui khi ăn, giận khi kiên nhẫn < 25%) — *Toon Characters 1*; cá linh / cá lóc / cá kèo, rong, đá, bong bóng — *Fish Pack 2.0*.
+- **Chế độ Sáng tạo Chợ Nổi (bật/tắt bằng phím `C` hoặc nút trên HUD/Menu):**
+  - *Dưới sông (`gather`):* Boss **Cá Sấu Năm Chèo** tuần tra tầng sâu, thoại giọng Nam Bộ. Khi Út Sen bắt cá (`Space`) hoặc bấm `Q` / click chuột, Út Sen tung **Chưởng Sóng Bà Ba** đấu với Năm Chèo.
+  - *Trên nhà bè (`quan`):* Khách quen tại các bàn `T1–T4` rung sàn bè khi kiên nhẫn xuống thấp; khi phục vụ (`E`), Út Sen tung chiêu **Chưởng Lẩu**; nhấn `Q` / `Space` / click chuột để kích hoạt hiệu ứng **Đấu Chưởng (Beam Clash)**.
 - **Âm nhạc & Hiệu ứng âm thanh Web Audio API (100% tự tổng hợp, lưu cài đặt trong `localStorage`):**
-  - Nhạc nền tự động đổi giữa **Ngũ cung Miền Tây** (chế độ thuần) và **Anime Boss Battle Synth** (chế độ Đa Vũ Trụ), kèm đầy đủ SFX theo từng sự kiện (`dive`, `gather`, `fish_caught`, `cook_started`, `dish_ready`, `served`, `paid`, `customer_arrived` kiểu Instant Transmission...). Có 3 thanh trượt âm lượng `Master / Music / SFX` và phím tắt `M`.
+  - Nhạc nền tự động đổi giữa **Ngũ cung Miền Tây** (chế độ thuần) và **Boss Battle Synth** (chế độ Chợ Nổi), kèm đầy đủ SFX theo từng sự kiện (`dive`, `gather`, `fish_caught`, `cook_started`, `dish_ready`, `served`, `paid`, `customer_arrived`...). Có 3 thanh trượt âm lượng `Master / Music / SFX` và phím tắt `M`.
 - **Cam kết không phá lõi & tắt 100% ở headless:** Toàn bộ tính năng đồ họa, VFX, âm thanh và nhân vật sáng tạo nằm độc lập trong `chonoi/web/index.html`, chỉ đọc snapshot từ `GET /state` và hoàn toàn **không chạy** khi thực thi `python3 -m chonoi.headless`. Toàn bộ bộ test tự động (`unittest`) và kiểm tra determinism từng byte vẫn đạt 100%.
 
 ## Sáng tạo của nhóm

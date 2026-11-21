@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quán Ăn Chợ Nổi — Đại Chiến Đa Vũ Trụ | Nhóm ForkMe</title>
+<title>Quán Ăn Chợ Nổi — Đại Chiến Chợ Nổi | Nhóm ForkMe</title>
 <style>
   :root {
     --bg-dark: #070d17;
@@ -240,7 +240,7 @@
 
 <!-- Thanh điều khiển nhanh trên góc phải -->
 <div class="quick-bar" id="quickBar">
-  <button class="qbtn creative-on" id="btnCreativeQuick" title="Phím C: Bật/Tắt chế độ Sáng tạo Aquaman × Goku SSJ3">⚡ Đa Vũ Trụ: BẬT [C]</button>
+  <button class="qbtn creative-on" id="btnCreativeQuick" title="Phím C: Bật/Tắt chế độ Sáng tạo Năm Chèo × Khách quen">⚡ Chợ Nổi: BẬT [C]</button>
   <button class="qbtn" id="btnAudioQuick" title="Phím M: Bật/Tắt Âm thanh">🔊 Nhạc: BẬT [M]</button>
   <button class="qbtn" id="btnRecipeQuick" title="Phím H: Ẩn/Hiện Sổ tay Thực đơn">📖 Thực đơn [H]</button>
   <button class="qbtn" id="btnPauseQuick" title="Phím Esc hoặc P: Tạm dừng">⏸ Dừng [P]</button>
@@ -260,8 +260,8 @@
  * ----------------------------------------------------------------------------
  * - Tuân thủ 100% Test Contract v1.0 & v1.1 (PRD-0 & Ticket-02):
  *   CHỈ ĐỌC snapshot từ GET /state và GỬI lệnh qua POST /input, POST /restart.
- * - Toàn bộ 2.5D VFX, Web Audio BGM/SFX và Chế độ Sáng tạo (Aquaman dưới sông
- *   & Goku SSJ3 trên nhà bè) chạy thuần phía client -> TẮT 100% ở headless!
+ * - Toàn bộ 2.5D VFX, Web Audio BGM/SFX và Chế độ Sáng tạo (Năm Chèo dưới sông
+ *   & Khách quen trên nhà bè) chạy thuần phía client -> TẮT 100% ở headless!
  * - Phím điều khiển:
  *   WASD / Mũi tên : Bơi (gather) / Đi (quan)
  *   E              : Tương tác (Cập bến, Hái rau, Nấu bếp, Bưng món, Phục vụ)
@@ -269,7 +269,7 @@
  *   Q              : Lao xua (nếu bật mở rộng) / Tuyệt chiêu Sáng tạo VFX
  *   F              : Chụp ảnh Cá Hô (nếu bật mở rộng)
  *   Esc / P        : Tạm dừng (Pause Menu)
- *   C              : Bật/Tắt Chế độ Sáng tạo (Aquaman × Goku SSJ3)
+ *   C              : Bật/Tắt Chế độ Sáng tạo (Năm Chèo × Khách quen)
  *   M              : Bật/Tắt Âm thanh
  *   H              : Ẩn/Hiện Sổ tay Thực đơn
  *   R              : Chơi lại
@@ -480,11 +480,11 @@ const AudioEngine = (() => {
     src.start();
   }
 
-  // Nhạc nền đa phong cách: Ngũ cung Miền Tây (Thường) vs Anime Boss Battle (Đa Vũ Trụ)
+  // Nhạc nền đa phong cách: Ngũ cung Miền Tây (Thường) vs Anime Boss Battle (Chợ Nổi)
   const SCALE_MEKONG_DAY = [293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 440.00, 392.00, 329.63, 392.00, 440.00, 523.25, 440.00, 392.00, 329.63, 293.66];
   const SCALE_MEKONG_NIGHT = [220.00, 261.63, 293.66, 329.63, 392.00, 329.63, 293.66, 261.63, 220.00, 293.66, 329.63, 440.00, 392.00, 329.63, 293.66, 220.00];
-  const SCALE_ANIME_AQUA = [146.83, 174.61, 220.00, 261.63, 293.66, 261.63, 220.00, 196.00, 146.83, 220.00, 293.66, 329.63, 349.23, 329.63, 293.66, 220.00];
-  const SCALE_ANIME_SSJ3 = [164.81, 164.81, 196.00, 220.00, 246.94, 220.00, 196.00, 146.83, 164.81, 246.94, 293.66, 329.63, 392.00, 329.63, 293.66, 246.94];
+  const SCALE_GATHER = [146.83, 174.61, 220.00, 261.63, 293.66, 261.63, 220.00, 196.00, 146.83, 220.00, 293.66, 329.63, 349.23, 329.63, 293.66, 220.00];
+  const SCALE_QUAN = [164.81, 164.81, 196.00, 220.00, 246.94, 220.00, 196.00, 146.83, 164.81, 246.94, 293.66, 329.63, 392.00, 329.63, 293.66, 246.94];
 
   function startBgm() {
     if (bgmTimer) return;
@@ -495,7 +495,7 @@ const AudioEngine = (() => {
       const creative = prefs.creative;
       let seq, bass, wave;
       if (creative) {
-        seq = ph === "quan" ? SCALE_ANIME_SSJ3 : SCALE_ANIME_AQUA;
+        seq = ph === "quan" ? SCALE_QUAN : SCALE_GATHER;
         bass = ph === "quan" ? 82.41 : 73.42;
         wave = "sawtooth";
       } else {
@@ -545,7 +545,7 @@ const AudioEngine = (() => {
       case "dish_ready": tone(880, 0.14, "sine", 0.3); setTimeout(() => tone(1318, 0.22, "sine", 0.3), 100); break;
       case "dish_picked": tone(440, 0.09, "triangle", 0.22, 660); break;
       case "served":
-        // Tiếng chưởng Kamehame-Lẩu cực đã!
+        // Tiếng chưởng Chưởng Lẩu cực đã!
         tone(240, 0.22, "sawtooth", 0.28, 920);
         setTimeout(() => tone(784, 0.16, "triangle", 0.32, 1175), 90);
         noise(0.16, 0.22, 1500);
@@ -594,9 +594,9 @@ const vfx = {
     x: Math.random() * 100, d: 1 + Math.random() * 28,
     r: 1.5 + Math.random() * 3.0, spd: 0.015 + Math.random() * 0.032, ph: Math.random() * 6.28
   })),
-  // Trạng thái hình ảnh thuần Client cho Boss A-Qua-Mèn & Gô-Ku SSJ3
-  aquaman: { x: 56, d: 15, dir: 1, hp: 100, maxHp: 100, hurtFlash: 0, speech: "", speechTimer: 0, tridentCooldown: 0 },
-  goku: { speech: "", speechTimer: 0, powerBurst: 0, clashTimer: 0 }
+  // Trạng thái hình ảnh thuần Client cho Boss Năm Chèo & Khách quen
+  boss: { x: 56, d: 15, dir: 1, hp: 100, maxHp: 100, hurtFlash: 0, speech: "", speechTimer: 0, tridentCooldown: 0 },
+  khach: { speech: "", speechTimer: 0, powerBurst: 0, clashTimer: 0 }
 };
 
 function spawnParticles(x, y, color, count = 14, speed = 3.2, life = 0.65, size = 3.5) {
@@ -638,7 +638,7 @@ function updateAndDrawVfx(dt) {
     ctx.stroke();
     ctx.restore();
   }
-  // Cập nhật & vẽ chưởng năng lượng (Kamehame-Lẩu / Đinh Ba / Sóng Bà Ba)
+  // Cập nhật & vẽ chưởng năng lượng (Chưởng Lẩu / Đuôi Sấu / Sóng Bà Ba)
   for (let i = vfx.beams.length - 1; i >= 0; i--) {
     const b = vfx.beams[i];
     b.life -= dt;
@@ -688,10 +688,10 @@ function updateAndDrawVfx(dt) {
     ctx.restore();
   }
   if (vfx.shake > 0) vfx.shake = Math.max(0, vfx.shake - dt * 28);
-  if (vfx.aquaman.hurtFlash > 0) vfx.aquaman.hurtFlash = Math.max(0, vfx.aquaman.hurtFlash - dt * 3);
-  if (vfx.aquaman.speechTimer > 0) vfx.aquaman.speechTimer = Math.max(0, vfx.aquaman.speechTimer - dt);
-  if (vfx.goku.speechTimer > 0) vfx.goku.speechTimer = Math.max(0, vfx.goku.speechTimer - dt);
-  if (vfx.goku.powerBurst > 0) vfx.goku.powerBurst = Math.max(0, vfx.goku.powerBurst - dt);
+  if (vfx.boss.hurtFlash > 0) vfx.boss.hurtFlash = Math.max(0, vfx.boss.hurtFlash - dt * 3);
+  if (vfx.boss.speechTimer > 0) vfx.boss.speechTimer = Math.max(0, vfx.boss.speechTimer - dt);
+  if (vfx.khach.speechTimer > 0) vfx.khach.speechTimer = Math.max(0, vfx.khach.speechTimer - dt);
+  if (vfx.khach.powerBurst > 0) vfx.khach.powerBurst = Math.max(0, vfx.khach.powerBurst - dt);
 }
 
 // ---------- Chuyển đổi tọa độ thế giới <-> màn hình dùng chung cho VFX ----------
@@ -741,9 +741,9 @@ function triggerRestart(goToIntro = true) {
   localPaused = false;
   lastProcessedEventKey = "";
   sessionStats = { servedCount: 0, leftCount: 0, tipsTotal: 0, dishCounts: {}, startRep: 3.0, dayEarned: 0 };
-  vfx.aquaman.hp = 100;
-  vfx.aquaman.speech = "";
-  vfx.goku.speech = "";
+  vfx.boss.hp = 100;
+  vfx.boss.speech = "";
+  vfx.khach.speech = "";
   if (goToIntro) {
     uiScreen = activePhase() === "quan" ? "evening_intro" : "intro";
     introTimer = 4.0;
@@ -802,7 +802,7 @@ function toggleAudio() {
   if (uiScreen === "menu" || uiScreen === "pause") renderModal();
 }
 function updateQuickButtons() {
-  btnCreativeQuick.textContent = prefs.creative ? "⚡ Đa Vũ Trụ: BẬT [C]" : "🌿 Miền Tây Thuần [C]";
+  btnCreativeQuick.textContent = prefs.creative ? "⚡ Chợ Nổi: BẬT [C]" : "🌿 Miền Tây Thuần [C]";
   btnCreativeQuick.classList.toggle("creative-on", prefs.creative);
   btnAudioQuick.textContent = prefs.muted ? "🔇 Nhạc: TẮT [M]" : "🔊 Nhạc: BẬT [M]";
   btnRecipeQuick.textContent = showHelp ? "📖 Ẩn Thực đơn [H]" : "📖 Thực đơn [H]";
@@ -820,18 +820,18 @@ function triggerCreativeActionVfx() {
   const px = lastTransform.sx(snap.player.pos[0]);
   const py = lastTransform.sy(snap.player.pos[1]);
   if (ph === "gather") {
-    const ax = lastTransform.sx(vfx.aquaman.x);
-    const ay = lastTransform.sy(vfx.aquaman.d);
+    const ax = lastTransform.sx(vfx.boss.x);
+    const ay = lastTransform.sy(vfx.boss.d);
     spawnBeam(px, py, ax, ay, "#38bdf8", "#fef08a", 20);
     spawnParticles(ax, ay, "#38bdf8", 22, 4.5, 0.7, 4);
     spawnRipple(ax, ay, "#fde047", 75);
     addShake(7);
     AudioEngine.playSfx("beam_clash");
-    vfx.aquaman.hurtFlash = 1.0;
-    vfx.aquaman.hp = Math.max(10, vfx.aquaman.hp - 12);
-    if (vfx.aquaman.hp <= 10) vfx.aquaman.hp = 100;
-    vfx.aquaman.speech = "A-Qua-Mèn: Ui da! Chưởng Bà Ba mạnh dữ vậy Út Sen?!";
-    vfx.aquaman.speechTimer = 3.0;
+    vfx.boss.hurtFlash = 1.0;
+    vfx.boss.hp = Math.max(10, vfx.boss.hp - 12);
+    if (vfx.boss.hp <= 10) vfx.boss.hp = 100;
+    vfx.boss.speech = "Năm Chèo: Ui da! Chưởng Bà Ba mạnh dữ vậy Út Sen?!";
+    vfx.boss.speechTimer = 3.0;
     spawnText(ax, ay - 45, "⚡ SÓNG BÀ BA -12 HP!", "#38bdf8", 18);
   } else if (ph === "quan") {
     const gx = lastTransform.sx(13.5);
@@ -842,10 +842,10 @@ function triggerCreativeActionVfx() {
     spawnRipple((px + gx) / 2, (py + gy) / 2, "#fde047", 95);
     addShake(11);
     AudioEngine.playSfx("beam_clash");
-    vfx.goku.powerBurst = 1.6;
-    vfx.goku.speech = "GÔ-KU SSJ3: KAMEHAME-HAAA! Nấu nhanh lên Út Sen ơi!";
-    vfx.goku.speechTimer = 3.2;
-    spawnText((px + gx) / 2, (py + gy) / 2 - 28, "🔥 ĐẤU CHƯỞNG SSJ3!!", "#fde047", 21);
+    vfx.khach.powerBurst = 1.6;
+    vfx.khach.speech = "KHÁCH QUEN: Ới quán ơi! Nấu nhanh lên Út Sen ơi!";
+    vfx.khach.speechTimer = 3.2;
+    spawnText((px + gx) / 2, (py + gy) / 2 - 28, "🔥 ĐẤU CHƯỞNG!!", "#fde047", 21);
   }
 }
 
@@ -1018,14 +1018,14 @@ function onGameEvent(e) {
       spawnRipple(px, py, "#38bdf8", 74);
       spawnText(px, py - 30, `🐟 +${d.yield} ${kName(d.kind)}!`, "#38bdf8", 19);
       if (prefs.creative) {
-        const ax = lastTransform.sx(vfx.aquaman.x);
-        const ay = lastTransform.sy(vfx.aquaman.d);
+        const ax = lastTransform.sx(vfx.boss.x);
+        const ay = lastTransform.sy(vfx.boss.d);
         spawnBeam(px, py, ax, ay, "#38bdf8", "#fef08a", 16);
-        vfx.aquaman.hurtFlash = 1.0;
-        vfx.aquaman.hp = Math.max(10, vfx.aquaman.hp - 15);
-        if (vfx.aquaman.hp <= 10) vfx.aquaman.hp = 100;
-        vfx.aquaman.speech = `A-Qua-Mèn: Ê Út Sen! Trả ${kName(d.kind)} lại cho trẫm!`;
-        vfx.aquaman.speechTimer = 3.2;
+        vfx.boss.hurtFlash = 1.0;
+        vfx.boss.hp = Math.max(10, vfx.boss.hp - 15);
+        if (vfx.boss.hp <= 10) vfx.boss.hp = 100;
+        vfx.boss.speech = `Năm Chèo: Ê Út Sen! Trả ${kName(d.kind)} lại cho tui!`;
+        vfx.boss.speechTimer = 3.2;
         addShake(6);
       }
       break;
@@ -1047,8 +1047,8 @@ function onGameEvent(e) {
       spawnText(px, py - 34, `🐊 BỊ ĐÁNH! -1 MÁU (Rơi ${(d.lost || []).length})`, "#f43f5e", 20);
       addShake(14);
       if (prefs.creative) {
-        vfx.aquaman.speech = "A-Qua-Mèn: Hahaha! Thấy uy lực Đinh Ba sông Chín Khúc chưa!";
-        vfx.aquaman.speechTimer = 3.2;
+        vfx.boss.speech = "Năm Chèo: Hahaha! Thấy uy lực Đuôi Sấu sông Chín Khúc chưa!";
+        vfx.boss.speechTimer = 3.2;
       }
       break;
     case "cook_started":
@@ -1069,10 +1069,10 @@ function onGameEvent(e) {
       if (prefs.creative) {
         spawnBeam(px, py, tx, ty, "#38bdf8", "#fde047", 20);
         addShake(8);
-        vfx.goku.powerBurst = 1.4;
-        vfx.goku.speech = `GÔ-KU SSJ3: Woa!! ${dName(d.dish_id)} ngon hết sảy!!`;
-        vfx.goku.speechTimer = 3.4;
-        spawnText(tx, ty - 42, `⚡ KAMEHAME-LẨU! ${d.tip > 0 ? "+BOA " + d.tip + "k!" : ""}`, "#fde047", 19);
+        vfx.khach.powerBurst = 1.4;
+        vfx.khach.speech = `KHÁCH QUEN: Woa!! ${dName(d.dish_id)} ngon hết sảy!!`;
+        vfx.khach.speechTimer = 3.4;
+        spawnText(tx, ty - 42, `⚡ CHƯỞNG LẨU! ${d.tip > 0 ? "+BOA " + d.tip + "k!" : ""}`, "#fde047", 19);
       } else {
         spawnText(tx, ty - 34, `🍲 Đã phục vụ! ${d.tip > 0 ? "+Boa " + d.tip + "k" : ""}`, "#4ade80", 17);
       }
@@ -1090,9 +1090,9 @@ function onGameEvent(e) {
     }
     case "customer_arrived":
       if (prefs.creative) {
-        vfx.goku.powerBurst = 1.1;
-        vfx.goku.speech = `GÔ-KU SSJ3: Cho ta phần ${dName(d.dish_id)} thiệt nóng nha Út Sen!`;
-        vfx.goku.speechTimer = 3.5;
+        vfx.khach.powerBurst = 1.1;
+        vfx.khach.speech = `KHÁCH QUEN: Cho ta phần ${dName(d.dish_id)} thiệt nóng nha Út Sen!`;
+        vfx.khach.speechTimer = 3.5;
       }
       break;
     case "customer_left":
@@ -1100,8 +1100,8 @@ function onGameEvent(e) {
         sessionStats.leftCount++;
         addShake(9);
         if (prefs.creative) {
-          vfx.goku.speech = "GÔ-KU SSJ3: Chờ lâu quá ta bay đi hành tinh khác ăn đây!";
-          vfx.goku.speechTimer = 3.0;
+          vfx.khach.speech = "KHÁCH QUEN: Chờ lâu quá tui qua ghe khác ăn à nghen!";
+          vfx.khach.speechTimer = 3.0;
         }
       }
       break;
@@ -1151,11 +1151,11 @@ function renderModal() {
       <h1 class="modal-title">QUÁN ĂN CHỢ NỔI</h1>
       <p class="modal-sub">
         Sáng Út Sen lặn sông Chín Khúc bắt cá hái rau · Tối mở quán nhà bè Má Tư.<br>
-        <strong>✨ Sáng tạo Đa Vũ Trụ:</strong> Đối đầu <strong>A-Qua-Mèn</strong> dưới đáy sông &amp; phục vụ <strong>Gô-Ku SSJ3</strong> trên nhà bè!
+        <strong>✨ Sáng tạo Chợ Nổi:</strong> Đối đầu <strong>Năm Chèo</strong> dưới đáy sông &amp; phục vụ <strong>Khách quen</strong> trên nhà bè!
       </p>
       <div class="settings-grid">
         <div class="setting-row">
-          <span><strong>⚡ Chế độ Sáng tạo (Aquaman × Goku SSJ3 + VFX)</strong></span>
+          <span><strong>⚡ Chế độ Sáng tạo (Năm Chèo × Khách quen + VFX)</strong></span>
           <button class="toggle-pill ${prefs.creative ? "" : "off"}" id="mToggleCreative">${prefs.creative ? "ĐANG BẬT" : "ĐANG TẮT"}</button>
         </div>
         <div class="setting-row">
@@ -1225,7 +1225,7 @@ function renderModal() {
           <div style="font-size:14px;color:#e2e8f0;line-height:1.6;">
             • Hái <strong>Bông điên điển, Bông súng, Kèo nèo</strong> trên mặt nước bằng phím <strong>[E]</strong>.<br>
             • Lặn xuống bắt <strong>Cá linh (+3), Cá lóc (+1), Cá kèo (+2)</strong> bằng phím <strong>[Space]</strong>.<br>
-            • Canh thanh Oxy &amp; né <strong>${prefs.creative ? "A-Qua-Mèn & Thủy Quái" : "Cá Sấu Năm Chèo"}</strong>, quay về Bến bấm <strong>[E]</strong> bàn giao kho!
+            • Canh thanh Oxy &amp; né <strong>${prefs.creative ? "Năm Chèo & Thủy Quái" : "Cá Sấu Năm Chèo"}</strong>, quay về Bến bấm <strong>[E]</strong> bàn giao kho!
           </div>
         </div>`;
     }
@@ -1250,7 +1250,7 @@ function renderModal() {
     modalCard.innerHTML = `
       <div class="modal-badge">EVENING INTRO · CA TỐI NGÀY ${dayNum}</div>
       <h1 class="modal-title">🏮 LÊN ĐÈN NHÀ BÈ MÁ TƯ</h1>
-      <p class="modal-sub">${prefs.creative ? "Gô-Ku SSJ3 vừa dịch chuyển tức thời tới chợ nổi và đang rất đói bụng!" : "Đèn dây vàng đã sáng, khách chợ nổi đang kéo tới nhà bè!"}</p>
+      <p class="modal-sub">${prefs.creative ? "Khách quen vừa dịch chuyển tức thời tới chợ nổi và đang rất đói bụng!" : "Đèn dây vàng đã sáng, khách chợ nổi đang kéo tới nhà bè!"}</p>
       <div class="settings-grid">
         <div style="font-size:14px;color:#fde047;font-weight:700;margin-bottom:6px;">📦 NGUYÊN LIỆU NHẬP KHO TỐI NAY:</div>
         <div style="font-size:15px;color:#f8fafc;margin-bottom:8px;">${stockTxt}</div>
@@ -1339,7 +1339,7 @@ function renderModal() {
       <p class="modal-sub">Đồng hồ và mọi bộ đếm mô phỏng đang đứng yên.</p>
       <div class="settings-grid">
         <div class="setting-row">
-          <span><strong>⚡ Chế độ Sáng tạo (Aquaman × Goku SSJ3)</strong></span>
+          <span><strong>⚡ Chế độ Sáng tạo (Năm Chèo × Khách quen)</strong></span>
           <button class="toggle-pill ${prefs.creative ? "" : "off"}" id="mToggleCreative">${prefs.creative ? "ĐANG BẬT" : "ĐANG TẮT"}</button>
         </div>
         <div class="setting-row">
@@ -1547,228 +1547,41 @@ function canCookCount(recipe, avail) {
   return maxP === Infinity ? 0 : maxP;
 }
 
-// ---------- VẼ NHÂN VẬT ĐỈNH CAO: A-QUA-MÈN (DƯỚI SÔNG) ----------
-function drawAquamanBoss(cx, cy, s, tNow, facingRight = true, chasing = false) {
-  const scale = Math.max(0.85, s / 15);
+// ---------- NHÂN VẬT NGƯỜI — sprite Kenney Toon Characters 1 (CC0, www.kenney.nl, CREDITS.md) ----------
+// Út Sen = "sen_*"; khách = 3 dáng người "khach1..3_*" chọn ổn định theo id khách. Chỉ vẽ phía client.
+const TOON_KEYS = ["sen_idle", "sen_walk0", "sen_walk1", "sen_walk2", "sen_fall", "sen_hold", "sen_hurt"];
+["khach1", "khach2", "khach3"].forEach((k) => ["idle", "talk", "cheer0", "hurt"].forEach((p) => TOON_KEYS.push(`${k}_${p}`)));
+const TOON = {};
+TOON_KEYS.forEach((key) => {
+  const img = new Image();
+  img.onload = () => { TOON[key] = img; };
+  img.src = `/assets/toon/${key}.png`;
+});
+
+// Vẽ sprite người: (cx, footY) là điểm giữa bàn chân; hPx chiều cao; flip quay mặt sang trái; rot xoay quanh tâm.
+function drawToon(key, cx, footY, hPx, flip = false, rot = 0) {
+  const img = TOON[key];
+  if (!img) return false;
+  const wPx = hPx * (img.width / img.height);
   ctx.save();
-  ctx.translate(cx, cy);
-
-  // Vòng xoáy năng lượng thủy triều 2.5D phía sau
-  const auraR = (chasing ? 3.2 : 2.3) * s;
-  const auraG = ctx.createRadialGradient(0, 0, 0.3 * s, 0, 0, auraR);
-  auraG.addColorStop(0, chasing ? "rgba(168, 85, 247, 0.55)" : "rgba(56, 189, 248, 0.42)");
-  auraG.addColorStop(0.6, "rgba(14, 165, 233, 0.18)");
-  auraG.addColorStop(1, "rgba(14, 165, 233, 0)");
-  ctx.fillStyle = auraG;
-  ctx.beginPath(); ctx.arc(0, 0, auraR, 0, Math.PI * 2); ctx.fill();
-
-  // Vòng sóng năng lượng xoay
-  ctx.strokeStyle = chasing ? "rgba(216, 180, 254, 0.75)" : "rgba(125, 211, 252, 0.6)";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.ellipse(0, 0, auraR * 0.78, auraR * 0.32, Math.sin(tNow * 2) * 0.25, tNow * 2, tNow * 2 + Math.PI * 1.4);
-  ctx.stroke();
-
-  ctx.save();
-  if (!facingRight) ctx.scale(-1, 1);
-  const bob = Math.sin(tNow * 4) * 3;
-  ctx.translate(0, bob);
-
-  // Tóc dài nâu vàng bồng bềnh dưới nước
-  ctx.fillStyle = "#92400e";
-  ctx.beginPath();
-  ctx.moveTo(-4 * scale, -18 * scale);
-  ctx.quadraticCurveTo(-22 * scale, -14 * scale + Math.sin(tNow * 6) * 4, -24 * scale, 2 * scale);
-  ctx.quadraticCurveTo(-12 * scale, 4 * scale, -4 * scale, -6 * scale);
-  ctx.closePath();
-  ctx.fill();
-
-  // Chân giáp xanh ngọc
-  ctx.fillStyle = "#047857";
-  ctx.fillRect(-7 * scale, 10 * scale, 6 * scale, 14 * scale);
-  ctx.fillRect(1 * scale, 10 * scale, 6 * scale, 14 * scale);
-
-  // Thân áo giáp vảy rồng vàng hoàng kim
-  const armorGrad = ctx.createLinearGradient(-10 * scale, -10 * scale, 10 * scale, 12 * scale);
-  armorGrad.addColorStop(0, "#fde047");
-  armorGrad.addColorStop(0.5, "#f59e0b");
-  armorGrad.addColorStop(1, "#b45309");
-  ctx.fillStyle = vfx.aquaman.hurtFlash > 0.2 ? "#ffffff" : armorGrad;
-  roundRect(-10 * scale, -10 * scale, 20 * scale, 22 * scale, 6 * scale);
-  ctx.fill();
-  ctx.strokeStyle = "#fef08a";
-  ctx.lineWidth = 1.5;
-  ctx.stroke();
-
-  // Thắt lưng chữ A Hoàng Kim
-  ctx.fillStyle = "#065f46";
-  ctx.fillRect(-10 * scale, 7 * scale, 20 * scale, 5 * scale);
-  ctx.fillStyle = "#fde047";
-  ctx.beginPath(); ctx.moveTo(0, 6 * scale); ctx.lineTo(-4 * scale, 12 * scale); ctx.lineTo(4 * scale, 12 * scale); ctx.closePath(); ctx.fill();
-
-  // Đầu & Râu quai nón oai phong
-  ctx.fillStyle = "#fdba74";
-  ctx.beginPath(); ctx.arc(0, -17 * scale, 8.5 * scale, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = "#78350f";
-  ctx.beginPath(); ctx.arc(0, -14 * scale, 7.5 * scale, 0.15, Math.PI - 0.15); ctx.fill();
-  // Mắt phát sáng
-  ctx.fillStyle = chasing ? "#f43f5e" : "#38bdf8";
-  ctx.beginPath(); ctx.arc(3.5 * scale, -18 * scale, 2 * scale, 0, Math.PI * 2); ctx.fill();
-
-  // CÂY ĐINH BA HOÀNG KIM (TRIDENT) phát tia sét nước!
-  ctx.save();
-  ctx.translate(14 * scale, -4 * scale);
-  ctx.rotate(Math.sin(tNow * 5) * 0.12 - 0.18);
-  ctx.shadowColor = "#38bdf8";
-  ctx.shadowBlur = 14;
-  ctx.strokeStyle = "#fde047";
-  ctx.lineWidth = 3.2 * scale;
-  ctx.beginPath(); ctx.moveTo(0, 22 * scale); ctx.lineTo(0, -24 * scale); ctx.stroke();
-  // 3 ngạnh đinh ba
-  ctx.beginPath();
-  ctx.moveTo(-7 * scale, -15 * scale); ctx.lineTo(-7 * scale, -27 * scale);
-  ctx.moveTo(7 * scale, -15 * scale); ctx.lineTo(7 * scale, -27 * scale);
-  ctx.moveTo(-7 * scale, -15 * scale); ctx.lineTo(7 * scale, -15 * scale);
-  ctx.moveTo(0, -24 * scale); ctx.lineTo(0, -32 * scale);
-  ctx.stroke();
+  ctx.translate(cx, footY - hPx / 2);
+  if (rot) ctx.rotate(rot);
+  if (flip) ctx.scale(-1, 1);
+  ctx.drawImage(img, -wPx / 2, -hPx / 2, wPx, hPx);
   ctx.restore();
-  ctx.restore();
-
-  // Thanh Boss Name & HP bar phía trên A-Qua-Mèn
-  text("🔱 A-QUA-MÈN — THỦY THẦN CHÍN KHÚC", 0, -34 * scale, { size: 12, align: "center", bold: true, color: "#fde047", shadow: true });
-  bar(-48, -30 * scale, 96, 8, vfx.aquaman.hp / vfx.aquaman.maxHp, "#38bdf8", "", { r: 4 });
-
-  // Bong bóng thoại của A-Qua-Mèn
-  if (vfx.aquaman.speechTimer > 0 && vfx.aquaman.speech) {
-    const bw = Math.min(310, vfx.aquaman.speech.length * 7.2 + 24);
-    panel(-bw / 2, -64 * scale, bw, 26, { bg: "rgba(12, 24, 44, 0.94)", border: "#38bdf8", r: 8 });
-    text(vfx.aquaman.speech, 0, -47 * scale, { size: 12, align: "center", bold: true, color: "#e0f2fe" });
-  }
-  ctx.restore();
+  return true;
 }
 
-// ---------- VẼ NHÂN VẬT ĐỈNH CAO: GÔ-KU SSJ3 (TRÊN NHÀ BÈ) ----------
-function drawGokuSSJ3(cx, cy, s, tNow, angry = false, eating = false) {
-  const scale = Math.max(0.85, s / 42);
-  const boost = angry || vfx.goku.powerBurst > 0;
-  ctx.save();
-  ctx.translate(cx, cy);
+function customerLook(id) {
+  const n = parseInt(String(id).replace(/\D+/g, ""), 10) || 0;
+  return `khach${(n % 3) + 1}`;
+}
 
-  // 1. Hào quang Ki Siêu Xay-Da Cấp 3 nhiều lớp bùng nổ!
-  const auraR = (boost ? 56 : 42) * scale + Math.sin(tNow * 18) * 5;
-  const kiGrad = ctx.createRadialGradient(0, 0, 6 * scale, 0, 0, auraR);
-  kiGrad.addColorStop(0, "rgba(254, 249, 195, 0.92)");
-  kiGrad.addColorStop(0.45, boost ? "rgba(250, 204, 21, 0.65)" : "rgba(250, 204, 21, 0.42)");
-  kiGrad.addColorStop(0.8, "rgba(245, 158, 11, 0.16)");
-  kiGrad.addColorStop(1, "rgba(245, 158, 11, 0)");
-  ctx.fillStyle = kiGrad;
-  ctx.beginPath(); ctx.arc(0, 0, auraR, 0, Math.PI * 2); ctx.fill();
-
-  // Lửa Ki nhọn bốc quanh người
-  ctx.fillStyle = "rgba(253, 224, 71, 0.45)";
-  for (let i = 0; i < 8; i++) {
-    const ang = (i / 8) * Math.PI * 2 + tNow * 1.4;
-    const r1 = (24 + Math.sin(tNow * 15 + i * 2) * 6) * scale;
-    const r2 = (boost ? 46 : 34) * scale;
-    ctx.beginPath();
-    ctx.moveTo(Math.cos(ang - 0.18) * r1 * 0.7, Math.sin(ang - 0.18) * r1 * 0.7);
-    ctx.lineTo(Math.cos(ang) * r2, Math.sin(ang) * r2);
-    ctx.lineTo(Math.cos(ang + 0.18) * r1 * 0.7, Math.sin(ang + 0.18) * r1 * 0.7);
-    ctx.closePath();
-    ctx.fill();
-  }
-
-  // 2. Bóng đổ 2.5D xuống sàn gỗ
-  ctx.fillStyle = "rgba(0, 0, 0, 0.38)";
-  ctx.beginPath(); ctx.ellipse(0, 18 * scale, 18 * scale, 7 * scale, 0, 0, Math.PI * 2); ctx.fill();
-
-  // 3. MÁI TÓC VÀNG DÀI KHỔNG LỒ ĐẶC TRƯNG SSJ3 (nhiều tầng nhọn bay phấp phới!)
-  const hairWave = Math.sin(tNow * 10) * 3 * scale;
-  const hairGrad = ctx.createLinearGradient(0, -24 * scale, 0, 24 * scale);
-  hairGrad.addColorStop(0, "#fef08a");
-  hairGrad.addColorStop(0.5, "#facc15");
-  hairGrad.addColorStop(1, "#ca8a04");
-  ctx.fillStyle = hairGrad;
-  ctx.strokeStyle = "#a16207";
-  ctx.lineWidth = 1.4;
-  ctx.beginPath();
-  ctx.moveTo(0, -26 * scale);
-  ctx.lineTo(-14 * scale, -18 * scale);
-  ctx.lineTo(-22 * scale + hairWave, -4 * scale);
-  ctx.lineTo(-15 * scale, 2 * scale);
-  ctx.lineTo(-23 * scale - hairWave, 16 * scale);
-  ctx.lineTo(-10 * scale, 14 * scale);
-  ctx.lineTo(-6 * scale + hairWave, 27 * scale);
-  ctx.lineTo(0, 19 * scale);
-  ctx.lineTo(6 * scale - hairWave, 27 * scale);
-  ctx.lineTo(10 * scale, 14 * scale);
-  ctx.lineTo(23 * scale + hairWave, 16 * scale);
-  ctx.lineTo(15 * scale, 2 * scale);
-  ctx.lineTo(22 * scale - hairWave, -4 * scale);
-  ctx.lineTo(14 * scale, -18 * scale);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-
-  // 4. Võ phục cam-xanh của Goku
-  ctx.fillStyle = "#ea580c";
-  roundRect(-11 * scale, -4 * scale, 22 * scale, 20 * scale, 6 * scale);
-  ctx.fill();
-  ctx.fillStyle = "#1d4ed8";
-  ctx.fillRect(-11 * scale, 7 * scale, 22 * scale, 4.5 * scale);
-  ctx.beginPath(); ctx.moveTo(-5 * scale, -4 * scale); ctx.lineTo(0, 4 * scale); ctx.lineTo(5 * scale, -4 * scale); ctx.closePath(); ctx.fill();
-
-  // 5. Khuôn mặt chuẩn SSJ3 (trán gồ không lông mày + mắt xanh lục bảo cực ngầu!)
-  ctx.fillStyle = "#fed7aa";
-  ctx.beginPath(); ctx.arc(0, -12 * scale, 9.5 * scale, 0, Math.PI * 2); ctx.fill();
-  // Tóc mái chữ V vàng rủ xuống trán (đặc trưng SSJ3)
-  ctx.fillStyle = "#fde047";
-  ctx.beginPath();
-  ctx.moveTo(-9 * scale, -19 * scale);
-  ctx.lineTo(0, -13 * scale);
-  ctx.lineTo(9 * scale, -19 * scale);
-  ctx.lineTo(4 * scale, -26 * scale);
-  ctx.lineTo(-4 * scale, -26 * scale);
-  ctx.closePath();
-  ctx.fill();
-  // Đôi mắt xanh ngọc lục bảo
-  ctx.fillStyle = "#10b981";
-  ctx.fillRect(-5 * scale, -13 * scale, 3.2 * scale, 2.4 * scale);
-  ctx.fillRect(1.8 * scale, -13 * scale, 3.2 * scale, 2.4 * scale);
-
-  // Hiệu ứng ăn siêu tốc nếu đang eating
-  if (eating) {
-    const ch = Math.sin(tNow * 35) * 6 * scale;
-    ctx.strokeStyle = "#fde68a";
-    ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(-14 * scale, -2 * scale); ctx.lineTo(-4 * scale, -7 * scale + ch); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(14 * scale, -2 * scale); ctx.lineTo(4 * scale, -7 * scale - ch); ctx.stroke();
-  }
-
-  // 6. TIA SÉT XANH ĐIỆN CAO THẾ SSJ3 GIẬT LÁCH TÁCH!
-  const boltCount = boost ? 5 : 2;
-  ctx.strokeStyle = "#38bdf8";
-  ctx.shadowColor = "#38bdf8";
-  ctx.shadowBlur = 10;
-  ctx.lineWidth = 2;
-  for (let i = 0; i < boltCount; i++) {
-    if (Math.sin(tNow * 24 + i * 7.3) > (boost ? -0.3 : 0.35)) {
-      const a0 = ((tNow * 3 + i * 1.9) % 6.28);
-      const x0 = Math.cos(a0) * 16 * scale, y0 = Math.sin(a0) * 16 * scale;
-      const xm = x0 * 1.45 + (Math.random() - 0.5) * 14, ym = y0 * 1.45 + (Math.random() - 0.5) * 14;
-      const x1 = x0 * 2.1 + (Math.random() - 0.5) * 12, y1 = y0 * 2.1 + (Math.random() - 0.5) * 12;
-      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(xm, ym); ctx.lineTo(x1, y1); ctx.stroke();
-    }
-  }
-  ctx.shadowBlur = 0;
-
-  // Thoại của Gô-Ku SSJ3
-  if (vfx.goku.speechTimer > 0 && vfx.goku.speech) {
-    const bw = Math.min(320, vfx.goku.speech.length * 7.0 + 26);
-    panel(-bw / 2, 26 * scale, bw, 26, { bg: "rgba(15, 23, 42, 0.95)", border: "#fde047", r: 8 });
-    text(vfx.goku.speech, 0, 43 * scale, { size: 12, align: "center", bold: true, color: "#fef08a" });
-  }
-  ctx.restore();
+// Khách ngồi bàn: tư thế theo trạng thái (gọi món / chờ / giận khi kiên nhẫn < 25% / vui khi ăn)
+function drawCustomerPerson(c, cx, cy, s, tNow, critical, justArrived) {
+  const pose = c.state === "eating" ? "cheer0" : critical ? "hurt" : justArrived ? "talk" : "idle";
+  const bob = c.state === "eating" ? Math.abs(Math.sin(tNow * 6)) * 0.08 * s : 0;
+  return drawToon(`${customerLook(c.id)}_${pose}`, cx, cy + 0.75 * s - bob, 2.1 * s);
 }
 
 // ---------- VẼ THỦY QUÁI (CÁ SẤU NĂM CHÈO / RẮN HỔ MÂY) ----------
@@ -1777,16 +1590,6 @@ function drawMonster(m, sx, sy, s, tNow) {
   const chasing = m.state === "chase";
   const stunned = m.state === "stunned";
   const recoil = m.state === "recoil";
-
-  // Nếu bật Chế độ Sáng tạo và là M1: vẽ A-Qua-Mèn cưỡi sóng uy phong ngay vị trí M1!
-  if (prefs.creative && m.id === "M1") {
-    const facingRight = m.waypoints && m.waypoints[m.target_idx] ? (m.waypoints[m.target_idx][0] >= m.pos[0]) : true;
-    drawAquamanBoss(mx, my, s, tNow, facingRight, chasing);
-    if (chasing) {
-      text("⚡ ĐANG RƯỢT ĐUỔI!", mx, my + 2.4 * s, { size: 12, align: "center", bold: true, color: "#f43f5e", shadow: true });
-    }
-    return;
-  }
 
   ctx.save();
   ctx.translate(mx, my);
@@ -1890,7 +1693,7 @@ function eventLog(w, h) {
 }
 
 // ============================================================================
-// CẢNH 1: BUỔI SÁNG — SÔNG CHÍN KHÚC 2.5D + A-QUA-MÈN (GATHER)
+// CẢNH 1: BUỔI SÁNG — SÔNG CHÍN KHÚC 2.5D + NĂM CHÈO (GATHER)
 // ============================================================================
 function drawGather(w, h, dt) {
   const meta = getPhaseMeta("gather");
@@ -2129,7 +1932,7 @@ function drawGather(w, h, dt) {
     text(ch.photographed ? "📸 Cá Hô H1 (Đã chụp)" : "📸 Cá Hô H1 [F]", hx, hy - 1.2 * s, { size: 12, align: "center", bold: true, color: "#fde047", shadow: true });
   }
 
-  // 7. Thủy quái (`snap.monsters[]`) HOẶC A-Qua-Mèn tuần tra (Chế độ Sáng tạo!)
+  // 7. Thủy quái (`snap.monsters[]`) HOẶC Năm Chèo tuần tra (Chế độ Sáng tạo!)
   const monsters = snap.monsters || [];
   let monsterDanger = false;
   monsters.forEach((m) => {
@@ -2139,30 +1942,36 @@ function drawGather(w, h, dt) {
   });
 
   if (prefs.creative && !monsters.some((m) => m.id === "M1")) {
-    // A-Qua-Mèn tuần tra oai phong ở tầng sâu để tương tác chiến đấu VFX (thuần client!)
+    // Năm Chèo tuần tra oai phong ở tầng sâu để tương tác chiến đấu VFX (thuần client!)
     if (uiScreen === "playing") {
-      vfx.aquaman.x += vfx.aquaman.dir * 3.8 * dt;
-      if (vfx.aquaman.x > 84) { vfx.aquaman.x = 84; vfx.aquaman.dir = -1; }
-      if (vfx.aquaman.x < 24) { vfx.aquaman.x = 24; vfx.aquaman.dir = 1; }
-      vfx.aquaman.d = 15 + Math.sin(tNow * 1.1) * 4.5;
+      vfx.boss.x += vfx.boss.dir * 3.8 * dt;
+      if (vfx.boss.x > 84) { vfx.boss.x = 84; vfx.boss.dir = -1; }
+      if (vfx.boss.x < 24) { vfx.boss.x = 24; vfx.boss.dir = 1; }
+      vfx.boss.d = 15 + Math.sin(tNow * 1.1) * 4.5;
     }
-    const distA = p ? Math.hypot(p.pos[0] - vfx.aquaman.x, p.pos[1] - vfx.aquaman.d) : 999;
+    const distA = p ? Math.hypot(p.pos[0] - vfx.boss.x, p.pos[1] - vfx.boss.d) : 999;
     const nearA = distA <= 13;
     if (nearA && underwater) {
       monsterDanger = true;
-      if (vfx.aquaman.speechTimer <= 0) {
-        vfx.aquaman.speech = "A-Qua-Mèn: Dám lặn vào lãnh địa của trẫm à?! Bấm [Q] hoặc Click đấu chưởng!";
-        vfx.aquaman.speechTimer = 3.5;
+      if (vfx.boss.speechTimer <= 0) {
+        vfx.boss.speech = "Năm Chèo: Dám lặn vào lãnh địa của tui à?! Bấm [Q] hoặc Click đấu chưởng!";
+        vfx.boss.speechTimer = 3.5;
       }
-      vfx.aquaman.tridentCooldown -= dt;
-      if (vfx.aquaman.tridentCooldown <= 0 && uiScreen === "playing") {
-        vfx.aquaman.tridentCooldown = 2.6;
-        spawnBeam(sx(vfx.aquaman.x), sy(vfx.aquaman.d), px, py, "#0ea5e9", "#e0f2fe", 14);
+      vfx.boss.tridentCooldown -= dt;
+      if (vfx.boss.tridentCooldown <= 0 && uiScreen === "playing") {
+        vfx.boss.tridentCooldown = 2.6;
+        spawnBeam(sx(vfx.boss.x), sy(vfx.boss.d), px, py, "#0ea5e9", "#e0f2fe", 14);
         spawnRipple(px, py, "#38bdf8", 55);
         AudioEngine.playSfx("dive");
       }
     }
-    drawAquamanBoss(sx(vfx.aquaman.x), sy(vfx.aquaman.d), s, tNow, vfx.aquaman.dir > 0, nearA);
+    drawMonster({ id: "NC", kind: "ca_sau", pos: [vfx.boss.x, vfx.boss.d], state: nearA ? "chase" : "patrol",
+                  waypoints: [[vfx.boss.x, vfx.boss.d], [vfx.boss.x + vfx.boss.dir, vfx.boss.d]], target_idx: 1 },
+                sx, sy, s, tNow);
+    if (vfx.boss.speechTimer > 0 && vfx.boss.speech) {
+      text(vfx.boss.speech, sx(vfx.boss.x), sy(vfx.boss.d) - 2.2 * s,
+           { size: 12, align: "center", bold: true, color: "#fef08a", shadow: true });
+    }
   }
 
   // 8. Nhân vật Út Sen (Áo bà ba cam + khăn rằn + kính lặn + vệt bọt)
@@ -2185,16 +1994,23 @@ function drawGather(w, h, dt) {
         ctx.fillStyle = `rgba(239, 68, 68, ${0.3 + 0.25 * Math.sin(tNow * 14)})`;
         ctx.beginPath(); ctx.arc(0, 0, 1.3 * s, 0, Math.PI * 2); ctx.fill();
       }
-      // Áo bà ba cam rực
-      ctx.fillStyle = "#f97316";
-      ctx.beginPath(); ctx.arc(0, 0, 0.72 * s, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = "#fef3c7"; ctx.lineWidth = 2; ctx.stroke();
-      // Khăn rằn & kính lặn
-      ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2.4;
-      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * 1.05 * s, Math.sin(a) * 1.05 * s); ctx.stroke();
-      ctx.fillStyle = "#38bdf8";
-      ctx.beginPath(); ctx.arc(Math.cos(a) * 0.4 * s, Math.sin(a) * 0.4 * s, 0.28 * s, 0, Math.PI * 2); ctx.fill();
       ctx.restore();
+      // Út Sen: sprite người Kenney (CC0). Mặt nước: đứng; dưới nước: nằm ngang bơi theo hướng; bị chạm: hurt
+      const left = Math.cos(a) < -0.01;
+      const hurt = (p.invuln_ticks || 0) > 0;
+      const swimRot = underwater ? (left ? -(Math.PI - a) : a) + (left ? -Math.PI / 2 : Math.PI / 2) : 0;
+      const key = hurt ? "sen_hurt" : underwater ? "sen_fall" : "sen_idle";
+      const drawn = underwater
+        ? drawToon(key, px, py + 0.95 * s, 1.9 * s, left, swimRot)
+        : drawToon(key, px, py + 0.2 * s, 1.9 * s, left);
+      if (!drawn) {  // dự phòng khi sprite chưa tải: hình khối cũ
+        ctx.save(); ctx.translate(px, py);
+        ctx.fillStyle = "#f97316";
+        ctx.beginPath(); ctx.arc(0, 0, 0.72 * s, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2.4;
+        ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * 1.05 * s, Math.sin(a) * 1.05 * s); ctx.stroke();
+        ctx.restore();
+      }
       text("Út Sen", px, py - 1.05 * s, { size: 12, align: "center", bold: true, color: "#ffffff", shadow: true });
     }
   }
@@ -2304,7 +2120,7 @@ function drawGather(w, h, dt) {
 }
 
 // ============================================================================
-// CẢNH 2: BUỔI TỐI — NHÀ BÈ MÁ TƯ 2.5D + GÔ-KU SSJ3 (QUAN)
+// CẢNH 2: BUỔI TỐI — NHÀ BÈ MÁ TƯ 2.5D + KHÁCH QUEN (QUAN)
 // ============================================================================
 function drawQuan(w, h) {
   const meta = getPhaseMeta("quan");
@@ -2434,13 +2250,12 @@ function drawQuan(w, h) {
     }
   });
 
-  // 4. Bàn & Khách (Tables T1..T4 — Nếu bật Chế độ Sáng tạo: Khách là GÔ-KU SSJ3!)
+  // 4. Bàn & Khách (Tables T1..T4 — Nếu bật Chế độ Sáng tạo: Khách là KHÁCH QUEN!)
   const patMax = (meta.patience_s || 60) * 60;
   const eatMax = (meta.eat_s || 10) * 60;
   const tipMinRatio = meta.tip_min_patience_ratio || 0.5;
   const byTable = {};
   (snap.customers || []).forEach((c) => { byTable[c.table_id] = c; });
-  let gokuDrawnOnTable = false;
 
   (snap.tables || []).forEach((tb, idx) => {
     const tx = sx(tb.pos[0]), ty = sy(tb.pos[1]);
@@ -2469,36 +2284,15 @@ function drawQuan(w, h) {
       const isAngry = c.state === "waiting" && patRatio < 0.5;
       const isCritical = c.state === "waiting" && patRatio < 0.25;
 
-      // Vẽ khách: GÔ-KU SSJ3 ở bàn đầu tiên, và Ca-Đíc SSJ / Pô-Cô-Lô / Gô-Han ở các bàn T2..T4 khi bật Sáng tạo!
-      if (prefs.creative && !gokuDrawnOnTable) {
-        gokuDrawnOnTable = true;
-        drawGokuSSJ3(cx, cy, s, tNow, isAngry, c.state === "eating");
-        if (isCritical && uiScreen === "playing") addShake(1.6);
-      } else if (prefs.creative) {
-        // Các chiến binh Z ghé quán nhà bè
-        const zStyles = [
-          { aura: "rgba(56,189,248,0.45)", hair: "#fde047", body: "#1d4ed8", tag: "Ca-Đíc" },
-          { aura: "rgba(168,85,247,0.42)", hair: "#f8fafc", body: "#6b21a8", tag: "Pô-Cô-Lô" },
-          { aura: "rgba(250,204,21,0.42)", hair: "#facc15", body: "#7c3aed", tag: "Gô-Han" }
-        ];
-        const zs = zStyles[(idx - 1 + zStyles.length) % zStyles.length];
-        ctx.fillStyle = zs.aura;
-        ctx.beginPath(); ctx.arc(cx, cy, 0.85 * s, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = zs.body;
-        ctx.beginPath(); ctx.arc(cx, cy, 0.56 * s, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = zs.hair;
-        ctx.beginPath();
-        ctx.moveTo(cx - 0.45 * s, cy - 0.2 * s);
-        ctx.lineTo(cx, cy - 0.9 * s);
-        ctx.lineTo(cx + 0.45 * s, cy - 0.2 * s);
-        ctx.closePath(); ctx.fill();
-        text(c.id, cx, cy + 4, { size: 11, align: "center", bold: true, color: "#ffffff" });
-      } else {
+      // Vẽ khách: sprite người Kenney (CC0); chưa tải xong thì vẽ hình tròn dự phòng
+      const justArrived = (snap.phase_tick || 0) - (c.order_tick || 0) < 120;
+      if (!drawCustomerPerson(c, cx, cy, s, tNow, isCritical, justArrived)) {
         ctx.fillStyle = c.state === "eating" ? "#22c55e" : (isCritical ? "#ef4444" : "#f43f5e");
         ctx.beginPath(); ctx.arc(cx, cy, 0.54 * s, 0, Math.PI * 2); ctx.fill();
         ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2; ctx.stroke();
-        text(c.id, cx, cy + 4, { size: 12, align: "center", bold: true, color: "#ffffff" });
       }
+      if (isCritical && uiScreen === "playing" && prefs.creative) addShake(0.6);
+      text(c.id, cx, cy - 1.45 * s, { size: 12, align: "center", bold: true, color: "#ffffff", shadow: true });
 
       // Thẻ đơn gọn đẹp, đặt lệch dưới bàn hoặc trên đầu tùy vị trí để 4 bàn KHÔNG chồng chéo!
       const cardW = Math.min(182, 3.6 * s), cardH = 54;
@@ -2508,7 +2302,7 @@ function drawQuan(w, h) {
         border: handMatch ? "#4ade80" : (isCritical ? "#ef4444" : "rgba(246, 196, 83, 0.55)"),
         r: 8
       });
-      const custTag = (prefs.creative && idx === 0) ? `⚡Gô-Ku (${c.id})` : c.id;
+      const custTag = (prefs.creative && idx === 0) ? `⭐Khách quen (${c.id})` : c.id;
       text(`${custTag} · ${dName(c.dish_id)}`, cx, cardY + 15, { size: 11, align: "center", bold: true, color: "#fde047" });
 
       if (c.state === "waiting") {
@@ -2537,15 +2331,6 @@ function drawQuan(w, h) {
     }
   });
 
-  // Nếu bật Sáng tạo mà chưa có khách ngồi bàn nào: Gô-Ku SSJ3 vẫn đứng gồng Ki chờ vào quán góc trên phải sàn bè!
-  if (prefs.creative && !gokuDrawnOnTable) {
-    const gx = sx(13.5), gy = sy(8.2);
-    drawGokuSSJ3(gx, gy, s, tNow, false, false);
-    text("⚡ GÔ-KU SSJ3 (Chờ gọi món · Bấm [Q/Space] Đấu Chưởng!)", gx, gy - 0.9 * s, {
-      size: 11, align: "center", bold: true, color: "#fef08a", shadow: true
-    });
-  }
-
   // 5. Người chơi Út Sen trong quán
   if (p) {
     const px = sx(p.pos[0]), py = sy(p.pos[1]);
@@ -2557,9 +2342,16 @@ function drawQuan(w, h) {
     }
     ctx.fillStyle = "rgba(0,0,0,0.3)";
     ctx.beginPath(); ctx.ellipse(px, py + 0.45 * s, 0.5 * s, 0.22 * s, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#f97316";
-    ctx.beginPath(); ctx.arc(px, py, 0.54 * s, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2.2; ctx.stroke();
+    // Út Sen: sprite người Kenney (CC0) — đi bộ có hoạt ảnh bước, bưng món khi cầm
+    const v = p.vel || [0, 0];
+    const moving = Math.hypot(v[0], v[1]) > 0.05;
+    if (Math.abs(v[0]) > 0.05) vfx.senLeft = v[0] < 0;
+    const key = snap.hand ? "sen_hold" : moving ? `sen_walk${Math.floor(tNow * 8) % 3}` : "sen_idle";
+    if (!drawToon(key, px, py + 0.45 * s, 1.9 * s, !!vfx.senLeft)) {
+      ctx.fillStyle = "#f97316";
+      ctx.beginPath(); ctx.arc(px, py, 0.54 * s, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 2.2; ctx.stroke();
+    }
     text("Út Sen", px, py + 0.9 * s, { size: 12, align: "center", bold: true, color: "#271206" });
 
     if (snap.hand) {

@@ -1,9 +1,10 @@
 # Credits — Nhóm ForkMe
 
 ## 1. Tài nguyên đồ họa & âm thanh
-- **Đồ họa 2D/2.5D & Hiệu ứng VFX (`chonoi/web/index.html`):** 100% tự vẽ bằng mã HTML5 Canvas 2D Procedural Vector bởi thành viên `Phog2811` (Đinh Hoàng Phong) — bao gồm bối cảnh Sông Chín Khúc, Nhà Bè Má Tư, nhân vật Út Sen, 6 loài nguyên liệu/cá/rau, Cá Sấu Năm Chèo, Rắn Hổ Mây, và các nhân vật parody chế độ Sáng tạo (*A-Qua-Mèn*, *Gô-Ku SSJ3*, *Z-Warriors*). Không sử dụng bất kỳ tệp hình ảnh PNG/SVG bên ngoài nào.
+- **Đồ họa 2D/2.5D & Hiệu ứng VFX (`chonoi/web/index.html`):** tự vẽ bằng HTML5 Canvas 2D bởi `Phog2811` (Đinh Hoàng Phong) — bối cảnh Sông Chín Khúc, Nhà Bè Má Tư, Cá Sấu Năm Chèo, Rắn Hổ Mây, VFX. Nhân vật parody từ thương hiệu khác (trước đây) đã được gỡ bỏ và thay bằng nhân vật gốc của lab + sprite CC0 bên dưới.
 - **Âm nhạc & Hiệu ứng âm thanh (Web Audio API Synthesizer trong `chonoi/web/index.html`):** 100% tự tổng hợp thời gian thực bằng bộ dao động Web Audio API (giai điệu ngũ cung miền Tây, nhạc nền Anime Boss Battle chiptune, và các hiệu ứng SFX tương tác). Không sử dụng tệp `.mp3`/`.wav` bên ngoài.
 - **Sprite cá, rong, đá, bong bóng (`chonoi/web/assets/kenney/`):** *Fish Pack 2.0* của **Kenney** (www.kenney.nl), giấy phép **CC0 1.0** (public domain, ghi công không bắt buộc — vẫn ghi để cảm ơn). Tải từ OpenGameArt (`opengameart.org/content/fish-pack-0`, file `kenney_fish-pack_2.0.zip`); bản License.txt gốc lưu kèm trong thư mục. Dùng: `fish_blue` (cá linh), `fish_grey` (cá lóc), `fish_green` (cá kèo), `seaweed_*`, `rock_*`, `bubble_*`. Chỉ vẽ phía client, không ảnh hưởng headless. Tích hợp bởi `Cuubeo`.
+- **Nhân vật người Út Sen và khách (`chonoi/web/assets/toon/`):** *Toon Characters 1* của **Kenney** (www.kenney.nl), giấy phép **CC0 1.0**. Tải từ OpenGameArt (`opengameart.org/content/toon-characters-1`, file `kenney_toonCharacters1.zip`); License.txt gốc lưu kèm. Dùng: Female person (Út Sen), Male person / Female adventurer / Male adventurer (khách), các tư thế idle, walk, fall, hold, hurt, talk, cheer. Tích hợp bởi `Cuubeo`.
 - **Khung mã nguồn khởi tạo (`chonoi/`):** Khung Python starter do giảng viên môn AI SDLC (VinUni) cung cấp.
 
 ## 2. Công cụ AI đã sử dụng (theo `docs/ai-usage-log.md`)
