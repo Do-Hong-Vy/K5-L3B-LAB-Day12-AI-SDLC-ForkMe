@@ -37,13 +37,13 @@
 
 ## 3. Hiện trạng repo & Rủi ro kỹ thuật cần xử lý ngay
 
-Kết quả rà soát sau các commit CP0 (`902de7f`):
-1. **Phần đã hoàn thành ở CP0:** [`TEAM.md`](TEAM.md), [`game.contract.json`](game.contract.json) (`"team": "ForkMe"`), [`tests/test_team_check.py`](tests/test_team_check.py) (5/5 pass), [`AGENTS.md`](AGENTS.md), 2 skills ([`check-contract`](.agents/skills/check-contract/SKILL.md) & [`verify-phase`](.agents/skills/verify-phase/SKILL.md)), [`docs/plan/phase-1.md`](docs/plan/phase-1.md), và [`docs/clarify.md`](docs/clarify.md) đã có trên `main`; cả 4 thành viên đã có commit bằng tài khoản GitHub của mình.
-2. **Đồng bộ `docs/contracts/`:** Đã hợp nhất [`docs/contracts/README.md`](docs/contracts/README.md) với [`sim-ui-interface.md`](docs/contracts/sim-ui-interface.md) & [`events.md`](docs/contracts/events.md) làm 1 nguồn chuẩn duy nhất; các trường/payload chưa có trong starter đều ghi rõ `[Đề xuất nhóm — chờ PO đối chiếu PRD-0]` để tránh code lệch schema.
-3. **Chờ mở đề `PRD-0` trên Lab Board:** Theo [`docs/clarify.md`](docs/clarify.md) #6, tab Phase 1 chưa mở nên `AC-P1-??` và các câu #1–#4, #7 đang tạm giả định theo khung `TODO(nhóm)` và đề xuất trong `docs/contracts/`.
+Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
+1. **CP0 đã hoàn thiện 100% (`CP0-1` .. `CP0-7`):** [`TEAM.md`](TEAM.md), [`game.contract.json`](game.contract.json) (`"team": "ForkMe"`), [`tests/test_team_check.py`](tests/test_team_check.py) (5/5 pass), [`AGENTS.md`](AGENTS.md), 2 skills ([`check-contract`](.agents/skills/check-contract/SKILL.md) & [`verify-phase`](.agents/skills/verify-phase/SKILL.md)), [`docs/prd0.md`](docs/prd0.md), [`docs/plan/phase-1.md`](docs/plan/phase-1.md) (`AC-P1-01..16`), [`docs/clarify.md`](docs/clarify.md) (`#1–#9` đã chốt), và [`docs/ai-usage-log.md`](docs/ai-usage-log.md) (đủ 4 thành viên) đã có trên `main`.
+2. **Hợp đồng `docs/contracts/` đã đối chiếu PRD-0:** PO (`Cuubeo`) đã đối chiếu khớp mục D/E/G trong [`docs/prd0.md`](docs/prd0.md) (`f4fa4aa`) — mọi payload sự kiện ở [`events.md`](docs/contracts/events.md) và snapshot ở [`sim-ui-interface.md`](docs/contracts/sim-ui-interface.md) đã chuyển trạng thái **Đã chốt**.
+3. **Điểm lệch cần sửa ngay đầu CP1 (`clarify #9`):** Khung starter `QuanSim.snapshot()` mới chỉ có `player.pos`, nhưng PRD-0 mục D yêu cầu `quan.player` có `{pos, vel}` → `Cuubeo` bổ sung `vel` vào `QuanSim.snapshot()` ở `CP1-Q2` (`AC-P1-11`).
 4. **Môi trường test Windows local & CI:**
    - Đã kiểm chứng toàn bộ **33/33 tests PASS** (`32/32` với `test_team_check` + `test_python_starter_units` + `test_smoke_p1` qua venv shim `python3.exe` tạm, và `1/1` với `test_live` khi cho phép bind socket localhost). Nếu máy Windows của thành viên nào chưa có `python3.exe` trong PATH, làm theo hướng dẫn cục bộ (không commit) trong [`AGENTS.md`](AGENTS.md#L12-L13).
-   - GitHub Actions workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) đang ở trạng thái `active` trên repo fork (sẽ chạy khi có push/PR mới).
+   - GitHub Actions workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) đang ở trạng thái `active` trên repo fork (tùy chọn bật chạy trên web nếu chưa tự kích hoạt).
 
 ---
 
@@ -61,7 +61,7 @@ Kết quả rà soát sau các commit CP0 (`902de7f`):
 - [x] **CP0-4 (`Cuubeo` — PO):**
   - [x] Điền kế hoạch tổng quan [`docs/plan/phase-1.md`](docs/plan/phase-1.md) và ghi câu hỏi #6–#7 vào [`docs/clarify.md`](docs/clarify.md).
   - [x] *(Phụ thuộc Lab Board — xong, nguồn `docs/prd0.md`)* Trích danh sách `AC-P1-??` chính thức và giải đáp các mục #1–#4, #7 trong [`docs/clarify.md`](docs/clarify.md) ngay khi Lab Board mở `PRD-0`.
-- [x] **CP0-5 (`Do-Hong-Vy` + `Cuubeo` + `Phog2811` — Hợp đồng tích hợp):** Đã tạo và đồng bộ thống nhất 1 nguồn chuẩn tại [`docs/contracts/README.md`](docs/contracts/README.md), [`docs/contracts/sim-ui-interface.md`](docs/contracts/sim-ui-interface.md), [`docs/contracts/events.md`](docs/contracts/events.md), [`docs/contracts/inventory.sample.json`](docs/contracts/inventory.sample.json) (đánh dấu rõ đề xuất chờ PO đối chiếu khi `PRD-0` mở).
+- [x] **CP0-5 (`Do-Hong-Vy` + `Cuubeo` + `Phog2811` — Hợp đồng tích hợp):** Đã tạo, đồng bộ và đối chiếu khớp [`docs/prd0.md`](docs/prd0.md) mục D/E/G tại [`docs/contracts/README.md`](docs/contracts/README.md), [`docs/contracts/sim-ui-interface.md`](docs/contracts/sim-ui-interface.md), [`docs/contracts/events.md`](docs/contracts/events.md), [`docs/contracts/inventory.sample.json`](docs/contracts/inventory.sample.json) (`f4fa4aa`).
 - [x] **CP0-6 (`Nguyenquoctoan0310` + `Do-Hong-Vy` — Môi trường & Smoke Test):**
   - `Nguyenquoctoan0310` đã sửa `test_template_is_rejected` và thêm `test_repo_team_md_is_valid` trong [`tests/test_team_check.py`](tests/test_team_check.py) (5/5 pass), giữ `python3` trong `game.contract.json` cho CI Linux, bổ sung hướng dẫn fix Windows vào [`AGENTS.md`](AGENTS.md).
   - Đã kiểm chứng trên máy `Do-Hong-Vy` qua shim `python3.exe` tạm + `test_live`: **33/33 tests PASS**. *(Nhắc các bạn dùng Windows tạo `python3.exe` cục bộ không commit nếu máy chưa có sẵn).*
@@ -74,64 +74,61 @@ Kết quả rà soát sau các commit CP0 (`902de7f`):
 
 ### CP1 — Phase 1: Lõi `gather` + `quan` + Kho v1.0 (0:00 – 1:00 | Hạn tag `phase-1`: trước 1:00)
 
-> **Mục tiêu:** Hoàn thiện toàn bộ luật chơi Phase 1 cho `gather` và `quan`, validation `scenario`/`contract`, giao diện chơi thử nâng cấp v1.0, pass toàn bộ smoke test + unit/integration test tự viết, xuất bằng chứng và gắn tag `phase-1`.
+> **Mục tiêu:** Đạt đủ **`AC-P1-01` .. `AC-P1-16`** trong [`docs/plan/phase-1.md`](docs/plan/phase-1.md) theo đúng [`docs/prd0.md`](docs/prd0.md) & [`docs/contracts/`](docs/contracts/README.md), xuất bằng chứng thật và gắn tag `phase-1` trước 1:00.
 
 #### A. `Do-Hong-Vy` (`sim/gather` — [`chonoi/sim/gather.py`](chonoi/sim/gather.py))
-- [ ] **CP1-G1 (Lát 1 — Bơi, phân vùng, oxy, ngạt, ngất, giỏ LIFO):**
-  - Theo dõi trạng thái mặt nước/dưới nước đầu bước vs cuối bước (`d <= surface_depth`) → phát event `dive` / `surface` với `data` chứa `pos` (đối chiếu chính xác schema `data` trong PRD-0).
-  - Cập nhật oxy theo `d` **cuối bước**: ở mặt nước hồi `oxygen_refill_per_tick`, dưới nước trừ `1` tick/tick, kẹp `[0, oxygen_max_ticks]`.
-  - Phát `oxygen_empty` khi `oxygen_ticks` chuyển từ dương xuống `0`.
-  - Khi `oxygen_ticks == 0` và đang dưới nước: tăng `zero_oxy_ticks`; đủ `choke_interval_ticks` thì trừ `1` HP, reset bộ đếm ngạt và phát `choke`.
-  - Khi `hp <= 0`: phát `faint`, xóa sạch giỏ (`self.hold.clear()`), gọi `_finish("fainted", events)` (đảm bảo `gather_end` với `reason: "fainted"` và kho rỗng `{}`), và `return events`.
-  - Quản lý giỏ `self.hold` theo thứ tự nhặt (LIFO, tối đa `hold_capacity`, không hard-code `12`).
-- [ ] **CP1-G2 (Lát 2 — Hái nút, bắt cá, cập bến, xuất kho):**
-  - Trong `interact`: giữ logic kiểm tra `_in_dock()` **TRƯỚC** hái nút (`docked` → `gather_end`).
-  - Nếu không ở bến và đang ở mặt nước (`_at_surface()`): tìm nút `ready` (`regrow_ticks == 0`) gần nhất trong `interact_radius` (tie-break theo `id_key` nhỏ nhất); nếu giỏ còn chỗ thêm vào `hold`, đặt `regrow_ticks = round(regrow_s * 60)`, phát `gather`; nếu giỏ đầy phát `hold_full` (kiểm tra cơ chế một phần hay toàn phần khi thêm từ `node_yield` theo PRD-0!).
-  - Trong `catch`: chỉ thực hiện khi `catch_cd_ticks == 0` và đang dưới nước (`not _at_surface()`): tìm đàn cá gần nhất trong `catch_radius` (tie-break `id_key`), kiểm tra sức chứa giỏ với `fish_yield[kind]`, xử lý `fish_caught` / `hold_full`, đặt `catch_cd_ticks = round(catch_cooldown_s * 60)`, xử lý đàn cá sau khi bắt (biến mất hay respawn — kiểm tra kỹ PRD-0!).
-- [ ] **CP1-G3 (Tích hợp & Tag P1):** Đọc review/PR cho `Cuubeo`, gộp các lát vào `main` sạch sẽ, kiểm tra mọi số liệu đều đọc từ `tuning`, chạy test và gắn tag `phase-1` trước `1:00`.
+- [ ] **CP1-G1 (Lát 1 — Bơi, phân vùng, oxy, ngạt, ngất, giỏ LIFO | `AC-P1-01`, `AC-P1-02`):**
+  - Bơi `[x,d]` (`ramp_max_ticks`, `Δt=1/60`, chặn biên + triệt vận tốc ra ngoài, `heading_deg` theo `move != 0` gần nhất — đã có phần khung, rà kỹ biên).
+  - So đầu/cuối bước (`d <= surface_depth`) → phát `dive` / `surface` với `{"pos": [x, d]}` (pos sau di chuyển).
+  - Cập nhật oxy theo `d` **cuối bước**: mặt nước `+oxygen_refill_per_tick` (kẹp max) và **reset `zero_oxy_ticks = 0`**; dưới nước `-1` tick (kẹp 0).
+  - Phát `oxygen_empty` (`{"oxygen_ticks": 0}`) khi từ `> 0` xuống `0`.
+  - Mỗi bước dưới nước kết thúc với `oxygen_ticks == 0` (**kể cả bước vừa chạm 0**) tăng `zero_oxy_ticks` (`chạm 0 ở t → ngạt lần đầu ở t+59`). Đủ `choke_interval_ticks` → reset về `0`, trừ `1` HP, phát `choke` (`{"hp": self.hp}`).
+  - Khi `hp <= 0`: lấy `lost = list(reversed(self.hold))` (LIFO), `self.hold.clear()`, phát `faint` (`{"cause": "choke", "lost": lost, "hp": 0}`), gọi `_finish("fainted", events)` (kho rỗng `{}`), và `return events`.
+- [ ] **CP1-G2 (Lát 2 — Hái nút, bắt cá, cập bến, xuất kho | `AC-P1-03`, `AC-P1-04`, `AC-P1-05`):**
+  - Trong `interact`: xét `_in_dock()` **TRƯỚC** hái nút (`docked` → `gather_end`, kể cả ở bước cuối nếu còn Máu).
+  - Ngoài bến, chỉ hái khi `_at_surface()`: chọn nút `ready` (`regrow_ticks == 0`) gần nhất trong `interact_radius` (cả đúng mép, hòa theo `id_key`). Đủ chỗ cho `node_yield` (`len(hold) + amount <= hold_capacity`) → thêm vào `hold`, đặt `regrow_ticks = round(regrow_s * 60)`, phát `gather` (`{"node_id", "kind", "amount"}`). Thiếu chỗ → phát `hold_full` (`{"action": "gather", "node_id", "required", "free"}`), **giữ nguyên nút**.
+  - Trong `catch`: chỉ khi `catch_cd_ticks == 0` và dưới nước (`not _at_surface()`): chọn đàn gần nhất trong `catch_radius` (hòa `id_key`). Đủ chỗ cho toàn bộ `fish_yield[kind]` → thêm vào `hold`, **xóa đàn khỏi `self.fish`**, đặt `catch_cd_ticks = round(catch_cooldown_s * 60)`, phát `fish_caught` (`{"fish_id", "kind", "yield"}`). Thiếu chỗ → phát `hold_full` (`{"action": "catch", "fish_id", "required", "free"}`), **giữ đàn & giữ cooldown**, không thử đàn khác. Không có đàn trong tầm → không event, không hồi chiêu.
+  - Bước cuối `time_left_ticks == 0`: kết thúc `time` ở mọi độ sâu *sau* các hành động trên, giữ giỏ hiện có.
+- [ ] **CP1-G3 (Tích hợp, `README` & Tag P1 | `AC-P1-15`, `AC-P1-16`):** Review code cho `Cuubeo`, gộp sạch vào `main`, kiểm tra [README.md](README.md) & [game.contract.json](game.contract.json) khớp DoD, chạy `check-contract` + cùng QA chốt tag `phase-1` trước `1:00`.
 
 #### B. `Cuubeo` (`sim/quan` — [`chonoi/sim/quan.py`](chonoi/sim/quan.py) + PO)
-- [ ] **CP1-Q1 (Lát 3 — Khách, chọn món, giữ chỗ, kiên nhẫn, bỏ đi):**
-  - Dựng khách có sẵn từ `scenario["customers"]` và suy ra/kiểm tra `reserved` (nguyên liệu giữ chỗ).
-  - Sinh khách mới theo lịch (`first_customer_tick`, sau đó mỗi `customer_interval_s * 60` ticks) nếu còn bàn trống (chọn bàn & chọn món bằng `Streams` trong `self.rng`, tuyệt đối không dùng `random` toàn cục).
-  - Khách chọn món nấu được dựa trên `stock - tổng reserved` và `menu`: nếu có món nấu được → giữ chỗ nguyên liệu vào `reserved` của khách; nếu không có món nào đủ nguyên liệu → phát `no_dish` (khách không ngồi/bỏ đi — đối chiếu PRD-0).
-  - Giảm `patience_ticks_left` của khách đang chờ theo từng tick; khi về `0` → giải phóng `reserved`, xóa khách khỏi bàn, cộng/trừ uy tín theo `left_reputation_delta` (kẹp `[reputation_min, reputation_max]`), phát `customer_left`.
-- [ ] **CP1-Q2 (Lát 4 — Bếp, bưng món, phục vụ, ăn, trả tiền, boa, uy tín, hết ca):**
-  - Ở `interact`: tối đa **1 tương tác/bước**, chọn đối tượng hợp lệ trong `interact_radius` theo thứ tự ưu tiên `(khoảng cách, bếp trước bàn, id_key)`:
-    - Tại **bếp (`idle`)**: nếu tay đang rỗng (`hand is None`) và có khách đang chờ món chưa có ai nấu (hoặc món hợp lệ theo PRD-0), bắt đầu nấu → chuyển bếp sang `cooking`, đặt `cook_ticks_left`, trừ nguyên liệu khỏi `stock` (và giải phóng phần `reserved` tương ứng), phát `cook_started`.
-    - Bếp đếm ngược `cook_ticks_left` mỗi bước; về `0` → chuyển `ready`, phát `dish_ready`.
-    - Tại **bếp (`ready`)**: nếu tay đang rỗng (`hand is None`) → nhặt món lên `self.hand`, đưa bếp về `idle`, phát `dish_picked`.
-    - Tại **bàn có khách đang chờ đúng món trên tay**: đặt món phục vụ khách → chuyển khách sang `eating` với `eat_ticks_left = round(eat_s * 60)`, xóa `self.hand`, phát `served`.
-  - Đếm ngược `eat_ticks_left` của khách `eating`; về `0` → tính tiền món (`price`) + tiền boa (`round(price * tip_rate)` nếu tỉ lệ kiên nhẫn còn lại `>= tip_min_patience_ratio`), cộng `money`, `earned`, `shift_earned`, cộng `tip_reputation` nếu có boa (kẹp `[reputation_min, reputation_max]`), phát `paid`, giải phóng bàn.
-  - Hết giờ: phát `quan_end` đúng schema.
-- [ ] **CP1-Q3 (PO):** Cập nhật [`docs/clarify.md`](docs/clarify.md) với mọi thắc mắc đã hỏi giảng viên/giả định của nhóm. Review code cho `Do-Hong-Vy`.
+- [ ] **CP1-Q1 (Lát 3 — Khách, giữ chỗ, kiên nhẫn, bỏ đi | `AC-P1-06`, `AC-P1-08`):**
+  - Khởi tạo khách từ `scenario["customers"]` (suy `reserved` theo công thức nếu đơn `reserved` thiếu `reserved`, theo `order_tick` rồi `id` bàn).
+  - Bước 1: giảm timer ca, nấu, ăn, kiên nhẫn; tăng `ready_ticks` **chỉ cho món đã `ready` ở đầu bước**.
+  - Bước 5 (khi còn giờ, đúng lịch `first_customer_tick` + `customer_interval_s * 60` theo `phase_tick` sau tăng): còn bàn trống → chọn bàn trống id nhỏ nhất; chọn **đều theo `Streams`** trong các món đủ nguyên liệu khả dụng (`stock - tổng reserved`, ứng viên sắp theo mã Unicode id món); giữ chỗ ngay (`order_status: "reserved"`, `order_tick = phase_tick`, kiên nhẫn đầy và giảm từ bước sau), phát `customer_arrived`. Không có món đủ → phát `no_dish` (`{}`).
+  - Bước 4 (duyệt theo id bàn): nếu còn giờ, khách `waiting` có `patience_ticks_left == 0` → nhả giữ chỗ, cộng `left_reputation_delta` (kẹp `[reputation_min, reputation_max]`), phát `customer_left` (`reason: "patience"`).
+- [ ] **CP1-Q2 (Lát 4 — Bếp, bưng, phục vụ, tiền, boa, uy tín, `player.vel` | `AC-P1-07`, `AC-P1-08`, `AC-P1-11`):**
+  - Bổ sung `"vel": self.vel` vào `QuanSim.snapshot()["player"]` (`clarify #9`, `AC-P1-11`).
+  - Bước 2 (duyệt bếp theo `sort_by_id`): `cooking` hết giờ → `ready` (`ready_ticks = 0`), phát `dish_ready`.
+  - Bước 3 (`interact` tối đa 1 đối tượng theo `(khoảng cách, bếp trước bàn, id_key)`): bếp `idle` lấy đơn `reserved` cũ nhất theo `(order_tick, table_id)`, tiêu nguyên liệu giữ, chốt `base_price` → `cook_started`; bếp `ready` & tay trống → `dish_picked`; bàn có khách khớp `hand.order_id` → chốt `tip = floor(base_price * tip_rate)` nếu tỷ lệ kiên nhẫn còn lại **sau bước 1** `>= tip_min_patience_ratio` (ngược lại `0`), chuyển `eating` → `served` (hợp lệ cả đúng tick kiên nhẫn về 0 hoặc hết ca).
+  - Bước 4: khách `eating` xong trả `paid` (`finished_eating`), boa dương cộng `tip_reputation` (kẹp `[min, max]`), rời bàn. Hết ca (`time_left_ticks == 0`): khách `eating` trả ngay `paid` (`closing`), khách `waiting` rời `customer_left` (`closing`, **không trừ uy tín**), phát `quan_end`.
+- [ ] **CP1-Q3 (PO):** Giữ [`docs/clarify.md`](docs/clarify.md) luôn cập nhật nếu phát sinh câu hỏi mới; review code cho `Do-Hong-Vy`.
 
-#### C. `Phog2811` (`client/ui` — [`chonoi/web/index.html`](chonoi/web/index.html) / UI của nhóm)
-- [ ] **CP1-U1 (Nâng cấp UI/HUD Gather & Quán v1.0):**
-  - Đảm bảo giao diện đọc hoàn toàn từ snapshot `GET /state` và gửi điều khiển qua `POST /input`, `POST /restart` (không phá tương thích `tests/test_live.py`!).
-  - Nâng cấp đồ họa/HUD buổi sáng (`gather`): hiển thị rõ thuyền/Út Sen, thanh Oxy (cảnh báo khi thấp), Tim HP, trạng thái đang ngạt (`zero_oxy_ticks`), cooldown bắt cá, giỏ LIFO trực quan, các nút hái (`bong_dien_dien`, `bong_sung` + đếm ngược mọc lại), đàn cá (`ca_linh`, `ca_loc`), vùng bến (`E`).
-  - Nâng cấp đồ họa/HUD buổi tối (`quan`): hiển thị rõ bếp (`idle`/`cooking`/`ready` + tiến độ nấu), món đang cầm trên tay, bàn + khách + món gọi + thanh kiên nhẫn + trạng thái `eating`, kho nguyên liệu, Tiền, Uy tín (sao), Điểm, log sự kiện dễ đọc.
-- [ ] **CP1-U2 (Trải nghiệm & Luật chơi tại chỗ):** Thêm bảng hướng dẫn/menu công thức nấu ăn ngay trên HUD để người chơi biết món cần nguyên liệu gì; bổ sung màn hình tổng kết cuối ca rõ ràng (số món, tiền, uy tín, phím `R` chơi lại).
-- [ ] **CP1-U3 (Scrum):** Nhắc cả nhóm cập nhật [`docs/standup.md`](docs/standup.md) giữa Phase 1 và kiểm tra tiến độ trước mốc `0:50`.
+#### C. `Phog2811` (`client/ui` — [`chonoi/web/index.html`](chonoi/web/index.html) & `README.md`)
+- [ ] **CP1-U1 (Nâng cấp UI/HUD Gather & Quán v1.0 | `AC-P1-14`):**
+  - Đọc hoàn toàn từ `GET /state`, gửi `POST /input`, `POST /restart` (giữ pass `tests/test_live.py`).
+  - HUD buổi sáng (`gather`): thời gian, thanh Oxy (cảnh báo khi thấp), Tim HP, trạng thái ngạt (`zero_oxy_ticks`), hồi chiêu bắt cá, giỏ LIFO, nút hái + đếm ngược mọc lại, đàn cá, vùng bến (`E`).
+  - HUD buổi tối (`quan`): kho khả dụng (`stock - reserved`), bếp (`idle`/`cooking`/`ready` + đọc đúng `st.dish.dish_id ?? st.dish`), món trên tay (`hand.dish_id ?? hand`), bàn + khách + món gọi + thanh kiên nhẫn + trạng thái `eating`, tiền, uy tín, điểm, log sự kiện.
+- [ ] **CP1-U2 (Trải nghiệm & README DoD | `AC-P1-14`, `AC-P1-15`):** Thêm bảng công thức 3 món trên HUD, màn hình kết thúc ca rõ ràng; rà soát [README.md](README.md) đảm bảo đủ hướng dẫn chạy từ clone sạch `≤ 3` lệnh macOS/Linux, điều khiển, công thức tính điểm và lệnh test 1 lệnh.
+- [ ] **CP1-U3 (Scrum):** Nhắc cả nhóm điền [`docs/standup.md`](docs/standup.md) giữa Phase 1 (phút 20–25) và kiểm tra tiến độ trước `0:50`.
 
 #### D. `Nguyenquoctoan0310` (`qa` — Validation, Tests & Verification Phase 1)
-- [ ] **CP1-T1 (Validation mức luật — mã thoát 2):**
-  - Hoàn thiện `TODO(nhóm)` trong [`chonoi/scenario.py`](chonoi/scenario.py): kiểm tra mâu thuẫn mức luật (ví dụ: tổng `reserved` của các khách vượt `stock`, khách `assigned`/`waiting`/`eating` sai định dạng món không có trong `menu`, thiếu giá/tip khi đang `eating`, bàn/bếp trùng hoặc không hợp lệ...) → ném `BadInput` để thoát mã `2` *trước* khi ghi file.
-  - Rà soát [`chonoi/contract.py`](chonoi/contract.py): bổ sung validate các khóa `quan` còn thiếu (`stoves`, `tables`, `reputation_initial/min/max`, `start_pos`, `menu` recipes chỉ dùng nguyên liệu hợp lệ).
-- [ ] **CP1-T2 (Bộ test Phase 1 — `tests/test_phase1_rules.py`):**
-  - Test `gather`: phân vùng `dive`/`surface`, tiêu hao & hồi oxy, `oxygen_empty` → `choke` → `faint` (mất sạch giỏ, kho rỗng), hái nút + mọc lại + tie-break id, bắt cá + cooldown + chỉ dưới nước, đầy giỏ `hold_full`, cập bến ở tick khác 0.
-  - Test `quan`: đọc kho từ `gather`, lịch khách, chọn món theo `stock`, giữ chỗ nguyên liệu, khách bỏ đi giải phóng `reserved` & giảm uy tín, `no_dish`, nấu ăn, ưu tiên tương tác `(khoảng cách, bếp trước bàn, id)`, phục vụ, ăn xong trả tiền + boa + tăng uy tín, `quan_end`.
-  - Test **Determinism**: chạy headless 2 lần cùng seed & cùng inputs cho cả `gather` và `quan` → so sánh byte-by-byte giống hệt nhau.
-- [ ] **CP1-T3 (Bằng chứng & Ma trận truy vết P1):**
-  - Lưu log chạy test và output JSONL mẫu vào `docs/proof/phase-1/` (ví dụ `unittest.txt`, `gather_sample.jsonl`, `quan_sample.jsonl`, ảnh chụp live UI từ `Phog2811`).
-  - Điền đầy đủ [`docs/verification/phase-1.md`](docs/verification/phase-1.md) (trung thực trạng thái Đạt / Chưa đạt của từng AC).
+- [ ] **CP1-T1 (Validation mức luật — mã thoát 2 | `AC-P1-09`, `AC-P1-10`):**
+  - Hoàn thiện `TODO(nhóm)` trong [`chonoi/scenario.py`](chonoi/scenario.py) theo đúng danh sách mục D [`docs/prd0.md`](docs/prd0.md#L207-L208): `quan.stoves`/`tables`/`hand`/`customers` (trạng thái `reserved`/`assigned`/`unfulfillable`/`served`, thiếu `reserved` thì suy từ công thức nếu đủ tồn, `assigned` phải có đúng 1 món ở bếp hoặc tay và `reserved` rỗng, `eating` phải là `served` có `eat_ticks_left > 0` và `base_price`/`tip`, bếp `cooking` timer dương khớp đơn, không trùng đơn giữa bếp & tay, giữ khác công thức hoặc quá tồn kho, liên kết thiếu, bộ đếm âm/mâu thuẫn → thoát `2` trước khi ghi file).
+  - Rà soát [`chonoi/contract.py`](chonoi/contract.py) kiểm các khóa `quan` & `menu` còn thiếu (giá nguyên dương, `tip_rate > 0`, `reputation`, `stoves`, `tables`...).
+- [ ] **CP1-T2 (Bộ test Phase 1 — `tests/test_phase1_rules.py` | `AC-P1-01`..`AC-P1-13`):**
+  - Test `gather`: biên bơi, `dive`/`surface`, oxy hồi/trừ, `oxygen_empty`, `choke` đúng `t+59`, nổi lên đúng tick ngạt không mất máu, `faint` mất giỏ LIFO + kho rỗng, hái nút + tie-break + mọc lại, bắt cá xóa đàn + cooldown, `hold_full` giữ nguyên nút/đàn/cooldown, hành động hợp lệ ở tick cuối, cập bến ở tick khác 0.
+  - Test `quan`: `player.vel` trong snapshot, lịch khách, chọn bàn id nhỏ nhất, chọn món đều theo seed, giữ chỗ khi gọi, `no_dish`, `customer_left` nhả giữ chỗ & `-0.5` uy tín, `interact` theo `(khoảng cách, bếp trước bàn, id)`, `cook_started` → `dish_ready` → `dish_picked` → `served` (boa `floor`, phục vụ đúng tick kiên nhẫn 0), `paid` & `tip_reputation`, đóng ca `closing` (`eating` trả tiền, `waiting` không trừ uy tín), `quan_end`.
+  - Test scenario mâu thuẫn (mã `2` không tạo file), smoke 2 tiến trình (`AC-P1-13`), và **Determinism** chạy 2 lần cùng seed + inputs cho cả `gather` & `quan` so byte-by-byte (`AC-P1-12`).
+- [ ] **CP1-T3 (Bằng chứng & Ma trận truy vết P1 | `AC-P1-16`):**
+  - Chạy skill `verify-phase`, lưu log & JSONL mẫu vào `docs/proof/phase-1/` và điền đầy đủ [`docs/verification/phase-1.md`](docs/verification/phase-1.md) theo đúng 16 mã `AC-P1-01..16`.
 
 #### E. Checklist đóng CP1 (trước `1:00`)
-- [ ] Toàn bộ unit test + smoke test + test Phase 1 xanh (`python -m unittest discover -s tests -v`), `python tools/check_team.py` đạt `OK`.
-- [ ] Cả 4 thành viên đều đã có ít nhất **1 commit** có nội dung bằng tài khoản GitHub thật.
-- [ ] [`docs/ai-usage-log.md`](docs/ai-usage-log.md) đã ghi đủ log Phase 1 cho cả 4 người.
-- [ ] [`docs/standup.md`](docs/standup.md) đã cập nhật dòng Phase 1 cho cả 4 người.
-- [ ] Push `main` lên `origin`, gắn tag `phase-1` và `git push origin phase-1` trước **1:00**.
+- [ ] Toàn bộ unit test + smoke test + test Phase 1 xanh (`python3 -m unittest discover -s tests -v`), `python3 tools/check_team.py` đạt `OK`.
+- [ ] Đủ bằng chứng trong `docs/proof/phase-1/` và [`docs/verification/phase-1.md`](docs/verification/phase-1.md) cho `AC-P1-01..16`.
+- [ ] [`docs/ai-usage-log.md`](docs/ai-usage-log.md) & [`docs/standup.md`](docs/standup.md) cập nhật đủ cho cả 4 thành viên.
+- [ ] Cả 4 thành viên đều có commit nội dung mới gắn với tài khoản GitHub thật.
+- [ ] Chạy `check-contract` + `verify-phase`, push `main`, gắn tag `phase-1` và `git push origin phase-1` trước **1:00**.
 
 ---
 
