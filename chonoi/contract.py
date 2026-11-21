@@ -31,10 +31,14 @@ def load_contract(path=DEFAULT_PATH) -> dict:
     if version not in SUPPORTED_VERSIONS:
         raise BadInput(f"contract_version phải là một trong {list(SUPPORTED_VERSIONS)}, đang là {version!r}")
     validate_tuning(c.get("tuning"))
-    if version == "1.2":
+    if version in ("1.2", "1.3"):  # v1.3 (Ticket-04): gameplay/tuning/kho/JSONL theo v1.2
         _validate_freshness(c["tuning"].get("freshness"))
     elif "freshness" in c["tuning"]:
         raise BadInput("tuning.freshness chỉ có từ contract_version 1.2")
+    if version == "1.3":
+        for key in ("bench_cmd", "soak_cmd"):
+            if not isinstance(c.get(key), str) or not c[key].strip():
+                raise BadInput(f"contract 1.3 cần khai {key} ở gốc game.contract.json")
     return c
 
 
@@ -50,8 +54,8 @@ def _validate_freshness(fr):
         raise BadInput("tuning.freshness: hao tươi > 0 và 0 < spoiled_below <= initial")
 
 
-# Validator kiểm schema v1.1 (Ticket-02) + v1.2 (Ticket-03: thêm freshness, kho cá thể).
-SUPPORTED_VERSIONS = ("1.1", "1.2")
+# Validator kiểm schema v1.1 (Ticket-02) + v1.2 (Ticket-03: freshness, kho cá thể) + v1.3 (Ticket-04: bench/soak).
+SUPPORTED_VERSIONS = ("1.1", "1.2", "1.3")
 MAX_DAYS = 5
 
 

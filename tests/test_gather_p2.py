@@ -24,7 +24,7 @@ class GatherContractV11Tests(unittest.TestCase):
     def test_contract_v11_gather_fields_and_standards(self):
         c = _contract()
         # v1.2 (Ticket-03) kế thừa toàn bộ khóa v1.1 của gather; chỉ số phiên bản đổi.
-        self.assertIn(c["contract_version"], ("1.1", "1.2"))
+        self.assertIn(c["contract_version"], ("1.1", "1.2", "1.3"))
         g = c["tuning"]["gather"]
         self.assertEqual(g["fish_yield"], {"ca_linh": 3, "ca_loc": 1, "ca_keo": 2})
         self.assertEqual(len(g["nodes"]), 6)
