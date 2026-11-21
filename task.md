@@ -142,12 +142,12 @@ Kết quả rà soát sau các commit CP0 (`f4fa4aa`):
 - [ ] **CP2-1 (`All` — Standup nhanh):** Điền dòng Phase 2 trong [`docs/standup.md`](docs/standup.md).
 - [ ] **CP2-2 (`Do-Hong-Vy` — `sim/gather`):** Triển khai các lát tính năng/đổi yêu cầu Phase 2 thuộc buổi sáng (`gather`) — giữ nguyên quy tắc `Streams` tách luồng (`rng.get("<ten_luong>")`) để không làm lệch RNG cũ; đọc mọi tham số mới từ `game.contract.json`.
 - [ ] **CP2-3 (`Cuubeo` — `sim/quan`):** Triển khai các lát tính năng/đổi yêu cầu Phase 2 thuộc buổi tối (`quan`) hoặc ghép ca/chế độ mới theo đề Phase 2.
-- [ ] **CP2-4 (`Phog2811` — `client/ui`):** Cập nhật UI/HUD hiển thị đầy đủ các thực thể/trạng thái/nút bấm/cơ chế mới của Phase 2; trau chuốt hình ảnh thay thế hình khối tạm (đảm bảo mọi hiệu ứng thêm chỉ chạy phía client/live, không chạm vào output headless).
+- [x] **CP2-4 (`Phog2811` — `client/ui`):** Cập nhật UI/HUD hiển thị đầy đủ các thực thể/trạng thái/nút bấm/cơ chế mới của Phase 2 (`AC-P2-10`, `AC-P2-13`: Menu chính, DayIntro/EveningIntro/DayResult/Shop/Pause/Summary, 6 nguyên liệu/6 món/2 bếp/4 bàn/thủy quái, HUD ≥ 18px) + đồ họa 2.5D VFX, âm thanh Web Audio & Chế độ Sáng tạo A-Qua-Mèn × Gô-Ku SSJ3 (tắt 100% ở headless).
 - [ ] **CP2-5 (`Nguyenquoctoan0310` — `qa`):**
   - Cập nhật validation mới trong `contract.py` / `scenario.py` / `inputs.py` (nếu contract nâng cấp).
   - Viết bộ test Phase 2 (`tests/test_phase2_*.py`) + **chạy lại toàn bộ test Phase 1 (regression)**.
   - Xuất bằng chứng vào `docs/proof/phase-2/` và hoàn thiện `docs/verification/phase-2.md`.
-- [ ] **CP2-6 (`Phog2811` + `All` — Retro nhanh Phase 2, ~1:45):**
+- [x] **CP2-6 (`Phog2811` + `All` — Retro nhanh Phase 2, ~1:45):**
   - Điền mục **Phase 2 (nhanh)** trong [`docs/retro.md`](docs/retro.md): *Điều tốt*, *Điều tệ*, *1 hành động cụ thể cho Phase 3*.
 - [ ] **CP2-7 (`Do-Hong-Vy` + `All` — Harness & Tag P2):**
   - Cập nhật [`AGENTS.md`](AGENTS.md) với quy tắc/bẫy mới phát hiện ở Phase 1–2 (tạo diff rõ trong git history).
