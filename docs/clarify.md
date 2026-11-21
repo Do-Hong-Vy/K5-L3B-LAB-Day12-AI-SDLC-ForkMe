@@ -2,3 +2,8 @@
 
 | # | Ngày giờ | Câu hỏi | Trả lời / giả định | Ai quyết |
 |---|---|---|---|---|
+| 1 | 2026-11-21 09:55 | (`gather`) Khi hái nút (`node_yield`) hoặc bắt cá (`fish_yield`) mà chỗ trống còn lại trong `hold` nhỏ hơn `yield`, hệ thống nhặt một phần tới khi đầy giỏ hay từ chối toàn bộ + phát `hold_full`? | *(Chờ PO `Cuubeo` đối chiếu PRD-0 mục 13.8 / hỏi giảng viên)* | PO |
+| 2 | 2026-11-21 09:55 | (`gather`) Đàn cá sau khi bị `catch` có biến mất khỏi `fish` hay giữ lại / hồi sinh ở Phase 1? | *(Chờ PO `Cuubeo` đối chiếu PRD-0 mục 13.8)* | PO |
+| 3 | 2026-11-21 09:55 | (`gather` & `quan`) Schema chính xác của trường `data` cho các event (`dive`, `surface`, `oxygen_empty`, `choke`, `faint`, `gather`, `fish_caught`, `hold_full`, `customer_left`, `no_dish`, `cook_started`, `dish_ready`, `dish_picked`, `served`, `paid`) và kiểu của `quan.hand`, `quan.customers[]` trong PRD-0 mục E/F? | *(Chờ PO `Cuubeo` đối chiếu PRD-0 mục E/F và chốt vào `docs/contracts/`)* | PO |
+| 4 | 2026-11-21 09:55 | (`quan`) Tiền boa (`tip_rate`) và các phép tính tiền dùng làm tròn (`round`/`floor`) hay số nguyên/thực? | *(Chờ PO `Cuubeo` đối chiếu PRD-0)* | PO |
+| 5 | 2026-11-21 09:55 | (`qa`/`ci`) `tests/test_team_check.py::test_template_is_rejected` bị fail sau khi điền `TEAM.md`, và `game.contract.json` dùng `python3` gây lỗi `[WinError 1920]` trên Windows local. Nhóm có đồng ý sửa `test_template_is_rejected` (ghi rõ lý do trong commit) và giữ nguyên `python3` trong `game.contract.json` cho Linux CI/chấm điểm không? | *(Chờ nhóm + QA `Nguyenquoctoan0310` xác nhận ở CP0)* | Nhóm / QA |

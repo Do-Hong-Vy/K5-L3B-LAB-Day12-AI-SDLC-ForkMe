@@ -55,18 +55,18 @@ Kết quả kiểm tra repo trước khi bắt đầu:
 
 > **Mục tiêu:** Chốt toàn bộ nền tảng nhóm, hợp đồng tích hợp, harness AI và môi trường chạy test xanh trước khi code luật Phase 1.
 
-- [ ] **CP0-1 (`Do-Hong-Vy` — Integrator):** Kiểm tra repo GitHub `K5-L3B-LAB-Day12-AI-SDLC-ForkMe` ở chế độ **Public**, đã mời đủ 4 thành viên quyền **Write** (`Do-Hong-Vy`, `Cuubeo`, `Phog2811`, `Nguyenquoctoan0310`). Cả 4 người kiểm tra `git config user.name` & `user.email` khớp tài khoản GitHub.
-- [ ] **CP0-2 (`All` — chủ trì `Phog2811`):** Họp 15 phút chốt và điền hoàn chỉnh [`TEAM.md`](TEAM.md) (đủ `Vai quy trình`, `Người dự phòng cho`, `Thỏa thuận làm việc nhóm ≤ 10 dòng`: kênh liên lạc, xử lý bất đồng 2 phút, vướng > 10 phút báo backup, giờ standup giữa phase, cách review/ghép code, ai gắn tag).
-- [ ] **CP0-3 (`Do-Hong-Vy`):** Cập nhật `"team": "ForkMe"` trong [`game.contract.json`](game.contract.json) và chạy `python tools/check_team.py` xác nhận `OK: 4 thành viên`.
-- [ ] **CP0-4 (`Cuubeo` — PO):** Mở Lab Board (**Chợ Nổi Lab**), lấy toàn bộ yêu cầu **Phase 1 (PRD-0)** và danh sách AC (`AC-P1-??`). Ghi câu hỏi/giả định (nếu có) vào [`docs/clarify.md`](docs/clarify.md) và điền [`docs/plan/phase-1.md`](docs/plan/phase-1.md) (`≤ 1 trang`: mục tiêu, việc/người/phụ thuộc, rủi ro).
-- [ ] **CP0-5 (`Do-Hong-Vy` + `Cuubeo` + `Phog2811`):** Chốt **Hợp đồng tích hợp** trong [`docs/contracts/`](docs/contracts/README.md):
+- [x] **CP0-1 (`Do-Hong-Vy` — Integrator):** Kiểm tra repo GitHub `K5-L3B-LAB-Day12-AI-SDLC-ForkMe` đã ở chế độ **Public** (`private: false`) và đã thêm đủ 4 collaborator có quyền Push/Write (`Do-Hong-Vy`, `Cuubeo`, `Phog2811`, `nguyenquoctoan0310`). *(Nhắc 4 người tự kiểm tra `git config user.name/email` khớp tài khoản GitHub).*
+- [x] **CP0-2 (`Do-Hong-Vy` khởi tạo bản đầy đủ — chờ cả nhóm xác nhận nhanh):** Điền hoàn chỉnh [`TEAM.md`](TEAM.md) (đủ `Vai quy trình`, `Người dự phòng cho`, `Thỏa thuận làm việc nhóm ≤ 10 dòng` không còn dấu `…`). *(Cả nhóm đọc lướt và chỉnh lại nếu cần trước khi commit).*
+- [x] **CP0-3 (`Do-Hong-Vy`):** Cập nhật `"team": "ForkMe"` trong [`game.contract.json`](game.contract.json) và chạy `python tools/check_team.py` xác nhận `OK: 4 thành viên`.
+- [ ] **CP0-4 (`Cuubeo` — PO):** Mở Lab Board (**Chợ Nổi Lab**), lấy toàn bộ yêu cầu **Phase 1 (PRD-0)** và danh sách AC (`AC-P1-??`). Giải đáp các mục đang chờ trong [`docs/clarify.md`](docs/clarify.md) và điền [`docs/plan/phase-1.md`](docs/plan/phase-1.md) (`≤ 1 trang`: mục tiêu, việc/người/phụ thuộc, rủi ro).
+- [x] **CP0-5 (`Do-Hong-Vy` khởi tạo — chờ `Cuubeo` & `Phog2811` xác nhận/bổ sung theo PRD-0):** Chốt **Hợp đồng tích hợp** trong [`docs/contracts/`](docs/contracts/README.md):
   - Xác nhận schema file kho ([`docs/contracts/inventory.sample.json`](docs/contracts/inventory.sample.json): `{"items": {"bong_sung": 2, "ca_loc": 1}}`).
-  - Chốt file `docs/contracts/sim-ui-interface.md` (hoặc bảng trong `docs/contracts/README.md`): các trường snapshot UI đọc (`gather`, `quan`) và lệnh input gửi vào (`/input`, `/restart`).
-  - Chốt file `docs/contracts/events.md`: đầy đủ tên sự kiện, `data` payload, ai phát, ai nghe (`gather`: `dive`, `surface`, `oxygen_empty`, `choke`, `faint`, `gather`, `node_regrown`, `hold_full`, `fish_caught`, `gather_end`; `quan`: `customer_arrived`, `no_dish`, `customer_left`, `cook_started`, `dish_ready`, `dish_picked`, `served`, `paid`, `quan_end` — đối chiếu chính xác với PRD-0).
+  - Tạo [`docs/contracts/sim-ui-interface.md`](docs/contracts/sim-ui-interface.md) khóa cấu trúc `snapshot()` & `/state`, `/input`, `/restart`.
+  - Tạo [`docs/contracts/events.md`](docs/contracts/events.md) liệt kê các sự kiện `gather` & `quan` (đánh dấu rõ các payload `[Chờ PO đối chiếu PRD-0]` trong [`docs/clarify.md`](docs/clarify.md)).
 - [ ] **CP0-6 (`Nguyenquoctoan0310` — QA):** Sửa lỗi môi trường chạy test local (Windows `python` vs `python3`), xử lý `test_template_is_rejected` trong [`tests/test_team_check.py`](tests/test_team_check.py) (ghi rõ lý do trong commit), xác nhận chạy xanh toàn bộ test suite hiện có (32 tests).
-- [ ] **CP0-7 (`Do-Hong-Vy` + `Nguyenquoctoan0310` — Harness AI):** Tạo **2 custom skills** đầu tiên trong `.agents/skills/` (xóa `.gitkeep` nếu không cần) và cập nhật [`AGENTS.md`](AGENTS.md) (lần 1):
-  - Skill 1: `.agents/skills/verify-phase/SKILL.md` — quy trình chạy test + kiểm tra byte-determinism (2 lần cùng seed) + cập nhật `docs/verification/phase-n.md` & `docs/proof/phase-n/`.
-  - Skill 2: `.agents/skills/check-contract/SKILL.md` — quy trình kiểm tra đồng bộ `game.contract.json`, `docs/contracts/`, `scenario.py`, không hard-code số liệu, không vỡ headless.
+- [ ] **CP0-7 (`Do-Hong-Vy` xong Skill 1; chờ `Nguyenquoctoan0310` làm Skill 2 — Harness AI):**
+  - [x] **Skill 1 (`Do-Hong-Vy`):** Tạo [`.agents/skills/check-contract/SKILL.md`](.agents/skills/check-contract/SKILL.md) và cập nhật [`AGENTS.md`](AGENTS.md) (lần 1).
+  - [ ] **Skill 2 (`Nguyenquoctoan0310`):** Tạo skill QA kiểm chứng AC / sinh bằng chứng `docs/verification/` & `docs/proof/` trong `.agents/skills/` và bổ sung vào [`AGENTS.md`](AGENTS.md).
 
 ---
 
