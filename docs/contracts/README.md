@@ -2,7 +2,7 @@
 
 > Tài liệu chốt hợp đồng tích hợp giữa 4 module: `sim/gather` (`Do-Hong-Vy`), `sim/quan` (`Cuubeo`), `client/ui` (`Phog2811`), và `qa` (`Nguyenquoctoan0310`).
 > **Quy tắc khóa:** Không tự ý sửa `docs/contracts/`, `game.contract.json` hoặc schema kho khi chưa báo cả nhóm. Khi đổi hợp đồng ở Phase 2–4, phải lập ADR trong [`docs/adr/`](../adr/0000-template.md).
-> **Trạng thái đối chiếu PRD-0:** Các mục từ khung starter đã cố định theo mã nguồn; các payload/trường mở rộng chưa mở trên Lab Board được đánh dấu `[Đề xuất nhóm — chờ PO đối chiếu PRD-0]` tại [`docs/clarify.md`](../clarify.md).
+> **Trạng thái đối chiếu PRD-0:** PO (`Cuubeo`) đã đối chiếu với [`docs/prd0.md`](../prd0.md) mục D, E, G — mọi payload sự kiện và trường snapshot **đã chốt**; một chỗ lệch với starter (`quan.player.vel`) ghi tại [`docs/clarify.md`](../clarify.md) #9.
 
 ---
 

@@ -38,13 +38,13 @@
 ## 4. Snapshot riêng của `quan` ([`chonoi/sim/quan.py`](../../chonoi/sim/quan.py))
 
 - **Đã khóa từ khung starter:**
-  - `player`: `{pos: [x, z]}`
+  - `player`: `{pos: [x, z], vel: [vx, vz]}` *(PRD-0 mục D — starter chỉ có `pos`, `sim/quan` bổ sung `vel` ở CP1, xem `docs/clarify.md` #9)*
   - `stock`: `{kind: count}` (chỉ chứa mục `> 0`, sắp theo key; gồm cả phần đang `reserved` khi chưa trừ lúc nấu)
   - `tables`: `[{id, pos: [x, z], customer_id: str | null}]`
-- **Đề xuất nhóm cho các trường mở rộng** `[Đề xuất nhóm — chờ PO đối chiếu PRD-0]`:
+- **Đã chốt theo PRD-0 mục D, E** (PO `Cuubeo` đối chiếu, `docs/clarify.md` #3):
   - `hand`: `null` hoặc `{order_id, dish_id, base_price}` *(Lưu ý: `chonoi/web/index.html` hiện đọc an toàn cả `str` và `hand.dish_id`)*
   - `stoves`: `[{id, pos: [x, z], state: "idle"|"cooking"|"ready", dish: null|{order_id, dish_id, base_price}, cook_ticks_left, ready_ticks}]` *(Lưu ý: `index.html` starter đang in trực tiếp `st.dish`; nếu `dish` là object thì `client/ui` cần đọc `st.dish.dish_id ?? st.dish`)*
-  - `customers`: `[{id, table_id, dish_id, order_tick, state: "waiting"|"eating", patience_ticks_left, eat_ticks_left, order_status: "reserved"|"assigned"|"unfulfillable"|"served", reserved: {kind: count}, base_price, tip}]` *(sắp theo `sort_by_id`)*
+  - `customers`: `[{id, table_id, dish_id, order_tick, state: "waiting"|"eating", patience_ticks_left, eat_ticks_left, order_status: "reserved"|"assigned"|"unfulfillable"|"served", reserved: {kind: count}, base_price, tip}]` *(sắp theo `sort_by_id`; **chỉ liệt kê khách còn ngồi**)*
 
 ---
 
